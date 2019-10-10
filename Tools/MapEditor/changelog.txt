@@ -1,0 +1,18 @@
+:: 2019-09-24 ::
+- Items searching
+
+:: 2019-09-25 ::
+- New Map properties - allow to set width height (was fixed size before)
+- Eraser tool
+
+:: 2019-09-26 ::
+- ItemsImporter.php
+
+:: 2019-09-27 ::
+- Layers
+- Loading/Saving
+
+:: 2019-09-27 ::
+- New layer - Edges
+- Map saves also on server
+- Cursor coordinates

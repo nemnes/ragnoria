@@ -1,0 +1,14 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Server\\": "Server",
+      "Libs\\": "Libs"
+    }
+  },
+  "require": {
+    "cboden/ratchet": "^0.4.1",
+    "pimple/pimple": "~3.0",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  }
+}
