@@ -3,33 +3,24 @@ var App = {
   IO: null,
   IO_STATUS: 'offline',
   MyPlayer: null,
-  Ping: [],
 
   run: function () {
+    Libs_Console.init();
+    Libs_Ping.init();
     App.IO = new WebSocket(Config.protocol + '://' +Config.domain+ ':' +Config.port);
     App.IO.onopen = function (e) {
       App.IO_STATUS = 'online';
-      var requestId = 1;
-      setInterval(function(){
-        App.emit('Ping', ['R'+requestId]);
-        App.Ping['R'+requestId] = Date.now();
-        requestId++;
-      },1000);
     };
     App.IO.onmessage = function (e) {
+      Libs_Console.addLog({msg: '<' + e.data, level: 'default'});
       var args = JSON.parse(e.data)[1];
       var fn = App.getFunctionFromString(JSON.parse(e.data)[0]);
       fn.apply(this, args);
     };
     App.IO.onclose = function (e) {
       var text = App.IO_STATUS == 'online' ? 'Disconnected' : 'Server is offline';
-      console.log(text);
+      Libs_Console.addLog({ msg: text, level: 'critical' });
     }
-  },
-
-  ping: function(requestId) {
-    $('#ping').text('Ping: ' + (Date.now() - App.Ping[requestId]) + 'ms');
-    App.Ping = App.Ping.splice(requestId);
   },
 
   authorization: function(state, params) {
@@ -71,6 +62,11 @@ var App = {
 
     document.addEventListener("keydown", function(e) {
       // toggle console
+      if (e.keyCode === 192) {
+        e.preventDefault();
+        Libs_Console.toggleConsole();
+      }
+
       if (e.keyCode === 38) {
         e.preventDefault();
         if(App.MyPlayer.movementBlocked) {
@@ -115,10 +111,11 @@ var App = {
 
   emit: function(method, args = []) {
     App.IO.send(JSON.stringify([method, args]));
+    Libs_Console.addLog({msg: '>' + JSON.stringify([method, args]), level: 'default'});
   },
 
   getItemURL: function(id) {
-    return 'assets/item/' +id+ '.png';
+    return Config.itemsURL + id + '.png';
   },
 
 };

@@ -1,0 +1,32 @@
+#console {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  background-color: rgba(0,0,40);
+  opacity: 0.85;
+  display: none;
+  z-index: 3;
+}
+#console .console-content{
+  font-family: tahoma, monospace;
+  font-size: 12px;
+  height: 40vh;
+  overflow: auto;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #fff;
+}
+#console .console-input {
+  width: 100%;
+  background-color: rgba(0,0,0,0.2);
+  border: 2px solid #fff;
+  color: #fff;
+}
+#console div.console-content div.log-default {
+  color: #fff;
+  font-weight: normal;
+}
+#console div.console-content div.log-critical {
+  color: #f00;
+  font-weight: bold;
+}

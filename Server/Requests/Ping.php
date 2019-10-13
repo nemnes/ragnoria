@@ -8,6 +8,6 @@ class Ping extends BaseRequest
 {
   public function initialize(Player $player, $requestId)
   {
-    $player->send('App.ping', [$requestId]);
+    $player->send('Libs_Ping.pull', [$requestId]);
   }
 }

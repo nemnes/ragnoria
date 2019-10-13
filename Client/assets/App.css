@@ -73,7 +73,7 @@ body {
   height: 64px;
   margin-left: -40px;
   margin-top: -40px;
-  background-image: url('assets/outfit.png');
+  background-image: url('outfit.png');
 }
 .nickname {
   font-size: 7px;
@@ -95,12 +95,4 @@ body {
       0 0 0.75px #000,
       0 0 0.75px #000,
       0 0 0.75px #000;
-}
-#ping {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
 }

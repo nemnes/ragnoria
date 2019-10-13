@@ -1,0 +1,9 @@
+#ping {
+  position: fixed;
+  right: 0;
+  top: 0;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  z-index: 2;
+}

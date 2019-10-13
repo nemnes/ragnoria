@@ -10,6 +10,7 @@ class App
 {
   public function __construct()
   {
+    ini_set('memory_limit','258M');
     if (is_resource($fp = @fsockopen($host = Settings::SERVER['HOST'], $port = Settings::SERVER['PORT']))) {
       fclose($fp);
       $this->log("Socket $host:$port is already open!", true);
@@ -62,3 +63,8 @@ class App
   }
 
 }
+
+require '../vendor/autoload.php';
+$app = new App();
+include('dependencies.php');
+$app->run();
