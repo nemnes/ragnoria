@@ -1,11 +1,12 @@
 var Libs_Ping = {
-  $Ping: null,
+  $: null,
+
   PingRequests: [],
   LastRequestId: 0,
 
   init: function () {
-    Libs_Ping.$Ping = $('<div id="ping"></div>');
-    $('body').prepend(Libs_Ping.$Ping);
+    Libs_Ping.$ = $('<div id="ping"></div>');
+    $('body').prepend(Libs_Ping.$);
 
     setInterval(function(){
       Libs_Ping.LastRequestId++;
@@ -19,7 +20,7 @@ var Libs_Ping = {
   },
 
   pull: function(requestId) {
-    Libs_Ping.$Ping.text('Ping: ' + (Date.now() - Libs_Ping.PingRequests[requestId]) + 'ms');
+    Libs_Ping.$.text('Ping: ' + (Date.now() - Libs_Ping.PingRequests[requestId]) + 'ms');
     Libs_Ping.PingRequests = Libs_Ping.PingRequests.splice(requestId);
   },
 

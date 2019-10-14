@@ -1,7 +1,7 @@
 var Libs_Console = {
-  $Console: null,
-  $Console_Content: null,
-  $Console_Input: null,
+  $: null,
+  $_Content: null,
+  $_Input: null,
 
   ActiveConsole: false,
 
@@ -11,10 +11,10 @@ var Libs_Console = {
     html.push('<div class="console-content"></div>');
     html.push('<input class="console-input" type="text"/>');
     html.push('</div>');
-    Libs_Console.$Console = $(html.join(''));
-    Libs_Console.$Console_Content = Libs_Console.$Console.find('.console-content');
-    Libs_Console.$Console_Input = Libs_Console.$Console.find('.console-input');
-    $('body').prepend(Libs_Console.$Console);
+    Libs_Console.$ = $(html.join(''));
+    Libs_Console.$_Content = Libs_Console.$.find('.console-content');
+    Libs_Console.$_Input = Libs_Console.$.find('.console-input');
+    $('body').prepend(Libs_Console.$);
   },
 
   /** msg, level */
@@ -22,16 +22,14 @@ var Libs_Console = {
     var date = new Date();
     var time = (date.getHours()<10?'0':'') + date.getHours() +":"+ (date.getMinutes()<10?'0':'') + date.getMinutes() + ":" +(date.getSeconds()<10?'0':'') + date.getSeconds();
     var log = "<div class='log-" +params.level+ "'><B>[" +time+ "]</B> " +params.msg+ "</div>\n";
-    var $console = $('#console');
-    var $consoleContent = $('#console .console-content');
-    $consoleContent.append(log);
+    Libs_Console.$_Content.append(log);
 
-    if($consoleContent.html().split("\n").length > 50) {
-      $consoleContent.html($consoleContent.html().split("\n").slice(1).join("\n"));
+    if(Libs_Console.$_Content.html().split("\n").length > 50) {
+      Libs_Console.$_Content.html(Libs_Console.$_Content.html().split("\n").slice(1).join("\n"));
     }
 
-    if($console.is(":visible")) {
-      $consoleContent.scrollTop($consoleContent.prop("scrollHeight"));
+    if(Libs_Console.$.is(":visible")) {
+      Libs_Console.$_Content.scrollTop(Libs_Console.$_Content.prop("scrollHeight"));
     }
 
     if(params.level === 'critical') {
@@ -41,9 +39,9 @@ var Libs_Console = {
 
   showConsole: function() {
     Libs_Console.ActiveConsole = true;
-    Libs_Console.$Console.slideDown(200);
-    Libs_Console.$Console_Content.scrollTop(Libs_Console.$Console_Content.prop("scrollHeight"));
-    Libs_Console.$Console_Input.focus().val('');
+    Libs_Console.$.slideDown(200);
+    Libs_Console.$_Content.scrollTop(Libs_Console.$_Content.prop("scrollHeight"));
+    Libs_Console.$_Input.focus().val('');
   },
 
   hideConsole: function() {
@@ -53,8 +51,7 @@ var Libs_Console = {
   },
 
   toggleConsole: function() {
-    var $console = $('#console');
-    if($console.is(":visible")) {
+    if(Libs_Console.$.is(":visible")) {
       Libs_Console.hideConsole();
     }
     else {
@@ -63,14 +60,16 @@ var Libs_Console = {
   },
 
   sendQuery: function() {
-    var $consoleInput = $('#console .console-input');
-    var query = $consoleInput.val().split(" ", 1)[0];
-    var params = $consoleInput.val().split(" ", -1);
+    var user = 'anonymous';
+    var msg = Libs_Misc.stripHtml(Libs_Console.$_Input.val());
+    var query = msg.split(" ", 1)[0];
+    var params = msg.split(" ", -1);
     params.shift();
 
-    if($consoleInput.val().length > 0) {
+    if(Libs_Console.$_Input.val().length > 0) {
       App.IO.send(JSON.stringify([query, params]));
-      $consoleInput.val('');
+      Libs_Console.addLog({level: 'default', msg: user +'@' +Config.domain+ ' > ' + msg});
+      Libs_Console.$_Input.val('');
     }
   }
 

@@ -29,13 +29,7 @@ class Player {
       if(!sqm) {
         continue;
       }
-      var url = App.getItemURL(sqm.Ground.Id);
-      var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" style="background-image: url(' +url+ ');"></div>');
-      for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-        var item = sqm.Items[id];
-        url = App.getItemURL(item.Id);
-        $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
-      }
+      var $newSQM = Libs_Board.setSQM(sqm,x,y);
       $newRow.append($newSQM);
     }
     $newRow.css('margin-top', '-32px').css('opacity', '0');
@@ -73,13 +67,7 @@ class Player {
       if(!sqm) {
         continue;
       }
-      var url = App.getItemURL(sqm.Ground.Id);
-      var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" style="background-image: url(' +url+ ');"></div>');
-      for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-        var item = sqm.Items[id];
-        url = App.getItemURL(item.Id);
-        $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
-      }
+      var $newSQM = Libs_Board.setSQM(sqm,x,y);
       $newRow.append($newSQM);
     }
     $newRow.css('margin-top', '-32px').css('opacity', '0');
@@ -120,13 +108,7 @@ class Player {
         $(this).remove();
       });
       $('.map-row[data-y="' +y+ '"] div.sqm[data-x="' + x + '"', document).remove();
-      var url = App.getItemURL(sqm.Ground.Id);
-      var $newSQM = $('<div class="sqm" data-x="' + x + '" data-y="' +y+ '" style="background-image: url(' +url+ ');"></div>');
-      for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-        var item = sqm.Items[id];
-        url = App.getItemURL(item.Id);
-        $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
-      }
+      var $newSQM = Libs_Board.setSQM(sqm,x,y);
       $newSQM.css('margin-left', '-32px').css('opacity', '0');
       $('.map-row[data-y="' +y+ '"]', document).append($newSQM.finish().animate({marginLeft: '0px'}, stepTime, 'linear', function(){ $(this).css('opacity', '1'); }));
     }
@@ -163,13 +145,7 @@ class Player {
         $(this).remove();
       });
       $('.map-row[data-y="' +y+ '"] div.sqm[data-x="' + x + '"', document).remove();
-      var url = App.getItemURL(sqm.Ground.Id);
-      var $newSQM = $('<div class="sqm" data-x="' + x + '" data-y="' +y+ '" style="background-image: url(' +url+ ');"></div>');
-      for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-        var item = sqm.Items[id];
-        url = App.getItemURL(item.Id);
-        $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
-      }
+      var $newSQM = Libs_Board.setSQM(sqm,x,y);
       $newSQM.css('margin-left', '-32px').css('opacity', '0');
       $('.map-row[data-y="' +y+ '"]', document).prepend($newSQM.finish().animate({marginLeft: '0px'}, stepTime, 'linear', function(){ $(this).css('opacity', '1'); }));
     }

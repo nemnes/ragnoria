@@ -49,11 +49,15 @@ class WebsocketEventHandler implements MessageComponentInterface
     $params = isset($msg[1]) ? $msg[1] : array();
 
     if(!is_string($request) || preg_match('/[^a-z_\-0-9]/i', $request)) {
-      $this->getApp()->log('Notice: unexpected request: ' . json_encode($request));
+      $msg = json_encode($request). " is not recognized as an internal command.";
+      $this->getApp()->log($msg);
+      MiscHelper::sendToClientConsole($from,$msg);
       return;
     }
     if(!file_exists(Settings::PATH['SERVER']. '/Requests/' .$request. '.php')) {
-      $this->getApp()->log('Notice: trying to call unknown request: ' . json_encode($request));
+      $msg = json_encode($request). " is not recognized as an internal command.";
+      $this->getApp()->log($msg);
+      MiscHelper::sendToClientConsole($from,$msg);
       return;
     }
 
