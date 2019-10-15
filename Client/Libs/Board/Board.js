@@ -18,15 +18,22 @@ var Libs_Board = {
     var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-blocking="' +sqm.Ground.IsBlocking+ '" style="background-image: url(' +url+ ');"></div>');
     for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
       var item = sqm.Items[id];
+      var zindex = parseInt(y+ '' +x);
+      if(item.IsAlwaysTop > 0) {
+        zindex = zindex+1;
+      }
+      if(item.IsAlwaysUnder > 0) {
+        zindex = 0;
+      }
       url = App.getItemURL(item.Id);
-      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
+      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
     }
     return $newSQM;
   },
 
   isWalkable: function() {
     var $sqm = $(this);
-    if(!$sqm || $sqmKeyboard.js.length === 0) {
+    if(!$sqm || $sqm.length === 0) {
       return false;
     }
     if($sqm.data('blocking') > 0) {

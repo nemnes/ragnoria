@@ -7,8 +7,9 @@ var App = {
   run: function () {
     Libs_Console.init();
     Libs_Ping.init();
-    Libs_Keyboard.init();
     Libs_Mouse.init();
+    Libs_Keyboard.init();
+    Libs_Movement.init();
     App.IO = new WebSocket(Config.protocol + '://' +Config.domain+ ':' +Config.port);
     App.IO.onopen = function (e) {
       App.IO_STATUS = 'online';
@@ -20,6 +21,7 @@ var App = {
     };
     App.IO.onclose = function (e) {
       var text = App.IO_STATUS === 'online' ? 'Disconnected' : 'Server is offline';
+      App.IO_STATUS = 'offline';
       Libs_Console.addLog({ msg: text, level: 'critical' });
     }
   },
@@ -30,6 +32,10 @@ var App = {
       return;
     }
     Libs_Console.addLog({ msg: 'Authorization failed', level: 'critical' });
+  },
+
+  refresh: function() {
+    location = location.href;
   },
 
   initialize: function(player, area) {
@@ -48,8 +54,15 @@ var App = {
         html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-blocking="' +sqm.Ground.IsBlocking+ '" style="background-image: url(' +url+ ');">');
         for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
           var item = sqm.Items[id];
+          var zindex = parseInt(y+ '' +x);
+          if(item.IsAlwaysTop > 0) {
+            zindex = zindex+1;
+          }
+          if(item.IsAlwaysUnder > 0) {
+            zindex = 0;
+          }
           url = App.getItemURL(item.Id);
-          html.push('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +y+ '' +x+ '; background-image: url(' +url+ ');"></div>');
+          html.push('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
         }
         html.push('</div>');
       }
@@ -59,45 +72,6 @@ var App = {
     App.MyPlayer = new Player(player);
     App.MyPlayer.$selector = $('<div id="Hero" style="z-index: ' +player.Y+ '' +player.X+ '"><div class="nickname">' +player.Name+ '</div></div>');
     $('.sqm[data-x="' +App.MyPlayer.X+ '"][data-y="' +App.MyPlayer.Y+ '"]').append(App.MyPlayer.$selector);
-
-
-    // document.addEventListener("keydown", function(e) {
-    //   // toggle console
-    //   if (e.keyCode === 192) {
-    //     e.preventDefault();
-    //     Libs_Console.toggleConsole();
-    //   }
-    //
-    //   if (e.keyCode === 38) {
-    //     e.preventDefault();
-    //     if(App.MyPlayer.movementBlocked) {
-    //       return;
-    //     }
-    //     App.emit('Walk', ['North']);
-    //   }
-    //   if (e.keyCode === 40) {
-    //     e.preventDefault();
-    //     if(App.MyPlayer.movementBlocked) {
-    //       return;
-    //     }
-    //     App.emit('Walk', ['South']);
-    //   }
-    //   if (e.keyCode === 39) {
-    //     e.preventDefault();
-    //     if(App.MyPlayer.movementBlocked) {
-    //       return;
-    //     }
-    //     App.emit('Walk', ['East']);
-    //   }
-    //   if (e.keyCode === 37) {
-    //     e.preventDefault();
-    //     if(App.MyPlayer.movementBlocked) {
-    //       return;
-    //     }
-    //     App.emit('Walk', ['West']);
-    //   }
-    // });
-
   },
 
   getFunctionFromString: function(string) {
@@ -115,7 +89,7 @@ var App = {
   },
 
   getItemURL: function(id) {
-    return Config.itemsURL + id + '.png';
+    return Config.itemsURL + id;
   },
 
 };

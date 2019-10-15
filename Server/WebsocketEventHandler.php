@@ -54,7 +54,7 @@ class WebsocketEventHandler implements MessageComponentInterface
       MiscHelper::sendToClientConsole($from,$msg);
       return;
     }
-    if(!file_exists(Settings::PATH['SERVER']. '/Requests/' .$request. '.php')) {
+    if(!file_exists(Settings::PATH['SERVER']. '/Requests/' .$request. '.php') || $request == 'BaseRequest') {
       $msg = json_encode($request). " is not recognized as an internal command.";
       $this->getApp()->log($msg);
       MiscHelper::sendToClientConsole($from,$msg);
@@ -130,8 +130,8 @@ class WebsocketEventHandler implements MessageComponentInterface
       if($this->getCookie($conn, 'PHPSESSID')) {
         $tblPlayer = $this->getApp()->getSQLMapper('tblPlayer');
         $tblPlayer->Name = 'Tester';
-        $tblPlayer->X = 23;
-        $tblPlayer->Y = 23;
+        $tblPlayer->X = 50;
+        $tblPlayer->Y = 50;
         $tblPlayer->save();
         $tblPlayer->Name = 'Tester #' .$tblPlayer->Id;
         $tblPlayer->save();
@@ -140,6 +140,7 @@ class WebsocketEventHandler implements MessageComponentInterface
         $tblPlayerSession->PlayerId = $tblPlayer->Id;
         $tblPlayerSession->PHPSESSID = $this->getCookie($conn, 'PHPSESSID');
         $tblPlayerSession->save();
+        $conn->send(MiscHelper::prepareResponse('App.refresh'));
       }
       // eo
 

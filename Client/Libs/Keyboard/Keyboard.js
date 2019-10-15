@@ -2,25 +2,22 @@ var Libs_Keyboard = {
   ActiveKeys: [],
   
   init: function() {
-    Libs_Keyboard.startWalkingInterval();
-    document.addEventListener("keydown", function(e) {
 
+    // simple bindings
+    document.addEventListener("keydown", function(e) {
+      // disable [tab]
+      if (e.keyCode === 9) {
+        e.preventDefault();
+      }
+      // prevent browser zoom
+      if (e.ctrlKey === true && (e.keyCode === 61 || e.keyCode === 107 || e.keyCode === 173 || e.keyCode === 109  || e.keyCode === 187  || e.keyCode === 189  ) ) {
+        e.preventDefault();
+      }
       // toggle console
       if (e.keyCode === 192) {
         e.preventDefault();
         Libs_Console.toggleConsole();
       }
-
-      // disable [tab]
-      if (e.keyCode === 9) {
-        e.preventDefault();
-      }
-
-      // prevent browser zoom
-      if (e.ctrlKey === true && (e.keyCode === 61 || e.keyCode === 107 || e.keyCode === 173 || e.keyCode === 109  || e.keyCode === 187  || e.keyCode === 189  ) ) {
-        e.preventDefault();
-      }
-
       if(Libs_Console.ActiveConsole) {
         // send console query
         if (e.keyCode === 13) {
@@ -28,49 +25,34 @@ var Libs_Keyboard = {
           Libs_Console.sendQuery();
         }
       }
-
     });
-  },
 
-  startWalkingInterval: function() {
-
-    // interval is required for smooth walking
+    // interval (required for smooth walking)
     setInterval(function() {
-
-      if(!Libs_Console.ActiveConsole) {
-        Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
+      Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
+      if(!Libs_Console.ActiveConsole && App.IO_STATUS === 'online') {
         if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'w', 's', 'a', 'd'])) {
           if (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a")) {
-            if(App.MyPlayer.movementBlocked) {
-              return;
-            }
-            App.emit('Walk', ['West']);
+            Libs_Movement.walk('West');
             return;
           }
           if (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("s")) {
-            if(App.MyPlayer.movementBlocked) {
-              return;
-            }
-            App.emit('Walk', ['South']);
+            Libs_Movement.walk('South');
             return;
           }
           if (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("w")) {
-            if(App.MyPlayer.movementBlocked) {
-              return;
-            }
-            App.emit('Walk', ['North']);
+            Libs_Movement.walk('North');
             return;
           }
           if (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("d")) {
-            if(App.MyPlayer.movementBlocked) {
-              return;
-            }
-            App.emit('Walk', ['East']);
+            Libs_Movement.walk('East');
             return;
           }
         }
+        return;
       }
     }, 25);
+
   },
 
   isClicked: function(key) {

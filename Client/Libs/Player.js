@@ -12,7 +12,7 @@ class Player {
 
   goNorth(area, speed) {
     var _self = App.MyPlayer;
-    var stepTime = 600-(speed*5.5);
+    var stepTime = 600-(speed*5.5)+25;
     var areaWidth = Object.keys(area[Object.keys(area)[0]]).length;
     var areaHeight = Object.keys(area).length;
     _self.movementBlocked = true;
@@ -50,7 +50,7 @@ class Player {
 
   goSouth(area, speed) {
     var _self = App.MyPlayer;
-    var stepTime = 600-(speed*5.5);
+    var stepTime = 600-(speed*5.5)+25;
     var areaWidth = Object.keys(area[Object.keys(area)[0]]).length;
     var areaHeight = Object.keys(area).length;
     _self.movementBlocked = true;
@@ -88,7 +88,7 @@ class Player {
 
   goEast(area, speed) {
     var _self = App.MyPlayer;
-    var stepTime = 600-(speed*5.5);
+    var stepTime = 600-(speed*5.5)+25;
     var areaWidth = Object.keys(area[Object.keys(area)[0]]).length;
     var areaHeight = Object.keys(area).length;
     _self.movementBlocked = true;
@@ -125,7 +125,7 @@ class Player {
 
   goWest(area, speed) {
     var _self = App.MyPlayer;
-    var stepTime = 600-(speed*5.5);
+    var stepTime = 600-(speed*5.5)+25;
     var areaWidth = Object.keys(area[Object.keys(area)[0]]).length;
     var areaHeight = Object.keys(area).length;
     _self.movementBlocked = true;

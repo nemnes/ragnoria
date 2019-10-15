@@ -3,7 +3,7 @@
  * Created by Adam Łożyński
  */
 var MapEditor = {
-  ImagesURL: 'assets/item/',
+  ImagesURL: Config.itemsURL,
   ItemsURL: 'items.json',
   LayersOpacity: false,
   InactiveLayersOpacity: '0.8',
@@ -51,7 +51,7 @@ var MapEditor = {
       var html = [];
       html.push('<div class="item-select" data-item-layer="' +Item.Type+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
       html.push('  <div class="item-select-icon">');
-      html.push('    <img alt="" src="' + MapEditor.ImagesURL + Item.Id + '.png"/>');
+      html.push('    <img alt="" src="' + MapEditor.ImagesURL + Item.Id + '"/>');
       html.push('  </div>');
       html.push('  <div style="float: left; height: 64px; line-height: 64px; padding-left: 10px;">' + Item.Name + '</div>');
       html.push('  <div style="clear: both;"></div>');
@@ -109,7 +109,7 @@ var MapEditor = {
     for(var i=0;i<$Height.val();i++) {
       html.push('<div class="map-row">');
       for(var j=0;j<$Width.val();j++) {
-        var url = MapEditor.ImagesURL+ '1000.png';
+        var url = MapEditor.ImagesURL+ '1000';
         html.push('<div class="sqm" data-x="' +(j+1)+ '" data-y="' +(i+1)+ '" data-item-id="1000" style="background-image: url(' +url+ ');"></div>');
       }
       html.push('</div>');
@@ -182,11 +182,11 @@ var MapEditor = {
       html.push('<div class="map-row">');
       for (var x in row) if (row.hasOwnProperty(x)) {
         var sqm = row[x];
-        var url = MapEditor.ImagesURL + sqm[0] + '.png';
+        var url = MapEditor.ImagesURL + sqm[0];
         html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-item-id="' +sqm[0]+ '" style="background-image: url(' +url+ ');">');
         for(var id in sqm[1]) if (sqm[1].hasOwnProperty(id)) {
           var item = MapEditor.Items[sqm[1][id]];
-          url = MapEditor.ImagesURL + item.Id + '.png';
+          url = MapEditor.ImagesURL + item.Id;
           html.push('<div class="item" data-layer="' +item.Type+ '" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="background-image: url(' +url+ ');"></div>');
         }
         html.push('</div>');
@@ -212,7 +212,7 @@ var MapEditor = {
     var url;
     // Grounds
     if(MapEditor.SelectedItem.Type == 1) {
-      url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id + '.png';
+      url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
       $sqm.data('item-id', MapEditor.SelectedItem.Id);
       $sqm.css('background-image', 'url(' +url+ ')');
       return;
@@ -220,7 +220,7 @@ var MapEditor = {
 
     // Other layers
     var layer = MapEditor.SelectedItem.Type;
-    url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id + '.png';
+    url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
     $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
     var item = '<div class="item" data-layer="' +layer+ '" data-item-id="' +MapEditor.SelectedItem.Id+ '" data-item-size="' +MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>';
     var $a = $sqm.find('.item').not($('#item-preview', document)).filter(function() {
@@ -262,7 +262,7 @@ var MapEditor = {
     $sqm.on('mouseenter', function() {
       var url;
       if(MapEditor.Tool === 1 && MapEditor.SelectedItem) {
-        url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id + '.png';
+        url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
         $('#item-preview', document).remove();
         $(this).append('<div class="item" id="item-preview" data-item-size="' + MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>');
       }

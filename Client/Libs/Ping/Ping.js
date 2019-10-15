@@ -9,8 +9,13 @@ var Libs_Ping = {
     $('body').prepend(Libs_Ping.$);
 
     setInterval(function(){
-      Libs_Ping.LastRequestId++;
-      Libs_Ping.push(Libs_Ping.LastRequestId);
+      if(App.IO_STATUS === 'online') {
+        Libs_Ping.LastRequestId++;
+        Libs_Ping.push(Libs_Ping.LastRequestId);
+      }
+      else {
+        Libs_Ping.$.text('');
+      }
     },1000);
   },
 

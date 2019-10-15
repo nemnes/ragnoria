@@ -13,7 +13,7 @@ class Walk extends BaseRequest
       return;
     }
 
-    $speed = 20;
+    $speed = 25; // in range between 1 to 100
     $player->Locks->Movement = microtime(true) + ((600-($speed*5.5))/1000+0.025);
 
     if($direction === 'North') {

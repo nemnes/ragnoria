@@ -18,6 +18,7 @@ class ItemStructureCollection extends BaseClass
       $structure->IsMoveable = $row->IsMoveable;
       $structure->IsPickupable = $row->IsPickupable;
       $structure->IsAlwaysUnder = $row->IsAlwaysUnder;
+      $structure->IsAlwaysTop = $row->IsAlwaysTop;
       $structure->LightLevel = $row->LightLevel;
       $structure->LightColor = $row->LightColor;
       $this->ItemStructures[$structure->Id] = $structure;

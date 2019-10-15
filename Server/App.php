@@ -64,7 +64,7 @@ class App
 
 }
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 $app = new App();
 include('dependencies.php');
 $app->run();

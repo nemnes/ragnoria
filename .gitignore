@@ -6,3 +6,5 @@ Server/Settings.php
 Tools/MapEditor/saved/
 
 Client/config.js
+
+Tools/MapEditor/config.js

@@ -13,6 +13,7 @@ class Item extends BaseClass
   public $IsMoveable;
   public $IsPickupable;
   public $IsAlwaysUnder; // if true z-index will be 0
+  public $IsAlwaysTop; // if true z-index will be +1
   public $LightLevel;
   public $LightColor;
 
