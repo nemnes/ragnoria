@@ -60,9 +60,9 @@ var Libs_Hero = {
 
           // find map-rows to add
           var mapRowsToAdd = [];
-          for(let y = y_range_first;y<=y_range_last;y++) {
-            if(Libs_Board.$.find('.map-row[data-y="'+y+'"]').length === 0) {
-              mapRowsToAdd.push(y);
+          for(let i = y_range_first;i<=y_range_last;i++) {
+            if(Libs_Board.$.find('.map-row[data-y="'+i+'"]').length === 0) {
+              mapRowsToAdd.push(i);
             }
           }
 
@@ -80,44 +80,44 @@ var Libs_Hero = {
 
           // create new map-rows
           for(let i in mapRowsToAdd) {
-            var y = mapRowsToAdd[i];
-            var $newRow = $('<div class="map-row" data-y="' +y+ '"></div>');
-            if(Libs_Board.$.find('.map-row[data-y="' +(y+1)+ '"]').length > 0) {
-              Libs_Board.$.find('.map-row[data-y="' +(y+1)+ '"]').before($newRow);
+            var mapRowY = mapRowsToAdd[i];
+            var $newRow = $('<div class="map-row" data-y="' +mapRowY+ '"></div>');
+            if(Libs_Board.$.find('.map-row[data-y="' +(mapRowY+1)+ '"]').length > 0) {
+              Libs_Board.$.find('.map-row[data-y="' +(mapRowY+1)+ '"]').before($newRow);
               continue;
             }
-            if(Libs_Board.$.find('.map-row[data-y="' +(y-1)+ '"]').length > 0) {
-              Libs_Board.$.find('.map-row[data-y="' +(y-1)+ '"]').after($newRow);
+            if(Libs_Board.$.find('.map-row[data-y="' +(mapRowY-1)+ '"]').length > 0) {
+              Libs_Board.$.find('.map-row[data-y="' +(mapRowY-1)+ '"]').after($newRow);
               continue;
             }
-            if(y_min_atm && y < y_min_atm) {
+            if(y_min_atm && mapRowY < y_min_atm) {
               Libs_Board.$.find('.map-row[data-y="' +y_min_atm+ '"]').before($newRow);
               continue;
             }
-            if(y_max_atm && y > y_max_atm) {
+            if(y_max_atm && mapRowY > y_max_atm) {
               Libs_Board.$.find('.map-row[data-y="' +y_max_atm+ '"]').after($newRow);
               continue;
             }
             Libs_Board.$.append($newRow);
           }
 
-          for (var [y, row] of Object.entries(area)) {
-            for (var [x, sqm] of Object.entries(row)) {
-              x = parseInt(x);
-              y = parseInt(y);
-              if(Libs_Board.$.find('.sqm[data-x="' +x+ '"][data-y="' +y+ '"]').length > 0) {
+          for (var [area_y, row] of Object.entries(area)) {
+            for (var [area_x, sqm] of Object.entries(row)) {
+              area_x = parseInt(area_x);
+              area_y = parseInt(area_y);
+              if(Libs_Board.$.find('.sqm[data-x="' +area_x+ '"][data-y="' +area_y+ '"]').length > 0) {
                 continue;
               }
-              var $newSQM = Libs_Board.setSQM(sqm,x,y);
-              if(Libs_Board.$.find('.sqm[data-x="' +(x+1)+ '"][data-y="' +y+ '"]').length > 0) {
-                Libs_Board.$.find('.sqm[data-x="' +(x+1)+ '"][data-y="' +y+ '"]').before($newSQM);
+              var $newSQM = Libs_Board.setSQM(sqm,area_x,area_y);
+              if(Libs_Board.$.find('.sqm[data-x="' +(area_x+1)+ '"][data-y="' +area_y+ '"]').length > 0) {
+                Libs_Board.$.find('.sqm[data-x="' +(area_x+1)+ '"][data-y="' +area_y+ '"]').before($newSQM);
                 continue;
               }
-              if(Libs_Board.$.find('.sqm[data-x="' +(x-1)+ '"][data-y="' +y+ '"]').length > 0) {
-                Libs_Board.$.find('.sqm[data-x="' +(x-1)+ '"][data-y="' +y+ '"]').after($newSQM);
+              if(Libs_Board.$.find('.sqm[data-x="' +(area_x-1)+ '"][data-y="' +area_y+ '"]').length > 0) {
+                Libs_Board.$.find('.sqm[data-x="' +(area_x-1)+ '"][data-y="' +area_y+ '"]').after($newSQM);
                 continue;
               }
-              Libs_Board.$.find('.map-row[data-y="' +y+ '"]').append($newSQM);
+              Libs_Board.$.find('.map-row[data-y="' +area_y+ '"]').append($newSQM);
             }
           }
 
@@ -125,7 +125,7 @@ var Libs_Hero = {
             mapRowsToRemove[i].remove();
           }
 
-          Libs_Board.$.find(".map-row[data-y='" +Y+ "'] .sqm[data-x='" +X+ "'][data-y='" +Y+ "']").append(Libs_Hero.$);
+          Libs_Board.$.find(".map-row[data-y='" +Y+ "'] .sqm[data-x='" +X+ "'][data-y='" +Y+ "']").prepend(Libs_Hero.$);
         }
         Libs_Board.$.find('.sqm').each(function(){
           if(typeof area[parseInt($(this).data('y'))][parseInt($(this).data('x'))] == 'undefined') {
@@ -146,10 +146,10 @@ var Libs_Hero = {
     Libs_Hero.startWalkingAnimation(Libs_Hero.StepTime());
 
     setTimeout(function(){
-      if(direction === 'North') Libs_Hero.$.css('z-index', (Libs_Hero.Y-1) +''+Libs_Hero.X);
-      if(direction === 'South') Libs_Hero.$.css('z-index', (Libs_Hero.Y+1) +''+Libs_Hero.X);
-      if(direction === 'East') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+Libs_Hero.X+1);
-      if(direction === 'West') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+Libs_Hero.X-1);
+      if(direction === 'North') Libs_Hero.$.css('z-index', (Libs_Hero.Y-1) +''+(Libs_Hero.X));
+      if(direction === 'South') Libs_Hero.$.css('z-index', (Libs_Hero.Y+1) +''+(Libs_Hero.X));
+      if(direction === 'East') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+(Libs_Hero.X+1));
+      if(direction === 'West') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+(Libs_Hero.X-1));
     }, Libs_Hero.StepTime()/2);
 
     if(direction === 'North') {
