@@ -140,7 +140,7 @@ class WebsocketEventHandler implements MessageComponentInterface
         $tblPlayerSession->PlayerId = $tblPlayer->Id;
         $tblPlayerSession->PHPSESSID = $this->getCookie($conn, 'PHPSESSID');
         $tblPlayerSession->save();
-        $conn->send(MiscHelper::prepareResponse('App.refresh'));
+        $conn->send(MiscHelper::prepareResponse('Libs_Misc.refresh'));
       }
       // eo
 

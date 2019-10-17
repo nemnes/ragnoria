@@ -9,7 +9,7 @@ var Libs_Ping = {
     $('body').prepend(Libs_Ping.$);
 
     setInterval(function(){
-      if(App.IO_STATUS === 'online') {
+      if(App.Connected) {
         Libs_Ping.LastRequestId++;
         Libs_Ping.push(Libs_Ping.LastRequestId);
       }

@@ -9,6 +9,7 @@ class Walk extends BaseRequest
   public function initialize(Player $player, $direction)
   {
     if($player->Locks->Movement > microtime(true)) {
+      $player->send('Libs_Hero.confirmStep', [false]);
       $this->getApp()->log($player->Name. ' - movement locked');
       return;
     }
@@ -18,24 +19,29 @@ class Walk extends BaseRequest
 
     if($direction === 'North') {
       if($player->goNorth()) {
-        $player->send('App.MyPlayer.goNorth', [$player->getArea(),$speed]);
+        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
+        return;
       }
     }
     if($direction === 'South') {
       if($player->goSouth()) {
-        $player->send('App.MyPlayer.goSouth', [$player->getArea(),$speed]);
+        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
+        return;
       }
     }
     if($direction === 'East') {
       if($player->goEast()) {
-        $player->send('App.MyPlayer.goEast', [$player->getArea(),$speed]);
+        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
+        return;
       }
     }
     if($direction === 'West') {
       if($player->goWest()) {
-        $player->send('App.MyPlayer.goWest', [$player->getArea(),$speed]);
+        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
+        return;
       }
     }
 
+    $player->send('Libs_Hero.confirmStep', [false]);
   }
 }
