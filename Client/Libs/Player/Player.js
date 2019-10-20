@@ -106,7 +106,6 @@ var Libs_Player = {
     let $player = Libs_Board.$.find('.player[data-id="' +id+ '"]');
     Libs_Player.Player[id].walkingAnimation = setTimeout(function(){
       $player.css('background-position-x', '0px');
-      Libs_Player.Player[id].walkingAnimation = false;
     }, 50);
   },
 
