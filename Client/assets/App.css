@@ -22,8 +22,7 @@ body {
   max-height: 32px;
   user-select: none;
 }
-.sqm:hover .item:last-child,
-.sqm:hover #Hero {
+.item.highlight {
   opacity: 0.8;
   filter: brightness(250%);
   mix-blend-mode: luminosity;
@@ -63,4 +62,36 @@ body {
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%) scale(2.0);
+}
+.player {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 64px;
+  margin-left: -40px;
+  margin-top: -40px;
+  background-image: url('../assets/outfit.png');
+  pointer-events: none;
+}
+.player .nickname {
+  font-size: 7px;
+  font-family: 'Tahoma';
+  font-weight: bold;
+  position: absolute;
+  left: 0px;
+  top: 20px;
+  right: -32px;
+  text-align: center;
+  color: #fff;
+
+  text-shadow:
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000;
 }

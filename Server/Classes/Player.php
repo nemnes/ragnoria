@@ -79,4 +79,23 @@ class Player extends Creature
     }
     return $area;
   }
+
+  public function getPlayersOnArea()
+  {
+    $factor_x = (ceil(Settings::GAME['CLIENT_SQM_WIDTH']/2)-1);
+    $factor_y = (ceil(Settings::GAME['CLIENT_SQM_HEIGHT']/2)-1);
+    $sqm_range_x = range(($this->X - $factor_x),($this->X + $factor_x));
+    $sqm_range_y = range(($this->Y - $factor_y),($this->Y + $factor_y));
+    $players = array();
+    /** @var Player $player */
+    foreach($this->getApp()->getWorld()->getPlayers() as $player) {
+      if($player->Id === $this->Id) {
+        continue;
+      }
+      if(in_array($player->X, $sqm_range_x) && in_array($player->Y, $sqm_range_y)) {
+        $players[] = $player;
+      }
+    }
+    return $players;
+  }
 }

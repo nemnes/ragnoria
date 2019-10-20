@@ -79,7 +79,13 @@ var Libs_Board = {
         itemBlock = true;
       }
     });
-    if(itemBlock) {
+
+    var playerBlock = false;
+    if($sqm.find('.player').length > 0) {
+      playerBlock = true;
+    }
+
+    if(itemBlock || playerBlock) {
       return false;
     }
     return true;

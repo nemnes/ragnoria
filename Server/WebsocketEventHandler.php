@@ -154,7 +154,7 @@ class WebsocketEventHandler implements MessageComponentInterface
     $player = $this->getApp()->newPlayer($tblPlayerSession->PlayerId, $conn);
     $area = $player->getArea();
 
-    $conn->send(MiscHelper::prepareResponse('App.authorization', ['pass', ['player' =>$player, 'area' => $area]]));
+    $conn->send(MiscHelper::prepareResponse('App.authorization', ['pass', ['hero' =>$player, 'area' => $area, 'players' => $player->getPlayersOnArea()]]));
     return true;
   }
 }

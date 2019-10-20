@@ -16,30 +16,36 @@ class Walk extends BaseRequest
 
     $speed = 25; // in range between 1 to 100
     $player->Locks->Movement = microtime(true) + ((600-($speed*5.5))/1000+0.025);
+    $playersOnAreaBeforeStep = $player->getPlayersOnArea();
+    $playersStillOnArea = array();
 
+    $stepDone = false;
     if($direction === 'North') {
-      if($player->goNorth()) {
-        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
-        return;
-      }
+      $stepDone = $player->goNorth();
     }
     if($direction === 'South') {
-      if($player->goSouth()) {
-        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
-        return;
-      }
+      $stepDone = $player->goSouth();
     }
     if($direction === 'East') {
-      if($player->goEast()) {
-        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
-        return;
-      }
+      $stepDone = $player->goEast();
     }
     if($direction === 'West') {
-      if($player->goWest()) {
-        $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea()]);
-        return;
+      $stepDone = $player->goWest();
+    }
+
+    if($stepDone) {
+      $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea()]);
+      /** @var Player $playerOnArea */
+      foreach($player->getPlayersOnArea() as $playerOnArea) {
+        $playerOnArea->send('Libs_Player.move', [$player, $direction]);
+        $playersStillOnArea[] = $playerOnArea->Id;
       }
+      foreach($playersOnAreaBeforeStep as $playerOnArea) {
+        if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
+          $playerOnArea->send('Libs_Player.remove', [$player->Id]);
+        }
+      }
+      return;
     }
 
     $player->send('Libs_Hero.confirmStep', [false]);

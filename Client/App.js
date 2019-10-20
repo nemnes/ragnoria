@@ -28,15 +28,18 @@ var App = {
 
   authorization: function(state, params) {
     if(state === 'pass') {
-      App.initialize(params.player, params.area);
+      App.initialize(params.hero, params.area, params.players);
       return;
     }
     Libs_Console.addLog({ msg: 'Authorization failed', level: 'critical' });
   },
 
-  initialize: function(player, area) {
+  initialize: function(hero, area, players) {
     Libs_Board.init(area);
-    Libs_Hero.init(player);
+    Libs_Hero.init(hero);
+    for(let i in players) if (players.hasOwnProperty(i)) {
+      Libs_Player.create(players[i]);
+    }
   },
 
   emit: function(method, args = []) {

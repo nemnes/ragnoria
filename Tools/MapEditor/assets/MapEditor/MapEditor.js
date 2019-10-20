@@ -221,7 +221,10 @@ var MapEditor = {
     // Other layers
     var layer = MapEditor.SelectedItem.Type;
     url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
+
+    // TODO: ignore line below while holding "shift" key
     $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
+
     var item = '<div class="item" data-layer="' +layer+ '" data-item-id="' +MapEditor.SelectedItem.Id+ '" data-item-size="' +MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>';
     var $a = $sqm.find('.item').not($('#item-preview', document)).filter(function() {
       return parseInt($(this).data('layer')) < layer;

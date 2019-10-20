@@ -21,33 +21,15 @@ var Libs_Hero = {
     Libs_Hero.X = parseInt(params.X);
     Libs_Hero.Y = parseInt(params.Y);
     Libs_Hero.Speed = parseInt(25);
-    Libs_Hero.$ = $('<div id="Hero" style="z-index: ' +params.Y+ '' +params.X+ '"><div class="nickname">' +params.Name+ '</div></div>');
+    Libs_Hero.$ = $('<div id="Hero" class="player" data-id="' +params.Id+ '" data-nickname="' +params.Name+ '" style="z-index: ' +params.Y+ '' +params.X+ '"><div class="nickname">' +params.Name+ '</div></div>');
     $('.sqm[data-x="' +Libs_Hero.X+ '"][data-y="' +Libs_Hero.Y+ '"]').append(Libs_Hero.$);
   },
 
-  rotate: function(dir) {
-    switch(dir) {
-      case 'North':
-        Libs_Hero.$.css('background-position-y', -64+'px');
-        break;
-      case 'South':
-        Libs_Hero.$.css('background-position-y', '0px');
-        break;
-      case 'East':
-        Libs_Hero.$.css('background-position-y', -128+'px');
-        break;
-      case 'West':
-        Libs_Hero.$.css('background-position-y', -192+'px');
-        break;
-    }
-  },
-
-  confirmStep: function(positive, X, Y, area) {
+  confirmStep: function(positive, X, Y, area, players) {
     var waitInt = setInterval(function(){
-      if(Libs_Hero.walking === false) {
+      if(Libs_Player.Player[Libs_Hero.Id].walking === false) {
         clearInterval(waitInt);
         if(positive) {
-
           Libs_Hero.X = parseInt(X);
           Libs_Hero.Y = parseInt(Y);
 
@@ -58,13 +40,6 @@ var Libs_Hero = {
           var x_range_first = Libs_Hero.X-Math.floor(areaWidth/2);
           var x_range_last = (x_range_first+areaWidth)-1;
 
-          // find map-rows to add
-          var mapRowsToAdd = [];
-          for(let i = y_range_first;i<=y_range_last;i++) {
-            if(Libs_Board.$.find('.map-row[data-y="'+i+'"]').length === 0) {
-              mapRowsToAdd.push(i);
-            }
-          }
 
           // find map-rows to remove
           var mapRowsToRemove = [];
@@ -79,26 +54,28 @@ var Libs_Hero = {
           });
 
           // create new map-rows
-          for(let i in mapRowsToAdd) {
-            var mapRowY = mapRowsToAdd[i];
-            var $newRow = $('<div class="map-row" data-y="' +mapRowY+ '"></div>');
-            if(Libs_Board.$.find('.map-row[data-y="' +(mapRowY+1)+ '"]').length > 0) {
-              Libs_Board.$.find('.map-row[data-y="' +(mapRowY+1)+ '"]').before($newRow);
-              continue;
+          for(let i = y_range_first;i<=y_range_last;i++) {
+            if(Libs_Board.$.find('.map-row[data-y="'+i+'"]').length === 0) {
+              var mapRowY = i;
+              var $newRow = $('<div class="map-row" data-y="' + mapRowY + '"></div>');
+              if (Libs_Board.$.find('.map-row[data-y="' + (mapRowY + 1) + '"]').length > 0) {
+                Libs_Board.$.find('.map-row[data-y="' + (mapRowY + 1) + '"]').before($newRow);
+                continue;
+              }
+              if (Libs_Board.$.find('.map-row[data-y="' + (mapRowY - 1) + '"]').length > 0) {
+                Libs_Board.$.find('.map-row[data-y="' + (mapRowY - 1) + '"]').after($newRow);
+                continue;
+              }
+              if (y_min_atm && mapRowY < y_min_atm) {
+                Libs_Board.$.find('.map-row[data-y="' + y_min_atm + '"]').before($newRow);
+                continue;
+              }
+              if (y_max_atm && mapRowY > y_max_atm) {
+                Libs_Board.$.find('.map-row[data-y="' + y_max_atm + '"]').after($newRow);
+                continue;
+              }
+              Libs_Board.$.append($newRow);
             }
-            if(Libs_Board.$.find('.map-row[data-y="' +(mapRowY-1)+ '"]').length > 0) {
-              Libs_Board.$.find('.map-row[data-y="' +(mapRowY-1)+ '"]').after($newRow);
-              continue;
-            }
-            if(y_min_atm && mapRowY < y_min_atm) {
-              Libs_Board.$.find('.map-row[data-y="' +y_min_atm+ '"]').before($newRow);
-              continue;
-            }
-            if(y_max_atm && mapRowY > y_max_atm) {
-              Libs_Board.$.find('.map-row[data-y="' +y_max_atm+ '"]').after($newRow);
-              continue;
-            }
-            Libs_Board.$.append($newRow);
           }
 
           for (var [area_y, row] of Object.entries(area)) {
@@ -126,12 +103,16 @@ var Libs_Hero = {
           }
 
           Libs_Board.$.find(".map-row[data-y='" +Y+ "'] .sqm[data-x='" +X+ "'][data-y='" +Y+ "']").prepend(Libs_Hero.$);
-        }
-        Libs_Board.$.find('.sqm').each(function(){
-          if(typeof area[parseInt($(this).data('y'))][parseInt($(this).data('x'))] == 'undefined') {
-            $(this).remove();
+          Libs_Board.$.find('.sqm').each(function(){
+            if(typeof area[parseInt($(this).data('y'))][parseInt($(this).data('x'))] == 'undefined') {
+              $(this).remove();
+            }
+          });
+
+          for(let i in players) if (players.hasOwnProperty(i)) {
+            Libs_Player.create(players[i]);
           }
-        });
+        }
         Libs_Board.$.css('margin-top', '0').css('margin-left', '0');
         Libs_Hero.$.css('top', '0').css('left', '0');
         Libs_Hero.movementBlocked = false;
@@ -140,10 +121,11 @@ var Libs_Hero = {
   },
 
   go: function (direction) {
+    if(!Libs_Player.Player[Libs_Hero.Id]) { Libs_Player.Player[Libs_Hero.Id] = {}; }
     Libs_Hero.movementBlocked = true;
-    Libs_Hero.walking = true;
-    Libs_Hero.rotate(direction);
-    Libs_Hero.startWalkingAnimation(Libs_Hero.StepTime());
+    Libs_Player.Player[Libs_Hero.Id].walking = true;
+    Libs_Player.rotate(Libs_Hero.Id, direction);
+    Libs_Player.startWalkingAnimation(Libs_Hero.Id, Libs_Hero.StepTime());
 
     setTimeout(function(){
       if(direction === 'North') Libs_Hero.$.css('z-index', (Libs_Hero.Y-1) +''+(Libs_Hero.X));
@@ -155,53 +137,27 @@ var Libs_Hero = {
     if(direction === 'North') {
       Libs_Board.$.finish().animate({ marginTop: '64px' }, Libs_Hero.StepTime(), 'linear');
       Libs_Hero.$.finish().animate({ top: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Hero.stopWalkingAnimation();
+        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
       });
     }
     if(direction === 'South') {
       Libs_Board.$.finish().animate({ marginTop: '-64px' }, Libs_Hero.StepTime(), 'linear');
       Libs_Hero.$.finish().animate({ top: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Hero.stopWalkingAnimation();
+        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
       });
     }
     if(direction === 'East') {
       Libs_Board.$.finish().animate({ marginLeft: '-64px' }, Libs_Hero.StepTime(), 'linear');
       Libs_Hero.$.finish().animate({ left: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Hero.stopWalkingAnimation();
+        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
       });
     }
     if(direction === 'West') {
       Libs_Board.$.finish().animate({ marginLeft: '64px' }, Libs_Hero.StepTime(), 'linear');
       Libs_Hero.$.finish().animate({ left: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Hero.stopWalkingAnimation();
+        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
       });
     }
   },
-
-  startWalkingAnimation: function(stepTime) {
-    clearTimeout(Libs_Hero.walkingAnimation);
-    clearInterval(Libs_Hero.walkingAnimation);
-    Libs_Hero.$.css('background-position-x', -2*64+'px');
-    Libs_Hero.walkingAnimation = setInterval(function(){
-      if(Libs_Hero.$.css('background-position-x') === '-128px') {
-        Libs_Hero.$.css('background-position-x', -1*64+'px');
-      }
-      else {
-        Libs_Hero.$.css('background-position-x', -2*64+'px');
-      }
-    }, (stepTime/2)+25);
-  },
-
-  stopWalkingAnimation: function() {
-    clearTimeout(Libs_Hero.walkingAnimation);
-    clearInterval(Libs_Hero.walkingAnimation);
-    Libs_Hero.walking = false;
-
-    Libs_Hero.walkingAnimation = setTimeout(function(){
-      Libs_Hero.$.css('background-position-x', '0px');
-      Libs_Hero.walkingAnimation = false;
-    }, 25);
-  },
-
 
 };

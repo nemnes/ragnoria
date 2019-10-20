@@ -31,11 +31,17 @@ class World extends BaseClass
 
   public function addPlayer(Player $player)
   {
+    foreach($player->getPlayersOnArea() as $playerOnArea) {
+      $playerOnArea->send('Libs_Player.move', [$player, '-']);
+    }
     $this->Players[$player->Id] = $player;
   }
 
   public function removePlayer(Player $player)
   {
+    foreach($player->getPlayersOnArea() as $playerOnArea) {
+      $playerOnArea->send('Libs_Player.remove', [$player->Id]);
+    }
     if(isset($this->Players[$player->Id])) {
       unset($this->Players[$player->Id]);
       return true;
@@ -49,6 +55,11 @@ class World extends BaseClass
       return $this->Players[$playerId];
     }
     return false;
+  }
+
+  public function getPlayers()
+  {
+    return $this->Players;
   }
 
   public function getPlayersOnline()
