@@ -9,7 +9,7 @@ class Walk extends BaseRequest
   public function initialize(Player $player, $direction)
   {
     if($player->Locks->Movement > microtime(true)) {
-      $player->send('Libs_Hero.confirmStep', [false]);
+      $player->send('Libs_Movement.confirmStep', [false]);
       $this->getApp()->log($player->Name. ' - movement locked');
       return;
     }
@@ -34,7 +34,7 @@ class Walk extends BaseRequest
     }
 
     if($stepDone) {
-      $player->send('Libs_Hero.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea()]);
+      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea()]);
       /** @var Player $playerOnArea */
       foreach($player->getPlayersOnArea() as $playerOnArea) {
         $playerOnArea->send('Libs_Player.move', [$player, $direction]);
@@ -48,6 +48,6 @@ class Walk extends BaseRequest
       return;
     }
 
-    $player->send('Libs_Hero.confirmStep', [false]);
+    $player->send('Libs_Movement.confirmStep', [false]);
   }
 }

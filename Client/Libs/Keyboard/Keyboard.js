@@ -25,6 +25,12 @@ var Libs_Keyboard = {
           Libs_Console.sendQuery();
         }
       }
+      else {
+        // prevent default for walking keys
+        if (e.keyCode === 40 || e.keyCode === 37|| e.keyCode === 39 || e.keyCode === 17) {
+          e.preventDefault();
+        }
+      }
     });
 
     // interval (required for smooth walking)
@@ -32,6 +38,24 @@ var Libs_Keyboard = {
       Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
       if(!Libs_Console.ActiveConsole && App.Connected) {
         if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'w', 's', 'a', 'd'])) {
+
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a"))) {
+            Libs_Movement.rotate('West');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("s"))) {
+            Libs_Movement.rotate('South');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("w"))) {
+            Libs_Movement.rotate('North');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("d"))) {
+            Libs_Movement.rotate('East');
+            return;
+          }
+
           if (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a")) {
             Libs_Movement.walk('West');
             return;

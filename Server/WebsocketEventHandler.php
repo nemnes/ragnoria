@@ -5,6 +5,7 @@ namespace Server;
 use Libs\MiscHelper;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
+use Server\Classes\Player;
 
 class WebsocketEventHandler implements MessageComponentInterface
 {
@@ -146,6 +147,7 @@ class WebsocketEventHandler implements MessageComponentInterface
 
       return false;
     }
+    /** @var Player $player */
     if($player = $this->getApp()->getWorld()->getPlayer($tblPlayerSession->PlayerId)) {
       $this->clients->detach($player->getConnection());
       $player->logout();

@@ -33,6 +33,7 @@ class World extends BaseClass
   {
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.move', [$player, '-']);
+      $playerOnArea->send('Libs_Effect.run', [1, $player->X, $player->Y]);
     }
     $this->Players[$player->Id] = $player;
   }

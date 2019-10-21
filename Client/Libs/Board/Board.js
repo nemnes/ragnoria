@@ -36,6 +36,9 @@ var Libs_Board = {
     html.push('</div>');
     Libs_Board.$ = $(html.join(''));
     $('body').append(Libs_Board.$);
+    $('body').append('<div id="map-overlay"></div>');
+    $('#map-overlay').width((Libs_Board.$.width()-64));
+    $('#map-overlay').height((Libs_Board.$.height()-64));
   },
 
   getSQM: function(x,y) {
@@ -89,6 +92,6 @@ var Libs_Board = {
       return false;
     }
     return true;
-  }
+  },
 
 };

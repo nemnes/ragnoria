@@ -80,7 +80,7 @@ class Player extends Creature
     return $area;
   }
 
-  public function getPlayersOnArea()
+  public function getPlayersOnArea($ignoreActivePlayer = true)
   {
     $factor_x = (ceil(Settings::GAME['CLIENT_SQM_WIDTH']/2)-1);
     $factor_y = (ceil(Settings::GAME['CLIENT_SQM_HEIGHT']/2)-1);
@@ -89,7 +89,7 @@ class Player extends Creature
     $players = array();
     /** @var Player $player */
     foreach($this->getApp()->getWorld()->getPlayers() as $player) {
-      if($player->Id === $this->Id) {
+      if($ignoreActivePlayer && $player->Id === $this->Id) {
         continue;
       }
       if(in_array($player->X, $sqm_range_x) && in_array($player->Y, $sqm_range_y)) {

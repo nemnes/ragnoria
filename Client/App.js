@@ -40,6 +40,7 @@ var App = {
     for(let i in players) if (players.hasOwnProperty(i)) {
       Libs_Player.create(players[i]);
     }
+    Libs_Effect.run(1,hero.X,hero.Y);
   },
 
   emit: function(method, args = []) {
