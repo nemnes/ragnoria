@@ -13,6 +13,7 @@ session_start();
   <link rel="stylesheet" type="text/css" href="Libs/Ping/Ping.css">
   <link rel="stylesheet" type="text/css" href="Libs/Board/Board.css">
   <link rel="stylesheet" type="text/css" href="Libs/Effect/Effect.css">
+  <link rel="stylesheet" type="text/css" href="Libs/Chat/Chat.css">
 
   <script src="assets/jquery/jquery-3.4.1.js"></script>
   <script src="assets/jquery/jquery-ui-1.12.1.js"></script>
@@ -21,6 +22,7 @@ session_start();
 <body>
   <script src="config.js"></script>
   <script src="App.js"></script>
+  <script src="Libs/Misc/Misc.js"></script>
   <script src="Libs/Console/Console.js"></script>
   <script src="Libs/Ping/Ping.js"></script>
   <script src="Libs/Board/Board.js"></script>
@@ -30,7 +32,7 @@ session_start();
   <script src="Libs/Keyboard/Keyboard.js"></script>
   <script src="Libs/Movement/Movement.js"></script>
   <script src="Libs/Effect/Effect.js"></script>
-  <script src="Libs/Misc/Misc.js"></script>
+  <script src="Libs/Chat/Chat.js"></script>
   <script>
     window.onload = function () {
       App.run();

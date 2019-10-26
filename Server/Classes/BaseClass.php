@@ -20,6 +20,7 @@ abstract class BaseClass
     return $this->App;
   }
 
+  /** @return World */
   public function getWorld()
   {
     return $this->getApp()->getWorld();

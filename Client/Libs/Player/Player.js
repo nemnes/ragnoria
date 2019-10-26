@@ -61,7 +61,7 @@ var Libs_Player = {
   },
 
   remove: function(id) {
-    Libs_Board.$.find('.player[data-id="' +id+ '"]').remove();
+    Libs_Board.$.find('.player[data-id="' +id+ '"]').finish().remove();
   },
 
   rotate: function(id, direction) {

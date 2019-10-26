@@ -42,6 +42,7 @@ class World extends BaseClass
   {
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.remove', [$player->Id]);
+      $playerOnArea->send('Libs_Effect.run', [2, $player->X, $player->Y]);
     }
     if(isset($this->Players[$player->Id])) {
       unset($this->Players[$player->Id]);

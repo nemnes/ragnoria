@@ -5,40 +5,55 @@ var Libs_Keyboard = {
 
     // simple bindings
     document.addEventListener("keydown", function(e) {
+
       // disable [tab]
       if (e.keyCode === 9) {
         e.preventDefault();
       }
+
       // prevent browser zoom
       if (e.ctrlKey === true && (e.keyCode === 61 || e.keyCode === 107 || e.keyCode === 173 || e.keyCode === 109  || e.keyCode === 187  || e.keyCode === 189  ) ) {
         e.preventDefault();
       }
-      // toggle console
-      if (e.keyCode === 192) {
-        e.preventDefault();
-        Libs_Console.toggleConsole();
-      }
-      if(Libs_Console.ActiveConsole) {
+
+      if(Libs_Console.isActive()) {
         // send console query
         if (e.keyCode === 13) {
           e.preventDefault();
           Libs_Console.sendQuery();
         }
       }
-      else {
+
+      if(!Libs_Console.isActive()) {
+        // toggle chat
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          Libs_Chat.toggle();
+        }
+      }
+
+      if(!Libs_Chat.isActive()) {
+        // toggle console
+        if (e.keyCode === 192) {
+          e.preventDefault();
+          Libs_Console.toggle();
+        }
+      }
+
+      if(!Libs_Chat.isActive() && !Libs_Console.isActive()) {
         // prevent default for walking keys
         if (e.keyCode === 40 || e.keyCode === 37|| e.keyCode === 39 || e.keyCode === 17) {
           e.preventDefault();
         }
       }
+
     });
 
     // interval (required for smooth walking)
     setInterval(function() {
       Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
-      if(!Libs_Console.ActiveConsole && App.Connected) {
+      if(!Libs_Console.isActive() && !Libs_Chat.isActive() && App.Connected) {
         if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'w', 's', 'a', 'd'])) {
-
           if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a"))) {
             Libs_Movement.rotate('West');
             return;
@@ -55,7 +70,6 @@ var Libs_Keyboard = {
             Libs_Movement.rotate('East');
             return;
           }
-
           if (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a")) {
             Libs_Movement.walk('West');
             return;

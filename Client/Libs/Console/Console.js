@@ -3,8 +3,6 @@ var Libs_Console = {
   $_Content: null,
   $_Input: null,
 
-  ActiveConsole: false,
-
   init: function () {
     var html = [];
     html.push('<div id="console">');
@@ -33,29 +31,30 @@ var Libs_Console = {
     }
 
     if(params.level === 'critical') {
-      Libs_Console.showConsole();
+      Libs_Console.show();
     }
   },
 
-  showConsole: function() {
-    Libs_Console.ActiveConsole = true;
+  isActive: function() {
+    return !!Libs_Console.$.is(":visible");
+  },
+
+  show: function() {
     Libs_Console.$.slideDown(200);
     Libs_Console.$_Content.scrollTop(Libs_Console.$_Content.prop("scrollHeight"));
     Libs_Console.$_Input.focus().val('');
   },
 
-  hideConsole: function() {
-    Libs_Console.ActiveConsole = false;
-    var $console = $('#console');
-    $console.slideUp(200);
+  hide: function() {
+    Libs_Console.$.slideUp(200);
   },
 
-  toggleConsole: function() {
+  toggle: function() {
     if(Libs_Console.$.is(":visible")) {
-      Libs_Console.hideConsole();
+      Libs_Console.hide();
     }
     else {
-      Libs_Console.showConsole();
+      Libs_Console.show();
     }
   },
 

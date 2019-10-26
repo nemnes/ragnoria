@@ -1,0 +1,36 @@
+.chat {
+  display: none;
+}
+.chat .chat-input {
+  display: none
+}
+
+.chat.active {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+}
+.chat.active .chat-input {
+  display: block;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  border: 0;
+  color: #fff;
+  text-align: center;
+  font-size: 24px;
+  text-shadow: 0 0 5px #000,
+  0 0 5px #000,
+  0 0 5px #000,
+  0 0 5px #000,
+  0 0 5px #000;
+}
+.chat.active .chat-input::selection {
+  background: rgba(0,0,0,0.5);
+  color: rgba(255,255,255,0.5);
+}

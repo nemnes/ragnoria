@@ -6,10 +6,8 @@ var App = {
 
   run: function () {
     Libs_Console.init();
-    Libs_Ping.init();
     Libs_Mouse.init();
     Libs_Keyboard.init();
-    Libs_Movement.init();
     App.IO = new WebSocket(Config.protocol + '://' +Config.domain+ ':' +Config.port);
     App.IO.onopen = function (e) {
       App.Connected = true;
@@ -35,8 +33,11 @@ var App = {
   },
 
   initialize: function(hero, area, players) {
+    Libs_Ping.init();
+    Libs_Movement.init();
     Libs_Board.init(area);
     Libs_Hero.init(hero);
+    Libs_Chat.init();
     for(let i in players) if (players.hasOwnProperty(i)) {
       Libs_Player.create(players[i]);
     }

@@ -2,6 +2,8 @@ var Libs_Effect = {
 
   // login
   1: {frames: 7, speed: 60},
+  // logout
+  2: {frames: 7, speed: 50},
 
   run: function(id,x,y) {
     if(typeof Libs_Effect[id] !== 'object') {
