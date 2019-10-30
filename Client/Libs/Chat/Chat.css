@@ -34,3 +34,27 @@
   background: rgba(0,0,0,0.5);
   color: rgba(255,255,255,0.5);
 }
+
+.message {
+  position: absolute;
+  left: -64px;
+  bottom: 40px;
+  width: 145px;
+  font-size: 7px;
+  font-family: 'Tahoma';
+  font-weight: bold;
+  color: #ffe600;
+  text-align: center;
+  text-shadow:
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000,
+      0 0 0.75px #000;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  z-index: 9999999;
+}

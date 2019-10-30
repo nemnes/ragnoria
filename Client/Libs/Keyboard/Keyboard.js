@@ -53,7 +53,7 @@ var Libs_Keyboard = {
     setInterval(function() {
       Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
       if(!Libs_Console.isActive() && !Libs_Chat.isActive() && App.Connected) {
-        if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'w', 's', 'a', 'd'])) {
+        if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down'])) {
           if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a"))) {
             Libs_Movement.rotate('West');
             return;

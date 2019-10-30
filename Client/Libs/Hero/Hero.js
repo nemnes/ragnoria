@@ -10,9 +10,6 @@ var Libs_Hero = {
   StepTime: function() {
     return 600-(Libs_Hero.Speed*5.5)+25;
   },
-  movementBlocked: false,
-  walkingAnimation: false,
-  walking: false,
 
   init: function(params) {
     Libs_Hero.Id = params.Id;
