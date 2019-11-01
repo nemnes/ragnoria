@@ -83,12 +83,15 @@ var Libs_Board = {
       }
     });
 
-    var playerBlock = false;
+    var creatureBlock = false;
     if($sqm.find('.player').length > 0) {
-      playerBlock = true;
+      creatureBlock = true;
     }
-
-    if(itemBlock || playerBlock) {
+    if($sqm.find('.npc').length > 0) {
+      creatureBlock = true;
+    }
+    
+    if(itemBlock || creatureBlock) {
       return false;
     }
     return true;

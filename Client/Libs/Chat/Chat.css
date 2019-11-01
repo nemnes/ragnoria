@@ -58,3 +58,7 @@
   overflow-wrap: break-word;
   z-index: 9999999;
 }
+
+.message span {
+  display: block;
+}

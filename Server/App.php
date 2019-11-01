@@ -4,6 +4,7 @@ namespace Server;
 
 use Libs\SQLMapper;
 use Server\Classes\Item;
+use Server\Classes\NPC;
 use Server\Classes\Player;
 
 class App
@@ -34,6 +35,12 @@ class App
   public function newPlayer($playerId, $conn)
   {
     return new Player($this, [$playerId, $conn]);
+  }
+
+
+  public function newNPC($id)
+  {
+    return new NPC($this, [$id]);
   }
 
   public function get($name)

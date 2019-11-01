@@ -9,79 +9,54 @@ abstract class Creature extends BaseClass
 
   public function goNorth()
   {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM($this->X, ($this->Y-1));
-    if($SQM->isWalkable()) {
-      $this->Y--;
-      return true;
-    }
-    return false;
-  }
-
-  public function goNorthEast()
-  {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($this->X+1), ($this->Y-1));
-    if($SQM->isWalkable()) {
-      $this->X++;
-      $this->Y--;
-      return true;
-    }
-    return false;
+    return $this->go('North');
   }
 
   public function goEast()
   {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($this->X+1), $this->Y);
-    if($SQM->isWalkable()) {
-      $this->X++;
-      return true;
-    }
-    return false;
-  }
-
-  public function goSouthEast()
-  {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($this->X+1), ($this->Y+1));
-    if($SQM->isWalkable()) {
-      $this->X++;
-      $this->Y++;
-      return true;
-    }
-    return false;
+    return $this->go('East');
   }
 
   public function goSouth()
   {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM($this->X, ($this->Y+1));
-    if($SQM->isWalkable()) {
-      $this->Y++;
-      return true;
-    }
-    return false;
+    return $this->go('South');
   }
 
-  public function goSouthWest()
-  {
-    /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($this->X-1), ($this->Y+1));
-    if($SQM->isWalkable()) {
-      $this->X--;
-      $this->Y++;
-      return true;
-    }
-    return false;
-  }
 
   public function goWest()
   {
+    return $this->go('West');
+  }
+
+  private function go($direction)
+  {
+    $targetPosition = array('X' => $this->X, 'Y' => $this->Y);
+    switch($direction) {
+      case 'North':
+        $targetPosition['Y']--;
+        break;
+      case 'East':
+        $targetPosition['X']++;
+        break;
+      case 'South':
+        $targetPosition['Y']++;
+        break;
+      case 'West':
+        $targetPosition['X']--;
+        break;
+      default:
+        return false;
+    }
+
+    if($this->getWorld()->getCreatureBySQM($targetPosition['X'], $targetPosition['Y'])) {
+      return false;
+    }
+
     /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($this->X-1), $this->Y);
+    $SQM = $this->getWorld()->getSQM(($targetPosition['X']), $targetPosition['Y']);
     if($SQM->isWalkable()) {
-      $this->X--;
+      $this->X = $targetPosition['X'];
+      $this->Y = $targetPosition['Y'];
       return true;
     }
     return false;

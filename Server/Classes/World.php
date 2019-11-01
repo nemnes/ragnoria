@@ -8,10 +8,12 @@ class World extends BaseClass
 {
   private $Grid = [];
   private $Players = [];
+  private $NPCs = [];
 
   public function initialize()
   {
     $this->createGrid();
+    $this->createNPCs();
   }
 
   private function createGrid()
@@ -27,6 +29,11 @@ class World extends BaseClass
       }
     }
     unset($scheme);
+  }
+
+  public function createNPCs()
+  {
+    $this->NPCs[1] = $this->getApp()->newNPC(1);
   }
 
   public function addPlayer(Player $player)
@@ -80,6 +87,34 @@ class World extends BaseClass
       return $this->Grid[$x][$y];
     }
     return false;
+  }
+
+  public function getNPC($id)
+  {
+    if(isset($this->NPCs[$id])) {
+      return $this->NPCs[$id];
+    }
+    return false;
+  }
+
+  public function getNPCs()
+  {
+    return $this->NPCs;
+  }
+
+  public function getCreatureBySQM($X, $Y)
+  {
+    foreach($this->Players as $player) {
+      if($player->X == $X && $player->Y == $Y) {
+        return $player;
+      }
+    }
+    foreach($this->NPCs as $npc) {
+      if($npc->X == $X && $npc->Y == $Y) {
+        return $npc;
+      }
+    }
+    return null;
   }
 
 }

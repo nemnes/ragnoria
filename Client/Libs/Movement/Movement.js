@@ -84,7 +84,7 @@ var Libs_Movement = {
     }
   },
 
-  confirmStep: function(positive, X, Y, area, players) {
+  confirmStep: function(positive, X, Y, area, players, NPCs) {
     var waitInt = setInterval(function(){
       if(Libs_Player.Player[Libs_Hero.Id].walking === false) {
         clearInterval(waitInt);
@@ -170,6 +170,9 @@ var Libs_Movement = {
 
           for(let i in players) if (players.hasOwnProperty(i)) {
             Libs_Player.create(players[i]);
+          }
+          for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
+            Libs_NPC.create(NPCs[i]);
           }
         }
         Libs_Board.$.css('margin-top', '0').css('margin-left', '0');

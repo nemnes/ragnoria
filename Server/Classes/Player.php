@@ -98,4 +98,20 @@ class Player extends Creature
     }
     return $players;
   }
+
+  public function getNPCsOnArea()
+  {
+    $factor_x = (ceil(Settings::GAME['CLIENT_SQM_WIDTH']/2)-1);
+    $factor_y = (ceil(Settings::GAME['CLIENT_SQM_HEIGHT']/2)-1);
+    $sqm_range_x = range(($this->X - $factor_x),($this->X + $factor_x));
+    $sqm_range_y = range(($this->Y - $factor_y),($this->Y + $factor_y));
+    $NPCs = array();
+    /** @var NPC $npc */
+    foreach($this->getApp()->getWorld()->getNPCs() as $npc) {
+      if(in_array($npc->X, $sqm_range_x) && in_array($npc->Y, $sqm_range_y)) {
+        $NPCs[] = $npc;
+      }
+    }
+    return $NPCs;
+  }
 }

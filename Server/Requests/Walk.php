@@ -34,7 +34,7 @@ class Walk extends BaseRequest
     }
 
     if($stepDone) {
-      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea()]);
+      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
       /** @var Player $playerOnArea */
       foreach($player->getPlayersOnArea() as $playerOnArea) {
         $playerOnArea->send('Libs_Player.move', [$player, $direction]);

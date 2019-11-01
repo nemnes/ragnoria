@@ -28,6 +28,7 @@ session_start();
   <script src="Libs/Board/Board.js"></script>
   <script src="Libs/Hero/Hero.js"></script>
   <script src="Libs/Player/Player.js"></script>
+  <script src="Libs/NPC/NPC.js"></script>
   <script src="Libs/Mouse/Mouse.js"></script>
   <script src="Libs/Keyboard/Keyboard.js"></script>
   <script src="Libs/Movement/Movement.js"></script>

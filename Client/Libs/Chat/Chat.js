@@ -13,7 +13,7 @@ var Libs_Chat = {
   },
 
   isActive: function() {
-    return !!Libs_Chat.$.is(":visible");
+    return Libs_Chat.$ ? !!Libs_Chat.$.is(":visible") : false;
   },
 
   show: function() {
@@ -44,15 +44,20 @@ var Libs_Chat = {
   },
 
   appendMessage: function(message, author, x, y) {
-    message = Libs_Misc.stripHtml(Libs_Chat.$_Input.val()).substring(0,135);
-    var msg = [];
-    msg.push(author + ' says:');
-    msg.push(message);
-    var $msg = $('<div class="message">' + msg.join('<br/>') + '</div>');
-    Libs_Board.getSQM(x,y).append($msg);
-    console.log($msg);
+    message = Libs_Misc.stripHtml(message).substring(0,135);
+    var $sqm = Libs_Board.getSQM(x,y);
+    var $msg = $('<span>' + message + '</span>');
+
+    if($sqm.find('.message[data-author="' +author+ '"]').length === 0) {
+      $sqm.append('<div class="message" data-author="' +author+ '">' +author+ ':</div>');
+    }
+
+    $sqm.find('.message[data-author="' +author+ '"]').append($msg);
     setTimeout(function() {
       $msg.remove();
+      if($sqm.find('.message[data-author="' +author+ '"] span').length === 0) {
+        $sqm.find('.message[data-author="' +author+ '"]').remove();
+      }
     }, 2000+(message.length * 25));
   }
 

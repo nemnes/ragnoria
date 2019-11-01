@@ -26,13 +26,13 @@ var App = {
 
   authorization: function(state, params) {
     if(state === 'pass') {
-      App.initialize(params.hero, params.area, params.players);
+      App.initialize(params.hero, params.area, params.players, params.NPCs);
       return;
     }
     Libs_Console.addLog({ msg: 'Authorization failed', level: 'critical' });
   },
 
-  initialize: function(hero, area, players) {
+  initialize: function(hero, area, players, NPCs) {
     Libs_Ping.init();
     Libs_Movement.init();
     Libs_Board.init(area);
@@ -40,6 +40,9 @@ var App = {
     Libs_Chat.init();
     for(let i in players) if (players.hasOwnProperty(i)) {
       Libs_Player.create(players[i]);
+    }
+    for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
+      Libs_NPC.create(NPCs[i]);
     }
     Libs_Effect.run(1,hero.X,hero.Y);
   },
