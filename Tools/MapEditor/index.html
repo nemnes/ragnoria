@@ -2,7 +2,7 @@
   <title>Ragnoria MapEditor</title>
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" type="text/css" href="assets/MapEditor/MapEditor.min.css" >
+  <link rel="stylesheet" type="text/css" href="assets/MapEditor/MapEditor.css" >
   <script src="config.js"></script>
   <script src="assets/jquery/jquery-3.4.1.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -11,7 +11,11 @@
 
 <body>
   <div class="item-container">
-    <select id="Layer" class="form-control" style="border-radius: 0;">
+    <div class="actual-item">
+      <div class="actual-item-image"></div>
+      <div class="actual-item-details">- (0)</div>
+    </div>
+    <select id="Layer">
       <option value="1" selected>[Layer 1] Grounds</option>
       <option value="2">[Layer 2] Edges</option>
       <option value="3">[Layer 3] Walls</option>
@@ -19,19 +23,22 @@
       <option value="5">[Layer 5] Ornaments</option>
       <option value="6">[Layer 6] Accessories</option>
     </select>
-    <input id="Search" type="text" class="form-control" placeholder="Search..." style="border-radius: 0;"/>
+    <input id="Search" type="hidden" class="form-control" placeholder="Search..." style="border-radius: 0;"/>
+    <div class="item-list">
+
+    </div>
   </div>
 
   <div class="map-container">
   </div>
 
   <div class="menu-container">
-    <div class="btn btn-sm btn-default" style="pointer-events: none;" id="Coords">X: 0, Y: 0</div>
-    <button class="btn btn-sm btn-primary" id="Eraser"><i class="glyphicon glyphicon-erase"></i> Eraser</button>
-    <button class="btn btn-sm btn-primary" id="NewWorld" type="button"><i class="glyphicon glyphicon-file"></i> New map</button>
-    <label class="btn btn-sm btn-primary" for="File" id="LoadWorld"><i class="glyphicon glyphicon-import"></i> Load</label>
-    <button class="btn btn-sm btn-primary" id="SaveWorld" type="button"><i class="glyphicon glyphicon-floppy-disk"></i> Save</button>
+    <button id="Eraser"><i class="glyphicon glyphicon-erase"></i> Eraser</button>
+    <button id="NewWorld" type="button"><i class="glyphicon glyphicon-file"></i> New map</button>
+    <label id="LoadWorld" for="File"><i class="glyphicon glyphicon-import"></i> Load</label>
+    <button id="SaveWorld" type="button"><i class="glyphicon glyphicon-floppy-disk"></i> Save</button>
     <input id="File" type="file" accept=".txt, .json" style="display: none;"/>
+    <div id="Coords" class="pull-right">X: 0, Y: 0</div>
   </div>
 
   <!-- New World Modal -->

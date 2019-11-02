@@ -10,48 +10,101 @@ body {
 .item-container {
   position: relative;
   float: left;
-  width: 250px;
+  width: 236px;
   height: 100%;
   max-height: 100%;
-  overflow-y: auto;
+  background-color: #2b3944;
+  color: #eee;
+  overflow: hidden;
+  z-index: 3;
+  border-right: 2px solid #0b0f12;
 }
 .map-container {
-  padding-top: 32px;
-  padding-left: 32px;
+  margin-top: 32px;
   float: left;
-  width: calc(100% - 250px);
-  height: 100%;
+  width: calc(100% - 236px);
+  height: calc(100vh - 32px);;
   max-height: 100%;
   overflow-x: auto;
   overflow-y: auto;
   background-color: #000;
+  z-index: 1;
+  scrollbar-color: rgba(255, 252, 243, 0.5) #181f26;
 }
 .menu-container {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: #181f26;
+  border-bottom: 2px solid #0b0f12;
+  z-index: 2;
+  padding: 3px 10px 0 240px;
+  height: 32px;
+}
+#Coords, #Eraser, #NewWorld, #SaveWorld, #LoadWorld {
+  padding: 2px 5px;
+  font-weight: bold;
+  display: inline-block;
+  color: #ddd;
+}
+#Eraser, #NewWorld, #SaveWorld, #LoadWorld {
+  border: 1px solid #141c27;
+  background-color: #28323c;
+  color: #dca855;
+  cursor: pointer;
 }
 
-/*ITEM SELECT*/
-.item-select {
-  border: 1px dotted #fafafa;
-  cursor: pointer;
-  user-select: none;
+/*item-container*/
+#Layer {
+  width: 100%;
+  padding: 2px;
+  border: 1px solid #12131e;
+  color: #eee;
+  height: 25px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(dropdown.png) 98% no-repeat #181f26;
 }
-.item-select.active {
-  background-color: #000d9d;
-  color: #fff;
+.actual-item {
+  margin: 10px;
+  height: 85px;
 }
-.item-select-icon {
-  float: left;
-  position: relative;
+.actual-item-image {
+  margin: auto;
+  width: 66px;
+  height: 66px;
+  border: 1px inset #181f26;
+  background-color: #181f26;
+}
+.actual-item-image img{
   width: 64px;
   height: 64px;
 }
-.item-select-icon img {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+.actual-item-details {
+  text-align: center;
+}
+.item-list {
+  overflow-y: scroll;
+  scrollbar-color: rgba(255, 252, 243, 0.5) #181f26;
+  height: calc(100vh - 130px);
+  background-color: rgba(0,0,0,0.25)
+}
+.item-select {
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  border: 2px outset #181f26;
+}
+.item-select.active {
+  border: 2px inset #b37f00;
+  background-color: rgba(0, 0, 0, 0.47);
+  color: #fff;
+}
+.item-select img {
+  width: 32px;
+  height: 32px;
 }
 
 .map-row {

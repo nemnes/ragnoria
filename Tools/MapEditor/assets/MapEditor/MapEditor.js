@@ -45,26 +45,29 @@ var MapEditor = {
     });
   },
 
+  selectItem: function(id) {
+    var Item = MapEditor.Items[id];
+    MapEditor.SelectedItem = Item;
+    $('.actual-item-image', document).html('<img src="' + MapEditor.ImagesURL + Item.Id + '"/>');
+    $('.actual-item-details', document).html(Item.Name + ' (' + Item.Id + ')');
+  },
+
   renderItemContainer: function() {
     for (var Id in MapEditor.Items) if (MapEditor.Items.hasOwnProperty(Id)) {
       var Item = MapEditor.Items[Id];
       var html = [];
       html.push('<div class="item-select" data-item-layer="' +Item.Type+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
-      html.push('  <div class="item-select-icon">');
-      html.push('    <img alt="" src="' + MapEditor.ImagesURL + Item.Id + '"/>');
-      html.push('  </div>');
-      html.push('  <div style="float: left; height: 64px; line-height: 64px; padding-left: 10px;">' + Item.Name + '</div>');
-      html.push('  <div style="clear: both;"></div>');
+      html.push('  <img src="' + MapEditor.ImagesURL + Item.Id + '"/>');
       html.push('</div>');
-      $('.item-container', document).append(html.join(''));
+      $('.item-list', document).append(html.join(''));
     }
     $('.item-select', document).on('click', function () {
       MapEditor.Tool = 1;
       $('.item-select', document).removeClass('active');
       $(this).addClass('active');
-      MapEditor.SelectedItem = MapEditor.Items[$(this).data('item-id')];
+      MapEditor.selectItem($(this).data('item-id'));
     });
-    $('.item-select', document).on('click mouseup mousedown mouseenter mouseout', function () {
+    $('.item-container', document).on('click mouseup mousedown mouseenter mouseout', function () {
       MapEditor.Dragging = false;
     });
     MapEditor.resortItemContainer();
@@ -201,6 +204,8 @@ var MapEditor = {
   onEraser: function() {
     MapEditor.Tool = 2;
     MapEditor.SelectedItem = null;
+    $('.actual-item-image', document).html('<img src="assets/MapEditor/eraser.png"/>');
+    $('.actual-item-details', document).html('Eraser');
     $('.item-select', document).removeClass('active');
   },
 
