@@ -37,8 +37,8 @@ var Libs_Board = {
     Libs_Board.$ = $(html.join(''));
     $('body').append(Libs_Board.$);
     $('body').append('<div id="map-overlay"></div>');
-    $('#map-overlay').width((Libs_Board.$.width()-64));
-    $('#map-overlay').height((Libs_Board.$.height()-64));
+    $('#map-overlay').width((Libs_Board.$.width()-128));
+    $('#map-overlay').height((Libs_Board.$.height()-128));
   },
 
   getSQM: function(x,y) {
@@ -63,8 +63,26 @@ var Libs_Board = {
         zindex = 0;
       }
       url = App.getItemURL(item.Id);
-      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
+
+      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" data-item-name="' +item.Name+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
     }
+
+    // $newSQM.on('mouseenter', function(e){
+    //   var $item = $('.item:last', $(this));
+    //   if (Libs_Keyboard.isClicked("shift") && $item.length > 0) {
+    //     $('#tooltip', document).remove();
+    //     $('.item.highlight', document).removeClass('highlight');
+    //     var $tooltip = $('<div id="tooltip" style="left: ' +(e.pageX+5)+ 'px; top: ' +e.pageY+ 'px;"></div>');
+    //     $item.addClass('highlight');
+    //     $tooltip.text($item.data('item-name'));
+    //     $('body').append($tooltip);
+    //   }
+    // });
+    // $newSQM.on('mouseout', function(e){
+    //   $('#tooltip', document).remove();
+    //   $('.item.highlight', document).removeClass('highlight');
+    // });
+
     return $newSQM;
   },
 
@@ -90,7 +108,7 @@ var Libs_Board = {
     if($sqm.find('.npc').length > 0) {
       creatureBlock = true;
     }
-    
+
     if(itemBlock || creatureBlock) {
       return false;
     }

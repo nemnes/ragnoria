@@ -34,6 +34,10 @@ class World extends BaseClass
   public function createNPCs()
   {
     $this->NPCs[1] = $this->getApp()->newNPC(1);
+    $this->NPCs[2] = $this->getApp()->newNPC(2);
+    $this->NPCs[3] = $this->getApp()->newNPC(3);
+    $this->NPCs[4] = $this->getApp()->newNPC(4);
+    $this->NPCs[5] = $this->getApp()->newNPC(5);
   }
 
   public function addPlayer(Player $player)

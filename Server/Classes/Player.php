@@ -13,6 +13,12 @@ class Player extends Creature
   public $X;
   public $Y;
   public $Locks;
+  public $LookType;
+  public $Head;
+  public $Primary;
+  public $Secondary;
+  public $Details;
+  public $Addon;
 
   /** @var ConnectionInterface */
   private $Connection;
@@ -24,6 +30,12 @@ class Player extends Creature
     $this->Name = $tblPlayer->Name;
     $this->X = $tblPlayer->X;
     $this->Y = $tblPlayer->Y;
+    $this->LookType = $tblPlayer->LookType;
+    $this->Head = $tblPlayer->Head;
+    $this->Primary = $tblPlayer->Primary;
+    $this->Secondary = $tblPlayer->Secondary;
+    $this->Details = $tblPlayer->Details;
+    $this->Addon = $tblPlayer->Addon;
 
     $this->Locks = new \stdClass();
     $this->Locks->Movement = null;

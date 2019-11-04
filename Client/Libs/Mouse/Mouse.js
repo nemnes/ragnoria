@@ -2,6 +2,18 @@ var Libs_Mouse = {
 
   init: function() {
     Libs_Mouse.preventZoom();
+    document.oncontextmenu=null;
+    $(document).on("mousedown mouseup click focus blur contextmenu mousewheel DOMMouseScroll wheel", function(e) {
+      // console.log("{" + e.which + ":" + e.type + "}");
+      if (e.which === 2) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (e.which === 3) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
   },
 
   preventZoom: function() {

@@ -16,8 +16,9 @@ var Libs_Hero = {
     Libs_Hero.Name = params.Name;
     Libs_Hero.X = parseInt(params.X);
     Libs_Hero.Y = parseInt(params.Y);
-    Libs_Hero.Speed = parseInt(25);
-    Libs_Hero.$ = $('<div id="Hero" class="player" data-id="' +params.Id+ '" data-nickname="' +params.Name+ '" style="z-index: ' +params.Y+ '' +params.X+ '"><div class="nickname">' +params.Name+ '</div></div>');
+    Libs_Hero.Speed = parseInt(35);
+    var url = App.getOutfitURL(params.LookType,params.Head,params.Primary,params.Secondary,params.Details,params.Addon);
+    Libs_Hero.$ = $('<div id="Hero" class="player" data-id="' +params.Id+ '" data-nickname="' +params.Name+ '" style="z-index: ' +params.Y+ '' +params.X+ '; background-image: url(' +url+ ')"><div class="nickname">' +params.Name+ '</div></div>');
     $('.sqm[data-x="' +Libs_Hero.X+ '"][data-y="' +Libs_Hero.Y+ '"]').append(Libs_Hero.$);
   },
 

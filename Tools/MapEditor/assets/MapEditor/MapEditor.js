@@ -36,6 +36,25 @@ var MapEditor = {
     $(document).on('mouseup', function() {
       MapEditor.Dragging = false;
     });
+    $(document).on('keydown', function(e) {
+      var $mapContainer = $(".map-container", document);
+      if (e.keyCode === 40) {
+        e.preventDefault();
+        $mapContainer.scrollTop($mapContainer.scrollTop()+64);
+      }
+      if (e.keyCode === 38) {
+        e.preventDefault();
+        $mapContainer.scrollTop($mapContainer.scrollTop()-64);
+      }
+      if (e.keyCode === 39) {
+        e.preventDefault();
+        $mapContainer.scrollLeft($mapContainer.scrollLeft()+64);
+      }
+      if (e.keyCode === 37) {
+        e.preventDefault();
+        $mapContainer.scrollLeft($mapContainer.scrollLeft()-64);
+      }
+    });
   },
 
   getItems: function() {

@@ -158,7 +158,7 @@ class SQLMapper
     $values = array();
     foreach ($this as $key => $property) {
       if ($key !== SQLMapper::SQL_MAPPER_PROPERTIES) {
-        $set[] = $key . ' = ?';
+        $set[] = $this->SQLMapperProperties->Table. '.' .$key . ' = ?';
         $values[] = $property;
       }
     }
@@ -199,7 +199,7 @@ class SQLMapper
 
     foreach ($this as $key => $property) {
       if ($key !== SQLMapper::SQL_MAPPER_PROPERTIES) {
-        $columns[] = $key;
+        $columns[] = $this->SQLMapperProperties->Table. '.' .$key;
         $values[] = $key === $this->SQLMapperProperties->PrimaryKeyColumn ? $newKey : $property;
         $QM[] = '?';
       }

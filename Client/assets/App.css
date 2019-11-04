@@ -6,9 +6,7 @@ body {
   background-color: #000;
 }
 .item.highlight {
-  opacity: 0.8;
-  filter: brightness(250%);
-  mix-blend-mode: luminosity;
+  filter: brightness(50%);
 }
 .item {
   position: absolute;
@@ -35,7 +33,6 @@ body {
   height: 64px;
   margin-left: -40px;
   margin-top: -40px;
-  background-image: url('../assets/outfit.png');
   pointer-events: none;
 }
 .player .nickname,

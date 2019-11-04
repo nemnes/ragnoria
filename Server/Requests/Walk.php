@@ -14,8 +14,8 @@ class Walk extends BaseRequest
       return;
     }
 
-    $speed = 25; // in range between 1 to 100
-    $player->Locks->Movement = microtime(true) + ((600-($speed*5.5))/1000+0.025);
+    $speed = 35; // in range between 1 to 100
+    $player->Locks->Movement = microtime(true) + ((600-($speed*5.5))/1000);
     $playersOnAreaBeforeStep = $player->getPlayersOnArea();
     $playersStillOnArea = array();
 

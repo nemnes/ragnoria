@@ -41,12 +41,16 @@ body {
   z-index: 2;
   padding: 3px 10px 0 240px;
   height: 32px;
+  cursor: default;
 }
 #Coords, #Eraser, #NewWorld, #SaveWorld, #LoadWorld {
   padding: 2px 5px;
   font-weight: bold;
   display: inline-block;
   color: #ddd;
+}
+#Eraser:hover, #NewWorld:hover, #SaveWorld:hover, #LoadWorld:hover {
+  background-color: #415061;
 }
 #Eraser, #NewWorld, #SaveWorld, #LoadWorld {
   border: 1px solid #141c27;
