@@ -55,8 +55,18 @@ var App = {
     return Config.itemsURL + id;
   },
 
-  getOutfitURL: function(looktype=2,head=0,primary=0,secondary=0,details=0,addon=0) {
-    return Config.outfitURL + ([looktype,head,primary,secondary,details,addon].join(':'));
+  getOutfitURL: function(creature) {
+    return Config.outfitURL + ([
+      creature.Base,
+      creature.Head,
+      creature.Body,
+      creature.Back,
+      creature.Hands,
+      creature.HeadColor.replace('#', ''),
+      creature.PrimaryColor.replace('#', ''),
+      creature.SecondaryColor.replace('#', ''),
+      creature.DetailColor.replace('#', '')
+    ].join(':'));
   },
 
 };

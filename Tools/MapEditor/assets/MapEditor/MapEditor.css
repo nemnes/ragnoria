@@ -51,6 +51,7 @@ body {
 }
 #Eraser:hover, #NewWorld:hover, #SaveWorld:hover, #LoadWorld:hover {
   background-color: #415061;
+  color: #f9e3bf;
 }
 #Eraser, #NewWorld, #SaveWorld, #LoadWorld {
   border: 1px solid #141c27;

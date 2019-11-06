@@ -12,12 +12,17 @@ class NPC extends Creature
   public $Name;
   public $X;
   public $Y;
-  public $LookType;
+
+  // outfit
+  public $Base;
   public $Head;
-  public $Primary;
-  public $Secondary;
-  public $Details;
-  public $Addon;
+  public $Body;
+  public $Back;
+  public $Hands;
+  public $HeadColor;
+  public $PrimaryColor;
+  public $SecondaryColor;
+  public $DetailColor;
 
   public function initialize($id)
   {
@@ -26,12 +31,17 @@ class NPC extends Creature
     $this->Name = $tblNPC->Name;
     $this->X = $tblNPC->X;
     $this->Y = $tblNPC->Y;
-    $this->LookType = $tblNPC->LookType;
+
+    // outfit
+    $this->Base = $tblNPC->Base;
     $this->Head = $tblNPC->Head;
-    $this->Primary = $tblNPC->Primary;
-    $this->Secondary = $tblNPC->Secondary;
-    $this->Details = $tblNPC->Details;
-    $this->Addon = $tblNPC->Addon;
+    $this->Body = $tblNPC->Body;
+    $this->Back = $tblNPC->Back;
+    $this->Hands = $tblNPC->Hands;
+    $this->HeadColor = $tblNPC->HeadColor;
+    $this->PrimaryColor = $tblNPC->PrimaryColor;
+    $this->SecondaryColor = $tblNPC->SecondaryColor;
+    $this->DetailColor = $tblNPC->DetailColor;
   }
 
   public function getArea()

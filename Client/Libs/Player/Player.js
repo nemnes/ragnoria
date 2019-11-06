@@ -6,7 +6,7 @@ var Libs_Player = {
     if(Libs_Board.$.find('.player[data-id="' +player.Id+ '"]').length > 0) {
       return;
     }
-    var url = App.getOutfitURL(player.LookType,player.Head,player.Primary,player.Secondary,player.Details,player.Addon);
+    var url = App.getOutfitURL(player);
     let $player = $('<div class="player" data-id="' +player.Id+ '" data-nickname="' +player.Name+ '" style="z-index: ' +player.Y+ '' +player.X+ ';background-image:url(' +url+ ');"><div class="nickname">' +player.Name+ '</div></div>');
     Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
   },

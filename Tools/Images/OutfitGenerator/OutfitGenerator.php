@@ -1,16 +1,19 @@
 <?php
 
+/**
+ * Class OutfitGenerator
+ * @author Adam Łożyński
+ * @date 2019-11-04
+ */
+
 include('AddonDictionary.php');
 
 class OutfitGenerator
 {
-  const HEAD = [255,0,0];
-  const PRIMARY = [0,255,0];
-  const SECONDARY = [0,0,255];
-  const DETAIL = [255,255,0];
-  const TRANSPARENT = [255,0,255];
+  const WIDTH = 192;
+  const HEIGHT = 256;
 
-  private $OutfitPath = '../../Data/outfit';
+  private $OutfitPath = __DIR__ . '/../outfit';
   private $BlendModes;
   private $Images = array();
   private $LookType = array();
@@ -43,32 +46,48 @@ class OutfitGenerator
     }
 
     $params = explode(':', $params);
-    if(count($params) !== 6) {
+    if(count($params) !== 9) {
       throw new Exception('Wrong looktype!');
     }
 
     $this->LookType = array(
-      'outfit' => (int) $params[0],
-      'head' => '#'.$params[1],
-      'primary' => '#'.$params[2],
-      'secondary' => '#'.$params[3],
-      'detail' => '#'.$params[4],
-      'addon' => (int) $params[5]
+      'base' => (int) $params[0],
+      'head' => (int) $params[1],
+      'body' => (int) $params[2],
+      'back' => (int) $params[3],
+      'hands' => (int) $params[4],
+      'head_color' => '#'.$params[5],
+      'primary_color' => '#'.$params[6],
+      'secondary_color' => '#'.$params[7],
+      'detail_color' => '#'.$params[8]
     );
 
-    if(!in_array($this->LookType['addon'], AddonDictionary::AVAILABLE)) {
-      throw new Exception('Unrecognized addon!');
+    if(!isset(AddonDictionary::BASE[$this->LookType['base']])) {
+      throw new Exception('Unrecognized base!');
     }
-    if(!$this->isHexColorValid($this->LookType['head'])) {
+    if($this->LookType['head'] != 0 && !isset(AddonDictionary::HEAD[$this->LookType['head']])) {
+      throw new Exception('Unrecognized head!');
+    }
+    if($this->LookType['body'] != 0 && !isset(AddonDictionary::BODY[$this->LookType['body']])) {
+      throw new Exception('Unrecognized body!');
+    }
+    if($this->LookType['back'] != 0 && !isset(AddonDictionary::BACK[$this->LookType['back']])) {
+      throw new Exception('Unrecognized back!');
+    }
+    if($this->LookType['hands'] != 0 && !isset(AddonDictionary::HANDS[$this->LookType['hands']])) {
+      throw new Exception('Unrecognized hands!');
+    }
+
+    if(!$this->isHexColorValid($this->LookType['head_color'])) {
       throw new Exception('Unrecognized head color!');
     }
-    if(!$this->isHexColorValid($this->LookType['primary'])) {
+    if(!$this->isHexColorValid($this->LookType['primary_color'])) {
       throw new Exception('Unrecognized primary color!');
     }
-    if(!$this->isHexColorValid($this->LookType['secondary'])) {
+    if(!$this->isHexColorValid($this->LookType['secondary_color'])) {
       throw new Exception('Unrecognized secondary color!');
     }
-    if(!$this->isHexColorValid($this->LookType['detail'])) {
+    if(!$this->isHexColorValid($this->LookType['detail_color'])) {
       throw new Exception('Unrecognized detail color!');
     }
 
@@ -77,85 +96,63 @@ class OutfitGenerator
   private function getColorsToReplace()
   {
     $replace = [];
-
-    $from = self::HEAD;
-    $to = $this->hexToRGB($this->LookType['head']);
-    $col1 = (($from[0] & 0xFF) << 16) + (($from[1] & 0xFF) << 8) + ($from[2] & 0xFF);
-    $col2 = (($to[0] & 0xFF) << 16) + (($to[1] & 0xFF) << 8) + ($to[2] & 0xFF);
-    $replace[$col1] = $col2;
-
-    $from = self::PRIMARY;
-    $to = $this->hexToRGB($this->LookType['primary']);
-    $col1 = (($from[0] & 0xFF) << 16) + (($from[1] & 0xFF) << 8) + ($from[2] & 0xFF);
-    $col2 = (($to[0] & 0xFF) << 16) + (($to[1] & 0xFF) << 8) + ($to[2] & 0xFF);
-    $replace[$col1] = $col2;
-
-    $from = self::SECONDARY;
-    $to = $this->hexToRGB($this->LookType['secondary']);
-    $col1 = (($from[0] & 0xFF) << 16) + (($from[1] & 0xFF) << 8) + ($from[2] & 0xFF);
-    $col2 = (($to[0] & 0xFF) << 16) + (($to[1] & 0xFF) << 8) + ($to[2] & 0xFF);
-    $replace[$col1] = $col2;
-
-    $from = self::DETAIL;
-    $to = $this->hexToRGB($this->LookType['detail']);
-    $col1 = (($from[0] & 0xFF) << 16) + (($from[1] & 0xFF) << 8) + ($from[2] & 0xFF);
-    $col2 = (($to[0] & 0xFF) << 16) + (($to[1] & 0xFF) << 8) + ($to[2] & 0xFF);
-    $replace[$col1] = $col2;
-
+    foreach(array(
+      array('from' => [255,0,0], 'to' => $this->hexToRGB($this->LookType['head_color'])),
+      array('from' => [0,255,0], 'to' => $this->hexToRGB($this->LookType['primary_color'])),
+      array('from' => [0,0,255], 'to' => $this->hexToRGB($this->LookType['secondary_color'])),
+      array('from' => [255,255,0], 'to' => $this->hexToRGB($this->LookType['detail_color'])),
+    ) as $color) {
+      $col1 = (($color['from'][0] & 0xFF) << 16) + (($color['from'][1] & 0xFF) << 8) + ($color['from'][2] & 0xFF);
+      $col2 = (($color['to'][0] & 0xFF) << 16) + (($color['to'][1] & 0xFF) << 8) + ($color['to'][2] & 0xFF);
+      $replace[$col1] = $col2;
+    }
     return $replace;
   }
 
   private function generateOutfit()
   {
-    list($width, $height) = getimagesize($this->OutfitPath. '/' .$this->LookType['outfit']. '/base.png');
+    $outfit = $this->prepareImage('base', 'real', 1);
+    $overlay = $this->prepareImage('base', 'overlay', 1);
 
-    // base layers
-    $this->Images['outfit_base'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/base.png');
-    imagealphablending($this->Images['outfit_base'], true);
-    imagesavealpha($this->Images['outfit_base'], true);
-    $outfit = $this->Images['outfit_base'];
-
-    if($this->LookType['addon'] === AddonDictionary::FIRST_ADDON || $this->LookType['addon'] === AddonDictionary::BOTH_ADDONS) {
-      $this->Images['addon1_base'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/addon1.png');
-      imagealphablending($this->Images['addon1_base'], true);
-      imagesavealpha($this->Images['addon1_base'], true);
-      imagecopy($outfit, $this->Images['addon' .AddonDictionary::FIRST_ADDON. '_base'], 0, 0, 0, 0, $width, $height);
+    foreach([1,2,3] as $layer) {
+      if($this->LookType['body'] > 0 && in_array($layer, AddonDictionary::BODY[$this->LookType['body']]['Layers'])) {
+        imagecopy($outfit, $this->prepareImage('body', 'real', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+        imagecopy($overlay, $this->prepareImage('body', 'overlay', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+      }
+      if($this->LookType['hands'] > 0 && in_array($layer, AddonDictionary::HANDS[$this->LookType['hands']]['Layers'])) {
+        imagecopy($outfit, $this->prepareImage('hands', 'real', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+        imagecopy($overlay, $this->prepareImage('hands', 'overlay', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+      }
+      if($this->LookType['back'] > 0 && in_array($layer, AddonDictionary::BACK[$this->LookType['back']]['Layers'])) {
+        imagecopy($outfit, $this->prepareImage('back', 'real', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+        imagecopy($overlay, $this->prepareImage('back', 'overlay', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+      }
+      if($this->LookType['head'] > 0 && in_array($layer, AddonDictionary::HEAD[$this->LookType['head']]['Layers'])) {
+        imagecopy($outfit, $this->prepareImage('head', 'real', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+        imagecopy($overlay, $this->prepareImage('head', 'overlay', $layer), 0, 0, 0, 0, self::WIDTH, self::HEIGHT);
+      }
     }
-    if($this->LookType['addon'] === AddonDictionary::SECOND_ADDON || $this->LookType['addon'] === AddonDictionary::BOTH_ADDONS) {
-      $this->Images['addon2_base'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/addon2.png');
-      imagealphablending($this->Images['addon2_base'], true);
-      imagesavealpha($this->Images['addon2_base'], true);
-      imagecopy($outfit, $this->Images['addon' .AddonDictionary::SECOND_ADDON. '_base'], 0, 0, 0, 0, $width, $height);
-    }
+    $this->replaceColours($overlay, $this->getColorsToReplace());
 
-    // merge overlay layers
-    $this->Images['outfit_overlay'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/base_overlay.png');
-    imagealphablending($this->Images['outfit_overlay'], true);
-    imagesavealpha($this->Images['outfit_overlay'], true);
-    $outfit_overlay = $this->Images['outfit_overlay'];
-
-    if($this->LookType['addon'] === AddonDictionary::FIRST_ADDON || $this->LookType['addon'] === AddonDictionary::BOTH_ADDONS) {
-      $this->Images['addon1_overlay'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/addon1_overlay.png');
-      imagealphablending($this->Images['addon1_overlay'], true);
-      imagesavealpha($this->Images['addon1_overlay'], true);
-      imagecopy($outfit_overlay, $this->Images['addon' .AddonDictionary::FIRST_ADDON. '_overlay'], 0, 0, 0, 0, $width, $height);
-    }
-    if($this->LookType['addon'] === AddonDictionary::SECOND_ADDON || $this->LookType['addon'] === AddonDictionary::BOTH_ADDONS) {
-      $this->Images['addon2_overlay'] = imagecreatefrompng($this->OutfitPath. '/' .$this->LookType['outfit']. '/addon2_overlay.png');
-      imagealphablending($this->Images['addon2_overlay'], true);
-      imagesavealpha($this->Images['addon2_overlay'], true);
-      imagecopy($outfit_overlay, $this->Images['addon' .AddonDictionary::SECOND_ADDON. '_overlay'], 0, 0, 0, 0, $width, $height);
-    }
-
-    $this->replaceColours($this->Images['outfit_overlay'], $this->getColorsToReplace());
-    $this->Images['outfit'] = $this->BlendModes->blend($outfit, $outfit_overlay, 'multiply');
-
+    $this->Images['outfit'] = $this->BlendModes->blend($outfit, $overlay, 'multiply');
     return $this->Images['outfit'];
+  }
+
+  public function prepareImage($addon, $type, $layer)
+  {
+    $this->Images[$addon.'_'.$type. '_' .$layer] = imagecreatefrompng($this->OutfitPath. '/' .$addon. '/' .$this->LookType[$addon]. '/' .$layer. '_' .$type. '.png');
+    imagealphablending($this->Images[$addon.'_'.$type. '_' .$layer], true);
+    imagesavealpha($this->Images[$addon.'_'.$type. '_' .$layer], true);
+    return $this->Images[$addon.'_'.$type. '_' .$layer];
   }
 
   public function __destruct()
   {
-    $this->destroyImages();
+    foreach($this->Images as $image) {
+      if(is_resource($image)) {
+        imagedestroy($image);
+      }
+    }
   }
 
   private function replaceColours($img, $replace)
@@ -177,14 +174,6 @@ class OutfitGenerator
       }
     }
     imagealphablending($img, true);
-  }
-
-  private function destroyImages() {
-    foreach($this->Images as $image) {
-      if(is_resource($image)) {
-        imagedestroy($image);
-      }
-    }
   }
 
   private function isHexColorValid($hex) {

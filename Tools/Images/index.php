@@ -7,7 +7,7 @@ if(isset($_GET['id'])) {
     die();
   }
   $noGIF = isset($_GET['nogif']);
-  $imagesPath = __DIR__ . '/../../Data/item/';
+  $imagesPath = __DIR__ . '/item/';
 
   if(!$noGIF) {
     if(file_exists($imagesPath.$id.'.gif')) {
