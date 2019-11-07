@@ -64,6 +64,15 @@ class Player extends Creature
     $tblPlayer->Name = $this->Name;
     $tblPlayer->X = $this->X;
     $tblPlayer->Y = $this->Y;
+    $tblPlayer->Base = $this->Base;
+    $tblPlayer->Head = $this->Head;
+    $tblPlayer->Body = $this->Body;
+    $tblPlayer->Back = $this->Back;
+    $tblPlayer->Hands = $this->Hands;
+    $tblPlayer->HeadColor = $this->HeadColor;
+    $tblPlayer->PrimaryColor = $this->PrimaryColor;
+    $tblPlayer->SecondaryColor = $this->SecondaryColor;
+    $tblPlayer->DetailColor = $this->DetailColor;
     $tblPlayer->save();
 
     $this->getWorld()->removePlayer($this);

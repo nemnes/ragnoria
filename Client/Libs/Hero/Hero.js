@@ -20,6 +20,18 @@ var Libs_Hero = {
     var url = App.getOutfitURL(params);
     Libs_Hero.$ = $('<div id="Hero" class="player" data-id="' +params.Id+ '" data-nickname="' +params.Name+ '" style="z-index: ' +params.Y+ '' +params.X+ '; background-image: url(' +url+ ')"><div class="nickname">' +params.Name+ '</div></div>');
     $('.sqm[data-x="' +Libs_Hero.X+ '"][data-y="' +Libs_Hero.Y+ '"]').append(Libs_Hero.$);
+
+    Libs_Outfiter.LookType = {
+      Base: params.Base,
+      Head: params.Head,
+      Body: params.Body,
+      Back: params.Back,
+      Hands: params.Hands,
+      HeadColor: params.HeadColor,
+      PrimaryColor: params.PrimaryColor,
+      SecondaryColor: params.SecondaryColor,
+      DetailColor: params.DetailColor
+    };
   },
 
 };

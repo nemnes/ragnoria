@@ -165,11 +165,11 @@ class OutfitGenerator
     }
     for ($x = 0; $x < imagesx($img); $x++) {
       for ($y = 0; $y < imagesy($img); $y++) {
-        if (array_key_exists($color = imagecolorat($img, $x, $y), $replace)) {
-          imagesetpixel($img, $x, $y, $replace[$color]);
-        }
         if(imagecolorat($img, $x, $y) === imagecolorallocate($img,0,0,0)) {
           imagesetpixel($img, $x, $y, $transparent);
+        }
+        if (array_key_exists($color = imagecolorat($img, $x, $y), $replace)) {
+          imagesetpixel($img, $x, $y, $replace[$color]);
         }
       }
     }

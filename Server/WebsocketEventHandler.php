@@ -49,6 +49,11 @@ class WebsocketEventHandler implements MessageComponentInterface
     $request = $msg[0];
     $params = isset($msg[1]) ? $msg[1] : array();
 
+    if(!is_array($params)) {
+      $this->getApp()->log('Notice: params are not an array!: ' . json_encode($msg));
+      return;
+    }
+
     if(!is_string($request) || preg_match('/[^a-z_\-0-9]/i', $request)) {
       $msg = json_encode($request). " is not recognized as an internal command.";
       $this->getApp()->log($msg);

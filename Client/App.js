@@ -38,6 +38,7 @@ var App = {
     Libs_Board.init(area);
     Libs_Hero.init(hero);
     Libs_Chat.init();
+    Libs_Outfiter.init();
     for(let i in players) if (players.hasOwnProperty(i)) {
       Libs_Player.create(players[i]);
     }
