@@ -31,13 +31,15 @@ var Libs_Outfiter = {
     html.push('<option value="0">-</option>');
     html.push('<option value="1">#1</option>');
     html.push('<option value="2">#2</option>');
+    html.push('<option value="3">#3</option>');
     html.push('</select>');
     html.push('<br/>');
 
     html.push('<label>Body:</label>');
     html.push('<select name="Body">');
     html.push('<option value="0">-</option>');
-    html.push('<option value="1">Armour</option>');
+    html.push('<option value="1">#1</option>');
+    html.push('<option value="2">#2</option>');
     html.push('</select>');
     html.push('<br/>');
 

@@ -9,6 +9,7 @@ var MapEditor = {
   InactiveLayersOpacity: '0.8',
   MaxWidth: '100',
   MaxHeight: '100',
+  ShiftDown: false,
 
   Tool: 1, // 1=Pencil, 2=Eraser
   Items: {},
@@ -53,6 +54,18 @@ var MapEditor = {
       if (e.keyCode === 37) {
         e.preventDefault();
         $mapContainer.scrollLeft($mapContainer.scrollLeft()-64);
+      }
+      if (e.keyCode === 16) {
+        e.preventDefault();
+        MapEditor.ShiftDown = true;
+        $('body').css('cursor', 'alias');
+      }
+    });
+    $(document).on('keyup', function(e) {
+      if (e.keyCode === 16) {
+        e.preventDefault();
+        MapEditor.ShiftDown = false;
+        $('body').css('cursor', 'default');
       }
     });
   },
@@ -247,11 +260,13 @@ var MapEditor = {
     url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
 
     // TODO: ignore line below while holding "shift" key
-    $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
+    if(!MapEditor.ShiftDown) {
+      $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
+    }
 
     var item = '<div class="item" data-layer="' +layer+ '" data-item-id="' +MapEditor.SelectedItem.Id+ '" data-item-size="' +MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>';
     var $a = $sqm.find('.item').not($('#item-preview', document)).filter(function() {
-      return parseInt($(this).data('layer')) < layer;
+      return parseInt($(this).data('layer')) <= layer;
     });
     if($a.last().length > 0) {
       $(item).insertAfter($a.last());
