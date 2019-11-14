@@ -14,13 +14,12 @@ var MapEditor = {
   Tool: 1, // 1=Pencil, 2=Eraser
   Items: {},
   SelectedItem: null,
+  SecondaryItem: null,
   Dragging: false,
 
   init: function() {
     MapEditor.getItems();
 
-    $('#NewWorld', document).on('click', MapEditor.onNewWorldClick);
-    $('#NewWorldModalSubmit', document).on('click', MapEditor.onNewWorldModalSubmit);
     $('#Eraser', document).on('click', MapEditor.onEraser);
     $('#Search', document).on('keyup', MapEditor.resortItemContainer);
     $('#Layer', document).on('change', MapEditor.resortItemContainer);
@@ -28,7 +27,6 @@ var MapEditor = {
     $('#SaveWorld', document).on('click', MapEditor.onSaveWorldClick);
     $('#File', document).on('change', MapEditor.onFile);
 
-    MapEditor.onNewWorldClick();
     MapEditor.rebind();
 
     $(document).on('mousedown', function(e) {
@@ -60,6 +58,19 @@ var MapEditor = {
         MapEditor.ShiftDown = true;
         $('body').css('cursor', 'alias');
       }
+      if (e.keyCode === 88) {
+        e.preventDefault();
+        var SelectedItem = MapEditor.SelectedItem;
+        var SecondaryItem = MapEditor.SecondaryItem;
+        if(SecondaryItem) {
+          MapEditor.selectItem(SecondaryItem.Id);
+        }
+        if(SelectedItem) {
+          MapEditor.selectSecondaryItem(SelectedItem.Id);
+        }
+        MapEditor.Tool = 1;
+        $('#item-preview').remove();
+      }
     });
     $(document).on('keyup', function(e) {
       if (e.keyCode === 16) {
@@ -68,6 +79,7 @@ var MapEditor = {
         $('body').css('cursor', 'default');
       }
     });
+    MapEditor.createEmptyWorld();
   },
 
   getItems: function() {
@@ -79,9 +91,17 @@ var MapEditor = {
 
   selectItem: function(id) {
     var Item = MapEditor.Items[id];
+    if(!Item) return;
     MapEditor.SelectedItem = Item;
     $('.actual-item-image', document).html('<img src="' + MapEditor.ImagesURL + Item.Id + '"/>');
     $('.actual-item-details', document).html(Item.Name + ' (' + Item.Id + ')');
+  },
+
+  selectSecondaryItem: function(id) {
+    var Item = MapEditor.Items[id];
+    if(!Item) return;
+    MapEditor.SecondaryItem = Item;
+    $('.secondary-item-image', document).html('<img src="' + MapEditor.ImagesURL + Item.Id + '"/>');
   },
 
   renderItemContainer: function() {
@@ -121,31 +141,13 @@ var MapEditor = {
     });
   },
 
-  onNewWorldClick: function() {
-    $('#NewWorldModal', document).modal('show');
-  },
-
-  onNewWorldModalSubmit: function() {
-    var modalBody = $('#NewWorldModal .modal-body', document);
-    var $Width = $('[name="Width"]', modalBody);
-    var $Height = $('[name="Height"]', modalBody);
-
-    if(!(/^\+?(0|[1-9]\d*)$/.test($Width.val())) || !(/^\+?(0|[1-9]\d*)$/.test($Height.val()))) {
-      alert('put integers');
-      return;
-    }
-    if((parseInt($Width.val()) > MapEditor.MaxWidth || parseInt($Width.val()) < 1) || (parseInt($Height.val()) > MapEditor.MaxHeight || parseInt($Height.val()) < 1)) {
-      alert('Width: min 1sqm, max ' +MapEditor.MaxWidth+ 'sqm \n Height: min 1sqm, max ' +MapEditor.MaxHeight+ 'sqm');
-      return;
-    }
-
-    $('#NewWorldModal', document).modal('hide');
+  createEmptyWorld: function() {
     var html = [];
-    for(var i=0;i<$Height.val();i++) {
+    for(var i=0;i<100;i++) {
       html.push('<div class="map-row">');
-      for(var j=0;j<$Width.val();j++) {
-        var url = MapEditor.ImagesURL+ '1000';
-        html.push('<div class="sqm" data-x="' +(j+1)+ '" data-y="' +(i+1)+ '" data-item-id="1000" style="background-image: url(' +url+ ');"></div>');
+      for(var j=0;j<100;j++) {
+        var url = MapEditor.ImagesURL+ '0';
+        html.push('<div class="sqm" data-x="' +(j+1)+ '" data-y="' +(i+1)+ '" data-item-id="0" style="background-image: url(' +url+ ');"></div>');
       }
       html.push('</div>');
     }
@@ -259,7 +261,6 @@ var MapEditor = {
     var layer = MapEditor.SelectedItem.Type;
     url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
 
-    // TODO: ignore line below while holding "shift" key
     if(!MapEditor.ShiftDown) {
       $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
     }
