@@ -2,22 +2,22 @@
 
 namespace Server\Classes;
 
-class SQM
+class SQM extends BaseClass
 {
   public $Items = array();
 
-  public function __construct()
+  public function initialize()
   {
   }
 
-  public function addItem(Item $item)
+  public function addItem($item)
   {
     $this->Items[] = $item;
   }
 
   public function removeItem($itemId)
   {
-    if(isset(end($this->Items)->Id) && end($this->Items)->Id == $itemId) {
+    if(!empty($this->Items) && end($this->Items) == $itemId) {
       array_pop($this->Items);
       return true;
     }
@@ -26,9 +26,9 @@ class SQM
 
   public function isWalkable()
   {
-    /** @var Item $item */
     foreach($this->Items as $item) {
-      if($item->IsBlocking) {
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item);
+      if($structure->IsBlocking) {
         return false;
       }
     }

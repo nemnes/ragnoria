@@ -27,6 +27,7 @@ session_start();
   <script src="Libs/Console/Console.js"></script>
   <script src="Libs/Ping/Ping.js"></script>
   <script src="Libs/Board/Board.js"></script>
+  <script src="Libs/Item/Item.js"></script>
   <script src="Libs/Hero/Hero.js"></script>
   <script src="Libs/Player/Player.js"></script>
   <script src="Libs/NPC/NPC.js"></script>

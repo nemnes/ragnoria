@@ -15,20 +15,7 @@ var Libs_Board = {
         if(!sqm) {
           continue;
         }
-        html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '">');
-        for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-          var item = sqm.Items[id];
-          var zindex = parseInt(y+ '' +x);
-          if(item.IsAlwaysTop > 0) {
-            zindex = zindex+1;
-          }
-          if(item.IsAlwaysUnder > 0) {
-            zindex = 0;
-          }
-          url = App.getItemURL(item.Id);
-          html.push('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
-        }
-        html.push('</div>');
+        html.push(Libs_Board.setSQM(sqm, x, y).prop('outerHTML'));
       }
       html.push('</div>');
     }
@@ -51,8 +38,9 @@ var Libs_Board = {
 
   setSQM: function(sqm, x, y) {
     var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '"></div>');
-    for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
-      var item = sqm.Items[id];
+    for(var key in sqm) if (sqm.hasOwnProperty(key)) {
+      var id = sqm[key];
+      var item = Libs_Item[id];
       var zindex = parseInt(y+ '' +x);
       if(item.IsAlwaysTop > 0) {
         zindex = zindex+1;
@@ -60,26 +48,10 @@ var Libs_Board = {
       if(item.IsAlwaysUnder > 0) {
         zindex = 0;
       }
-      url = App.getItemURL(item.Id);
+      var url = App.getItemURL(id);
 
-      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
+      $newSQM.append('<div class="item" data-item-id="' +id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
     }
-
-    // $newSQM.on('mouseenter', function(e){
-    //   var $item = $('.item:last', $(this));
-    //   if (Libs_Keyboard.isClicked("shift") && $item.length > 0) {
-    //     $('#tooltip', document).remove();
-    //     $('.item.highlight', document).removeClass('highlight');
-    //     var $tooltip = $('<div id="tooltip" style="left: ' +(e.pageX+5)+ 'px; top: ' +e.pageY+ 'px;"></div>');
-    //     $item.addClass('highlight');
-    //     $tooltip.text($item.data('item-name'));
-    //     $('body').append($tooltip);
-    //   }
-    // });
-    // $newSQM.on('mouseout', function(e){
-    //   $('#tooltip', document).remove();
-    //   $('.item.highlight', document).removeClass('highlight');
-    // });
 
     return $newSQM;
   },
@@ -87,9 +59,6 @@ var Libs_Board = {
   isWalkable: function() {
     var $sqm = $(this);
     if(!$sqm || $sqm.length === 0) {
-      return false;
-    }
-    if($sqm.data('blocking') > 0) {
       return false;
     }
     var itemBlock = false;

@@ -6,6 +6,7 @@ use Libs\SQLMapper;
 use Server\Classes\Item;
 use Server\Classes\NPC;
 use Server\Classes\Player;
+use Server\Classes\SQM;
 
 class App
 {
@@ -27,11 +28,6 @@ class App
     $this->get('IoServer')->run();
   }
 
-  public function newItem($itemId)
-  {
-    return new Item($this, [$itemId]);
-  }
-
   public function newPlayer($playerId, $conn)
   {
     return new Player($this, [$playerId, $conn]);
@@ -41,6 +37,11 @@ class App
   public function newNPC($id)
   {
     return new NPC($this, [$id]);
+  }
+
+  public function newSQM()
+  {
+    return new SQM($this, []);
   }
 
   public function get($name)

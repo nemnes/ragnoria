@@ -105,7 +105,7 @@ class Player extends Creature
     $area = array();
     foreach($sqm_range_y as $y) {
       foreach($sqm_range_x as $x) {
-        $area[$y][$x] = $this->getWorld()->getSQM($x,$y);
+        $area[$y][$x] = $this->getWorld()->getSQM($x,$y)->Items;
       }
     }
     return $area;
