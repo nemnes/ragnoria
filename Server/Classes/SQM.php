@@ -4,13 +4,10 @@ namespace Server\Classes;
 
 class SQM
 {
-  /** @var Item */
-  public $Ground;
   public $Items = array();
 
-  public function __construct(Item $item)
+  public function __construct()
   {
-    $this->Ground = $item;
   }
 
   public function addItem(Item $item)
@@ -29,9 +26,6 @@ class SQM
 
   public function isWalkable()
   {
-    if($this->Ground->IsBlocking) {
-      return false;
-    }
     /** @var Item $item */
     foreach($this->Items as $item) {
       if($item->IsBlocking) {

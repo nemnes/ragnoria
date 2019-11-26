@@ -21,8 +21,8 @@ class World extends BaseClass
     $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']), true);
     foreach($scheme as $y => $row) {
       foreach($row as $x => $tile) {
-        $sqm = $this->newSQM($tile[0]);
-        foreach($tile[1] as $itemId) {
+        $sqm = $this->newSQM();
+        foreach($tile as $itemId) {
           $sqm->addItem($this->getApp()->newItem($itemId));
         }
         $this->Grid[$x][$y] = $sqm;
@@ -80,9 +80,9 @@ class World extends BaseClass
     return count($this->Players);
   }
 
-  private function newSQM($itemId)
+  private function newSQM()
   {
-    return new SQM($this->getApp()->newItem($itemId));
+    return new SQM();
   }
 
   public function getSQM($x, $y)

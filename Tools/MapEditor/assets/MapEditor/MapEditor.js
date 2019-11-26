@@ -1,6 +1,6 @@
 /*
- * Ragnoria Map Editor
- * Created by Adam Łożyński
+ * Ragnoria Map Editor v1.91
+ * Created by Adam Lozynski
  */
 var MapEditor = {
   ImagesURL: Config.itemsURL,
@@ -147,7 +147,7 @@ var MapEditor = {
       html.push('<div class="map-row">');
       for(var j=0;j<100;j++) {
         var url = MapEditor.ImagesURL+ '0';
-        html.push('<div class="sqm" data-x="' +(j+1)+ '" data-y="' +(i+1)+ '" data-item-id="0" style="background-image: url(' +url+ ');"></div>');
+        html.push('<div class="sqm" data-x="' +(j)+ '" data-y="' +(i)+ '" data-item-id="0" style="background-image: url(' +url+ ');"></div>');
       }
       html.push('</div>');
     }
@@ -156,7 +156,7 @@ var MapEditor = {
   },
 
   onSaveWorldClick: function() {
-    var map = {};
+    var map = [];
     var _context = $('.map-container', document);
     $('.sqm', _context).each(function(a) {
       var $sqm = $(this);
@@ -164,6 +164,7 @@ var MapEditor = {
       var y = $sqm.data('y');
       var groundId = parseInt($sqm.data('item-id'));
       var items = [];
+      items.push(groundId);
       $('.item', $sqm).each(function(){
         if($(this).attr('id') == 'item-preview') {
           return;
@@ -171,9 +172,9 @@ var MapEditor = {
         items.push($(this).data('item-id'));
       });
       if(!map[y]) {
-        map[y] = {};
+        map[y] = [];
       }
-      map[y][x] = [groundId,items];
+      map[y][x] = items;
     });
     var world = JSON.stringify(map);
     $.ajax({
@@ -213,24 +214,27 @@ var MapEditor = {
 
   renderWorld: function(data) {
     $('.map-container', document).empty();
-    for (var y in data) if (data.hasOwnProperty(y)) {
-      var row = data[y];
+    for(var y = 0; y < data.length; y++) {
       var html = [];
+      var url = '';
       html.push('<div class="map-row">');
-      for (var x in row) if (row.hasOwnProperty(x)) {
-        var sqm = row[x];
-        var url = MapEditor.ImagesURL + sqm[0];
-        html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-item-id="' +sqm[0]+ '" style="background-image: url(' +url+ ');">');
-        for(var id in sqm[1]) if (sqm[1].hasOwnProperty(id)) {
-          var item = MapEditor.Items[sqm[1][id]];
+      for (var x = 0; x < data[y].length; x++) {
+        url = MapEditor.ImagesURL + data[y][x][0];
+        html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-item-id="' +data[y][x][0]+ '" style="background-image: url(' +url+ ');">');
+        for (var i = 0; i < data[y][x].length; i++) {
+          if(i === 0) {
+            continue;
+          }
+          var item = MapEditor.Items[data[y][x][i]];
           url = MapEditor.ImagesURL + item.Id;
-          html.push('<div class="item" data-layer="' +item.Type+ '" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" style="background-image: url(' +url+ ');"></div>');
+          html.push('<div class="item" data-layer="' + item.Type + '" data-item-id="' + item.Id + '" data-item-size="' + item.Size + '" style="background-image: url(' + url + ');"></div>');
         }
         html.push('</div>');
       }
       html.push('</div>');
       $('.map-container', document).append(html.join(''));
     }
+
     MapEditor.rebind();
     $('#Layer', document).trigger('change');
   },

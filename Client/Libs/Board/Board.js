@@ -15,8 +15,7 @@ var Libs_Board = {
         if(!sqm) {
           continue;
         }
-        url = App.getItemURL(sqm.Ground.Id);
-        html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-blocking="' +sqm.Ground.IsBlocking+ '" style="background-image: url(' +url+ ');">');
+        html.push('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '">');
         for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
           var item = sqm.Items[id];
           var zindex = parseInt(y+ '' +x);
@@ -51,8 +50,7 @@ var Libs_Board = {
   },
 
   setSQM: function(sqm, x, y) {
-    var url = App.getItemURL(sqm.Ground.Id);
-    var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '" data-blocking="' +sqm.Ground.IsBlocking+ '" style="background-image: url(' +url+ ');"></div>');
+    var $newSQM = $('<div class="sqm" data-x="' +x+ '" data-y="' +y+ '"></div>');
     for(var id in sqm.Items) if (sqm.Items.hasOwnProperty(id)) {
       var item = sqm.Items[id];
       var zindex = parseInt(y+ '' +x);
@@ -64,7 +62,7 @@ var Libs_Board = {
       }
       url = App.getItemURL(item.Id);
 
-      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" data-item-name="' +item.Name+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
+      $newSQM.append('<div class="item" data-item-id="' +item.Id+ '" data-item-size="' +item.Size+ '" data-blocking="' +item.IsBlocking+ '" style="z-index: ' +zindex+ '; background-image: url(' +url+ ');"></div>');
     }
 
     // $newSQM.on('mouseenter', function(e){
