@@ -44,21 +44,21 @@ var Libs_Chat = {
   },
 
   appendMessage: function(message, author, x, y) {
-    message = Libs_Misc.stripHtml(message).substring(0,135);
-    var $sqm = Libs_Board.getSQM(x,y);
-    var $msg = $('<span>' + message + '</span>');
-
-    if($sqm.find('.message[data-author="' +author+ '"]').length === 0) {
-      $sqm.append('<div class="message" data-author="' +author+ '">' +author+ ':</div>');
-    }
-
-    $sqm.find('.message[data-author="' +author+ '"]').append($msg);
-    setTimeout(function() {
-      $msg.remove();
-      if($sqm.find('.message[data-author="' +author+ '"] span').length === 0) {
-        $sqm.find('.message[data-author="' +author+ '"]').remove();
-      }
-    }, 2000+(message.length * 25));
+    // message = Libs_Misc.stripHtml(message).substring(0,135);
+    // var $sqm = Libs_Board.getSQM(x,y);
+    // var $msg = $('<span>' + message + '</span>');
+    //
+    // if($sqm.find('.message[data-author="' +author+ '"]').length === 0) {
+    //   $sqm.append('<div class="message" data-author="' +author+ '">' +author+ ':</div>');
+    // }
+    //
+    // $sqm.find('.message[data-author="' +author+ '"]').append($msg);
+    // setTimeout(function() {
+    //   $msg.remove();
+    //   if($sqm.find('.message[data-author="' +author+ '"] span').length === 0) {
+    //     $sqm.find('.message[data-author="' +author+ '"]').remove();
+    //   }
+    // }, 2000+(message.length * 25));
   }
 
 };

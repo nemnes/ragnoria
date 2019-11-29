@@ -9,13 +9,12 @@ class Walk extends BaseRequest
   public function initialize(Player $player, $direction)
   {
     if($player->Locks->Movement > microtime(true)) {
-      $player->send('Libs_Movement.confirmStep', [false]);
-      $this->getApp()->log($player->Name. ' - movement locked');
+      $player->send('Libs_Movement.confirmStep', [false, $player->X, $player->Y, $player->Direction]);
+//      $this->getApp()->log($player->Name. ' - movement locked');
       return;
     }
 
-    $speed = 35; // in range between 1 to 100
-    $player->Locks->Movement = microtime(true) + ((600-($speed*5.5))/1000);
+    $player->Locks->Movement = microtime(true) + ((600-($player->Speed*5.5))/1000);
     $playersOnAreaBeforeStep = $player->getPlayersOnArea();
     $playersStillOnArea = array();
 
@@ -23,18 +22,30 @@ class Walk extends BaseRequest
     if($direction === 'North') {
       $stepDone = $player->goNorth();
     }
-    if($direction === 'South') {
-      $stepDone = $player->goSouth();
+    if($direction === 'NorthEast') {
+      $stepDone = $player->goNorthEast();
     }
     if($direction === 'East') {
       $stepDone = $player->goEast();
     }
+    if($direction === 'SouthEast') {
+      $stepDone = $player->goSouthEast();
+    }
+    if($direction === 'South') {
+      $stepDone = $player->goSouth();
+    }
+    if($direction === 'SouthWest') {
+      $stepDone = $player->goSouthWest();
+    }
     if($direction === 'West') {
       $stepDone = $player->goWest();
     }
+    if($direction === 'NorthWest') {
+      $stepDone = $player->goNorthWest();
+    }
 
     if($stepDone) {
-      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
+      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
       /** @var Player $playerOnArea */
       foreach($player->getPlayersOnArea() as $playerOnArea) {
         $playerOnArea->send('Libs_Player.move', [$player, $direction]);
@@ -48,6 +59,6 @@ class Walk extends BaseRequest
       return;
     }
 
-    $player->send('Libs_Movement.confirmStep', [false]);
+    $player->send('Libs_Movement.confirmStep', [false, $player->X, $player->Y, $player->Direction]);
   }
 }

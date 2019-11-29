@@ -3,6 +3,8 @@ var App = {
   IO: null,
   Connected: false,
   Hero: null,
+  Intervals: {},
+  Timeouts: {},
 
   run: function () {
     Libs_Console.init();
@@ -42,32 +44,36 @@ var App = {
     for(let i in players) if (players.hasOwnProperty(i)) {
       Libs_Player.create(players[i]);
     }
-    for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
-      Libs_NPC.create(NPCs[i]);
-    }
-    Libs_Effect.run(1,hero.X,hero.Y);
+//     for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
+//       Libs_NPC.create(NPCs[i]);
+//     }
+//     Libs_Effect.run(1,hero.X,hero.Y);
   },
 
   emit: function(method, args = []) {
     App.IO.send(JSON.stringify([method, args]));
   },
 
-  getItemURL: function(id) {
-    return Config.itemsURL + id;
+  addInterval: function(name, fn, time) {
+    App.Intervals[name] = setInterval(fn, time);
   },
 
-  getOutfitURL: function(creature) {
-    return Config.outfitURL + ([
-      creature.Base,
-      creature.Head,
-      creature.Body,
-      creature.Back,
-      creature.Hands,
-      creature.HeadColor.replace('#', ''),
-      creature.PrimaryColor.replace('#', ''),
-      creature.SecondaryColor.replace('#', ''),
-      creature.DetailColor.replace('#', '')
-    ].join(':'));
+  clearInterval: function(name) {
+    if(typeof App.Intervals[name] === 'undefined') {
+      return;
+    }
+    clearInterval(App.Intervals[name]);
+  },
+
+  addTimeout: function(name, fn, time) {
+    App.Timeouts[name] = setTimeout(fn, time);
+  },
+
+  clearTimeout: function(name) {
+    if(typeof App.Timeouts[name] === 'undefined') {
+      return;
+    }
+    clearTimeout(App.Timeouts[name]);
   },
 
 };

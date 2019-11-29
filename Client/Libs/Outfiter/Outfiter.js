@@ -15,7 +15,7 @@ var Libs_Outfiter = {
   init: function() {
     var html = [];
     html.push('<div id="outfiter">');
-    html.push('<div class="preview" style="background-image: url(' +App.getOutfitURL(Libs_Outfiter.LookType)+ ');"></div>');
+    html.push('<div class="preview" style="background-image: url(' +Libs_Misc.getOutfitURL(Libs_Outfiter.LookType)+ ');"></div>');
 
     html.push('<hr/>');
 
@@ -77,7 +77,7 @@ var Libs_Outfiter = {
         'SecondaryColor': $('[name="SecondaryColor"]', Libs_Outfiter.$).val(),
         'DetailColor': $('[name="DetailColor"]', Libs_Outfiter.$).val(),
       };
-      var url = App.getOutfitURL(Libs_Outfiter.LookType);
+      var url = Libs_Misc.getOutfitURL(Libs_Outfiter.LookType);
       $('div.preview', Libs_Outfiter.$).css('background-image', 'url(' +url+ ')');
     });
 

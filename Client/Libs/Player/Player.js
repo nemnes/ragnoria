@@ -1,114 +1,131 @@
 var Libs_Player = {
 
-  Player: [],
-
   create: function(player) {
-    if(Libs_Board.$.find('.player[data-id="' +player.Id+ '"]').length > 0) {
-      return;
-    }
-    var url = App.getOutfitURL(player);
-    let $player = $('<div class="player" data-id="' +player.Id+ '" data-nickname="' +player.Name+ '" style="z-index: ' +player.Y+ '' +player.X+ ';background-image:url(' +url+ ');"><div class="nickname">' +player.Name+ '</div></div>');
-    Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
+    player.Image = new Image;
+    player.Image.src = Libs_Misc.getOutfitURL(player);
+    player.Animation = {
+      Playing: false,
+      CurrentFrame: null
+    };
+    Libs_Board.Players[player.Id] = player;
   },
 
   move: function(player, direction) {
-    if(Libs_Board.$.find('.player[data-id="' +player.Id+ '"]').length === 0) {
+    if(!(Libs_Board.Players[player.Id])) {
       Libs_Player.create(player);
-      Libs_Player.rotate(player.Id, direction);
-    }
-    else {
-      Libs_Player.rotate(player.Id, direction);
-      let $player = Libs_Board.$.find('.player[data-id="' +player.Id+ '"]');
-      let stepTime = (600-(25*5.5)+25);
-      Libs_Player.startWalkingAnimation(player.Id, stepTime);
-
-      setTimeout(function(){
-        if(direction === 'North') $player.css('z-index', (player.Y) +''+(player.X));
-        if(direction === 'South') $player.css('z-index', (player.Y) +''+(player.X));
-        if(direction === 'East') $player.css('z-index', (player.Y) +''+(player.X));
-        if(direction === 'West') $player.css('z-index', (player.Y) +''+(player.X));
-      }, stepTime/2);
-
-      if(direction === 'North') {
-        $player.finish().animate({ top: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-          $player.css('top', '0px').css('left', '0px');
-          Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
-          Libs_Player.stopWalkingAnimation(player.Id);
-        });
-      }
-      if(direction === 'South') {
-        $player.finish().animate({ top: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-          $player.css('top', '0px').css('left', '0px');
-          Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
-          Libs_Player.stopWalkingAnimation(player.Id);
-        });
-      }
-      if(direction === 'East') {
-        $player.finish().animate({ left: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-          $player.css('top', '0px').css('left', '0px');
-          Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
-          Libs_Player.stopWalkingAnimation(player.Id);
-        });
-      }
-      if(direction === 'West') {
-        $player.finish().animate({ left: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-          $player.css('top', '0px').css('left', '0px');
-          Libs_Board.$.find('.sqm[data-x="' +player.X+ '"][data-y="' +player.Y+ '"]').append($player);
-          Libs_Player.stopWalkingAnimation(player.Id);
-        });
-      }
+      return;
     }
 
-  },
-
-  remove: function(id) {
-    Libs_Board.$.find('.player[data-id="' +id+ '"]').finish().remove();
+    Libs_Board.Players[player.Id].X = player.X;
+    Libs_Board.Players[player.Id].Y = player.Y;
+    Libs_Board.Players[player.Id].Direction = player.Direction;
+    Libs_Board.Players[player.Id].Animation.CurrentFrame = 0;
+    App.clearInterval('Player_' +player.Id+ '_Movement');
+    Libs_Board.Players[player.Id].Animation.Playing = true;
+    App.addInterval('Player_' +player.Id+ '_Movement', function() {
+      if(typeof Libs_Board.Players[player.Id] === 'undefined') {
+        App.clearInterval('Player_' +player.Id+ '_Movement');
+        return;
+      }
+      Libs_Board.Players[player.Id].Animation.CurrentFrame++;
+      if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
+        App.clearInterval('Player_' +player.Id+ '_Movement');
+        Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
+        Libs_Board.Players[player.Id].Animation.Playing = false;
+      }
+    }, (Libs_Player.getStepTime(player.Id)/32));
   },
 
   rotate: function(id, direction) {
-    let $player = $('.player[data-id="' +id+ '"]');
-    switch(direction) {
-      case 'North':
-        $player.css('background-position-y', -64+'px');
-        break;
-      case 'South':
-        $player.css('background-position-y', '0px');
-        break;
-      case 'East':
-        $player.css('background-position-y', -128+'px');
-        break;
-      case 'West':
-        $player.css('background-position-y', -192+'px');
-        break;
+    Libs_Board.Players[id].Direction = direction;
+  },
+
+  remove: function(id) {
+    if(Libs_Board.Players[id]) {
+      delete Libs_Board.Players[id];
     }
   },
 
-  startWalkingAnimation(id, stepTime) {
-    if(!Libs_Player.Player[id]) { Libs_Player.Player[id] = {};}
-    clearTimeout(Libs_Player.Player[id].walkingAnimation);
-    clearInterval(Libs_Player.Player[id].walkingAnimation);
-    let $player = Libs_Board.$.find('.player[data-id="' +id+ '"]');
-    $player.finish().css('background-position-x', -2*64+'px');
-    Libs_Player.Player[id].walkingAnimation = setInterval(function(){
-      if($player.css('background-position-x') === '-128px') {
-        $player.css('background-position-x', -1*64+'px');
-      }
-      else {
-        $player.css('background-position-x', -2*64+'px');
-      }
-    }, (stepTime/2)+25);
+  getStepTime: function(id) {
+    return 600-(Libs_Board.Players[id].Speed*5.5)+35;
   },
 
-  stopWalkingAnimation: function(id) {
-    if(!Libs_Player.Player[id]) { Libs_Player.Player[id] = {};}
-    clearTimeout(Libs_Player.Player[id].walkingAnimation);
-    clearInterval(Libs_Player.Player[id].walkingAnimation);
-    Libs_Player.Player[id].walking = false;
-    let $player = Libs_Board.$.find('.player[data-id="' +id+ '"]');
-    Libs_Player.Player[id].walkingAnimation = setTimeout(function(){
-      $player.css('background-position-x', '0px');
-    }, 50);
+  getTopOffset: function(id) {
+    switch(Libs_Board.Players[id].Direction) {
+      case 'North': return 64;
+      case 'NorthEast': return 128;
+      case 'East': return 128;
+      case 'SouthEast': return 128;
+      case 'South': return 0;
+      case 'SouthWest': return 192;
+      case 'West': return 192;
+      case 'NorthWest': return 192;
+      default: return 0;
+    }
   },
 
+  getLeftOffset: function(id) {
+    if(!Libs_Board.Players[id].Animation.Playing) {
+      return 0;
+    }
+    return Libs_Board.Players[id].Animation.CurrentFrame < 16 ? 64 : 128;
+  },
+
+
+  getTopMargin: function(id) {
+    if(!Libs_Board.Players[id].Animation.Playing) {
+      return 0;
+    }
+    if(Libs_Board.Players[id].Animation.CurrentFrame < 16) {
+      switch(Libs_Board.Players[id].Direction) {
+        case 'South': return Libs_Board.Players[id].Animation.CurrentFrame;
+        case 'North': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        case 'NorthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        case 'NorthEast': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        case 'SouthEast': return Libs_Board.Players[id].Animation.CurrentFrame;
+        case 'SouthWest': return Libs_Board.Players[id].Animation.CurrentFrame;
+        default: return 0;
+      }
+    }
+    else {
+      switch(Libs_Board.Players[id].Direction) {
+        case 'South': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        case 'North': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        case 'NorthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        case 'NorthEast': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        case 'SouthEast': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        case 'SouthWest': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        default: return 0;
+      }
+    }
+  },
+
+  getLeftMargin: function(id) {
+    if(!(Libs_Board.Players[id].Animation.Playing)) {
+      return 0;
+    }
+    if(Libs_Board.Players[id].Animation.CurrentFrame < 16) {
+      switch(Libs_Board.Players[id].Direction) {
+        case 'East': return Libs_Board.Players[id].Animation.CurrentFrame;
+        case 'West': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        case 'NorthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        case 'NorthEast': return Libs_Board.Players[id].Animation.CurrentFrame;
+        case 'SouthEast': return Libs_Board.Players[id].Animation.CurrentFrame;
+        case 'SouthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1);
+        default: return 0;
+      }
+    }
+    else {
+      switch(Libs_Board.Players[id].Direction) {
+        case 'East': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        case 'West': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        case 'NorthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        case 'NorthEast': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        case 'SouthEast': return Libs_Board.Players[id].Animation.CurrentFrame-32;
+        case 'SouthWest': return Libs_Board.Players[id].Animation.CurrentFrame*(-1)+32;
+        default: return 0;
+      }
+    }
+  }
 
 };

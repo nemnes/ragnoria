@@ -18,4 +18,22 @@ var Libs_Misc = {
     location = location.href;
   },
 
+  getItemURL: function(id) {
+    return Config.itemsURL + id;
+  },
+
+  getOutfitURL: function(creature) {
+    return Config.outfitURL + ([
+      creature.Base,
+      creature.Head,
+      creature.Body,
+      creature.Back,
+      creature.Hands,
+      creature.HeadColor.replace('#', ''),
+      creature.PrimaryColor.replace('#', ''),
+      creature.SecondaryColor.replace('#', ''),
+      creature.DetailColor.replace('#', '')
+    ].join(':'));
+  },
+
 };

@@ -8,170 +8,91 @@ var Libs_Movement = {
     if(Libs_Hero.movementBlocked) {
       return;
     }
-    var $targetSQM = null;
+    var targetSQM = null;
     switch(direction) {
       case 'North':
-        $targetSQM = Libs_Board.getSQM(Libs_Hero.X, Libs_Hero.Y-1);
+        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X];
+        break;
+      case 'NorthEast':
+        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X+1];
         break;
       case 'East':
-        $targetSQM = Libs_Board.getSQM(Libs_Hero.X+1, Libs_Hero.Y);
+        targetSQM = Libs_Board.Area[Libs_Hero.Y][Libs_Hero.X+1];
+        break;
+      case 'SouthEast':
+        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X+1];
         break;
       case 'South':
-        $targetSQM = Libs_Board.getSQM(Libs_Hero.X, Libs_Hero.Y+1);
+        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X];
+        break;
+      case 'SouthWest':
+        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X-1];
         break;
       case 'West':
-        $targetSQM = Libs_Board.getSQM(Libs_Hero.X-1, Libs_Hero.Y);
+        targetSQM = Libs_Board.Area[Libs_Hero.Y][Libs_Hero.X-1];
+        break;
+      case 'NorthWest':
+        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X-1];
         break;
     }
-    if(!$targetSQM) {
+    if(!targetSQM) {
       return;
     }
-    if($targetSQM.isWalkable()) {
-      Libs_Movement.go(direction);
-      App.emit('Walk', [direction]);
+    for(var stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
+      if(Libs_Item[targetSQM[stack]].IsBlocking) {
+        return;
+      }
     }
+    // check collisions here
+    Libs_Movement.go(direction);
+    App.emit('Walk', [direction]);
   },
 
   rotate: function(direction) {
     if(Libs_Hero.movementBlocked) {
       return;
     }
-    Libs_Hero.movementBlocked = 1;
+    Libs_Hero.movementBlocked = true;
     setTimeout(function(){
-      Libs_Hero.movementBlocked = 0;
+      Libs_Hero.movementBlocked = false;
     }, 100);
-    Libs_Player.rotate(Libs_Hero.Id, direction);
+    Libs_Hero.Direction = direction;
     App.emit('Rotate', [direction]);
   },
 
   go: function (direction) {
-    if(!Libs_Player.Player[Libs_Hero.Id]) { Libs_Player.Player[Libs_Hero.Id] = {}; }
+    Libs_Hero.Direction = direction;
     Libs_Hero.movementBlocked = true;
-    Libs_Player.Player[Libs_Hero.Id].walking = true;
-    Libs_Player.rotate(Libs_Hero.Id, direction);
-    Libs_Player.startWalkingAnimation(Libs_Hero.Id, Libs_Hero.StepTime());
 
-    setTimeout(function(){
-      if(direction === 'North') Libs_Hero.$.css('z-index', (Libs_Hero.Y-1) +''+(Libs_Hero.X));
-      if(direction === 'South') Libs_Hero.$.css('z-index', (Libs_Hero.Y+1) +''+(Libs_Hero.X));
-      if(direction === 'East') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+(Libs_Hero.X+1));
-      if(direction === 'West') Libs_Hero.$.css('z-index', (Libs_Hero.Y) +''+(Libs_Hero.X-1));
-    }, Libs_Hero.StepTime()/2);
+    clearInterval(Libs_Hero.Animation.Interval);
+    Libs_Hero.Animation.CurrentFrame = 0;
+    Libs_Hero.Animation.Playing = true;
+    Libs_Hero.Animation.Interval = setInterval(function(){
+      Libs_Hero.Animation.CurrentFrame++;
+      if(Libs_Hero.Animation.CurrentFrame === 32) {
+        clearInterval(Libs_Hero.Animation.Interval);
+        Libs_Hero.Animation.Playing = false;
+      }
+    }, (Libs_Hero.StepTime()/32));
 
-    if(direction === 'North') {
-      Libs_Board.$.finish().animate({ marginTop: '64px' }, Libs_Hero.StepTime(), 'linear');
-      Libs_Hero.$.finish().animate({ top: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
-      });
-    }
-    if(direction === 'South') {
-      Libs_Board.$.finish().animate({ marginTop: '-64px' }, Libs_Hero.StepTime(), 'linear');
-      Libs_Hero.$.finish().animate({ top: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
-      });
-    }
-    if(direction === 'East') {
-      Libs_Board.$.finish().animate({ marginLeft: '-64px' }, Libs_Hero.StepTime(), 'linear');
-      Libs_Hero.$.finish().animate({ left: '32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
-      });
-    }
-    if(direction === 'West') {
-      Libs_Board.$.finish().animate({ marginLeft: '64px' }, Libs_Hero.StepTime(), 'linear');
-      Libs_Hero.$.finish().animate({ left: '-32px' }, Libs_Hero.StepTime(), 'linear', function(){
-        Libs_Player.stopWalkingAnimation(Libs_Hero.Id);
-      });
-    }
   },
 
-  confirmStep: function(positive, X, Y, area, players, NPCs) {
-    var waitInt = setInterval(function(){
-      if(!(Libs_Player.Player[Libs_Hero.Id].walking === false)) {
+  confirmStep: function(positive, X, Y, direction, area, players, NPCs) {
+    var waitInterval = setInterval(function(){
+      if(Libs_Hero.Animation.Playing) {
         return
       }
-      clearInterval(waitInt);
+      clearInterval(waitInterval);
+      Libs_Hero.Direction = direction;
+      Libs_Hero.X = parseInt(X);
+      Libs_Hero.Y = parseInt(Y);
       if(positive) {
-        Libs_Hero.X = parseInt(X);
-        Libs_Hero.Y = parseInt(Y);
-        var areaWidth = Object.keys(area[Object.keys(area)[0]]).length;
-        var areaHeight = Object.keys(area).length;
-        var y_range_first = Libs_Hero.Y-Math.floor(areaHeight/2);
-        var y_range_last = (y_range_first+areaHeight)-1;
-        var x_range_first = Libs_Hero.X-Math.floor(areaWidth/2);
-        var x_range_last = (x_range_first+areaWidth)-1;
-        // find map-rows to remove
-        var mapRowsToRemove = [];
-        var y_min_atm;
-        var y_max_atm;
-        $('.map-row', Libs_Board.$).each(function(){
-          if($(this).data('y') > y_range_last || $(this).data('y') < y_range_first) {
-            mapRowsToRemove.push($(this));
-          }
-          y_min_atm = !y_min_atm || $(this).data('y') < y_min_atm ? $(this).data('y') : y_min_atm;
-          y_max_atm = !y_max_atm || $(this).data('y') > y_max_atm ? $(this).data('y') : y_max_atm;
-        });
-        // create new map-rows
-        for(let i = y_range_first;i<=y_range_last;i++) {
-          if($('.map-row[data-y="'+i+'"]', Libs_Board.$).length === 0) {
-            var mapRowY = i;
-            var $newRow = $('<div class="map-row" data-y="' + mapRowY + '"></div>');
-            if ($('.map-row[data-y="' + (mapRowY + 1) + '"]', Libs_Board.$).length > 0) {
-              $('.map-row[data-y="' + (mapRowY + 1) + '"]', Libs_Board.$).before($newRow);
-              continue;
-            }
-            if ($('.map-row[data-y="' + (mapRowY - 1) + '"]', Libs_Board.$).length > 0) {
-              $('.map-row[data-y="' + (mapRowY - 1) + '"]', Libs_Board.$).after($newRow);
-              continue;
-            }
-            if (y_min_atm && mapRowY < y_min_atm) {
-              $('.map-row[data-y="' + y_min_atm + '"]', Libs_Board.$).before($newRow);
-              continue;
-            }
-            if (y_max_atm && mapRowY > y_max_atm) {
-              $('.map-row[data-y="' + y_max_atm + '"]', Libs_Board.$).after($newRow);
-              continue;
-            }
-            Libs_Board.$.append($newRow);
-          }
-        }
-        for (var [area_y, row] of Object.entries(area)) {
-          for (var [area_x, sqm] of Object.entries(row)) {
-            area_x = parseInt(area_x);
-            area_y = parseInt(area_y);
-            if($('.sqm[data-x="' +area_x+ '"][data-y="' +area_y+ '"]', Libs_Board.$).length > 0) {
-              continue;
-            }
-            var $newSQM = Libs_Board.setSQM(sqm,area_x,area_y);
-            if($('.sqm[data-x="' +(area_x+1)+ '"][data-y="' +area_y+ '"]', Libs_Board.$).length > 0) {
-              $('.sqm[data-x="' +(area_x+1)+ '"][data-y="' +area_y+ '"]', Libs_Board.$).before($newSQM);
-              continue;
-            }
-            if($('.sqm[data-x="' +(area_x-1)+ '"][data-y="' +area_y+ '"]', Libs_Board.$).length > 0) {
-              $('.sqm[data-x="' +(area_x-1)+ '"][data-y="' +area_y+ '"]', Libs_Board.$).after($newSQM);
-              continue;
-            }
-            $('.map-row[data-y="' +area_y+ '"]', Libs_Board.$).append($newSQM);
-          }
-        }
-        for(let i in mapRowsToRemove) {
-          mapRowsToRemove[i].remove();
-        }
-        $(".map-row[data-y='" +Y+ "'] .sqm[data-x='" +X+ "'][data-y='" +Y+ "']", Libs_Board.$).prepend(Libs_Hero.$);
-        $('.sqm', Libs_Board.$).each(function(){
-          if(typeof area[parseInt($(this).data('y'))][parseInt($(this).data('x'))] == 'undefined') {
-            $(this).remove();
-          }
-        });
-        for(let i in players) if (players.hasOwnProperty(i)) {
-          Libs_Player.create(players[i]);
-        }
-        for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
-          Libs_NPC.create(NPCs[i]);
-        }
+        Libs_Board.Area = area;
+        Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
+        Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
       }
-      Libs_Board.$.css('margin-top', '0').css('margin-left', '0');
-      Libs_Hero.$.css('top', '0').css('left', '0');
       Libs_Hero.movementBlocked = false;
+      Libs_Hero.Animation.CurrentFrame = 0;
     }, 10);
   },
 

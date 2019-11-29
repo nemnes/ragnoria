@@ -18,7 +18,7 @@ var Libs_Keyboard = {
       }
 
       // prevent browser zoom
-      if (e.ctrlKey === true && (e.keyCode === 61 || e.keyCode === 107 || e.keyCode === 173 || e.keyCode === 109  || e.keyCode === 187  || e.keyCode === 189  ) ) {
+      if (e.ctrlKey === true && ([61,107,173,109,187,189].includes(e.keyCode))) {
         e.preventDefault();
       }
 
@@ -48,7 +48,7 @@ var Libs_Keyboard = {
 
       if(!Libs_Chat.isActive() && !Libs_Console.isActive()) {
         // prevent default for walking keys
-        if (e.keyCode === 40 || e.keyCode === 37|| e.keyCode === 39 || e.keyCode === 17) {
+        if ([17,37,38,39,40,97,98,99,100,101,102,103,104,105,33,34,35,36].includes(e.keyCode)) {
           e.preventDefault();
         }
       }
@@ -59,37 +59,56 @@ var Libs_Keyboard = {
     setInterval(function() {
       Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
       if(!Libs_Console.isActive() && !Libs_Chat.isActive() && App.Connected) {
-        if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down'])) {
-          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a"))) {
+        if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'num1', 'num2', 'num3', 'num4', 'num6', 'num7', 'num8', 'num9', 'end', 'pagedown', 'home', 'pageup'])) {
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("num4"))) {
             Libs_Movement.rotate('West');
             return;
           }
-          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("s"))) {
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("num2"))) {
             Libs_Movement.rotate('South');
             return;
           }
-          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("w"))) {
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("num8"))) {
             Libs_Movement.rotate('North');
             return;
           }
-          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("d"))) {
+          if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("num6"))) {
             Libs_Movement.rotate('East');
             return;
           }
-          if (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("a")) {
+          if (Libs_Keyboard.isClicked("ctrl")) {
+            return;
+          }
+          if (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("num4")) {
             Libs_Movement.walk('West');
             return;
           }
-          if (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("s")) {
+          if (Libs_Keyboard.isClicked("down") || Libs_Keyboard.isClicked("num2")) {
             Libs_Movement.walk('South');
             return;
           }
-          if (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("w")) {
+          if (Libs_Keyboard.isClicked("up") || Libs_Keyboard.isClicked("num8")) {
             Libs_Movement.walk('North');
             return;
           }
-          if (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("d")) {
+          if (Libs_Keyboard.isClicked("right") || Libs_Keyboard.isClicked("num6")) {
             Libs_Movement.walk('East');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("num1") || Libs_Keyboard.isClicked("end")) {
+            Libs_Movement.walk('SouthWest');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("num3") || Libs_Keyboard.isClicked("pagedown")) {
+            Libs_Movement.walk('SouthEast');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("num7") || Libs_Keyboard.isClicked("home")) {
+            Libs_Movement.walk('NorthWest');
+            return;
+          }
+          if (Libs_Keyboard.isClicked("num9") || Libs_Keyboard.isClicked("pageup")) {
+            Libs_Movement.walk('NorthEast');
             return;
           }
         }

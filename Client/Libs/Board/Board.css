@@ -1,4 +1,4 @@
-#map {
+#board {
   image-rendering: -moz-crisp-edges;          /* Firefox                        */
   image-rendering: -o-crisp-edges;            /* Opera                          */
   image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
@@ -11,42 +11,5 @@
   top: 50%;
   left: 50%;
   margin-right: -50%;
-  transform: translate(-50%, -50%) scale(2.0);
-}
-#map-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%) scale(2);
-  border: 150px solid #000;
-  pointer-events: none;
-}
-.map-row {
-  height: 32px;
-  display: flex;
-  user-select: none;
-}
-.sqm {
-  display: inline-block;
-  position: relative;
-  width: 32px;
-  min-width: 32px;
-  max-width: 32px;
-  height: 32px;
-  min-height: 32px;
-  max-height: 32px;
-  user-select: none;
-}
-#tooltip {
-  position: absolute;
-  pointer-events: none;
-  background-color: rgba(0,0,0,0.5);
-  border-radius: 4px;
-  color: #eee;
-  padding: 5px 10px;
-  font-weight: bold;
-  font-variant: all-small-caps;
-  font-family: 'Tahoma';
-  font-size: 11px;
+  transform: translate(-50%, -50%);
 }

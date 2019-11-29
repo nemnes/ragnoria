@@ -12,6 +12,8 @@ class Player extends Creature
   public $Name;
   public $X;
   public $Y;
+  public $Direction;
+  public $Speed;
   public $Locks;
 
   // outfit
@@ -35,6 +37,8 @@ class Player extends Creature
     $this->Name = $tblPlayer->Name;
     $this->X = $tblPlayer->X;
     $this->Y = $tblPlayer->Y;
+    $this->Direction = $tblPlayer->Direction;
+    $this->Speed = (int) $tblPlayer->Speed;
 
     // outfit
     $this->Base = $tblPlayer->Base;
@@ -64,6 +68,7 @@ class Player extends Creature
     $tblPlayer->Name = $this->Name;
     $tblPlayer->X = $this->X;
     $tblPlayer->Y = $this->Y;
+    $tblPlayer->Direction = $this->Direction;
     $tblPlayer->Base = $this->Base;
     $tblPlayer->Head = $this->Head;
     $tblPlayer->Body = $this->Body;
