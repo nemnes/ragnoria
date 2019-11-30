@@ -2,13 +2,19 @@ var Libs_Board = {
 
   Width: 33,
   Height: 19,
-  Area: {},
   AreaStart: {X: null, Y: null},
+  Area: {},
   Players: {},
+  NPCs: {},
 
-  canvasCTX: null,
+  board: null,
+  boardCTX: null,
+  fog: null,
+  fogCTX: null,
   canvasScale: 2,
   canvasAntialiasing: false,
+  LightEffectsEnabled: true,
+  lightSources: [],
 
   FramerateLimit: 100,
   RenderingInProgress: false,
@@ -18,15 +24,21 @@ var Libs_Board = {
 
   init: function(area) {
     $('<canvas id="board" width="' +((Libs_Board.Width*32)*Libs_Board.canvasScale)+ 'px" height="' +((Libs_Board.Height*32)*Libs_Board.canvasScale)+ 'px"></canvas>').appendTo($('body'));
-    Libs_Board.canvasCTX = document.getElementById("board").getContext("2d");
-    Libs_Board.canvasCTX.scale(Libs_Board.canvasScale, Libs_Board.canvasScale);
-    Libs_Board.canvasCTX.imageSmoothingEnabled = Libs_Board.canvasAntialiasing;
+    Libs_Board.board = document.getElementById("board");
+    Libs_Board.boardCTX = Libs_Board.board.getContext("2d");
+    Libs_Board.boardCTX.scale(Libs_Board.canvasScale, Libs_Board.canvasScale);
+    Libs_Board.boardCTX.imageSmoothingEnabled = Libs_Board.canvasAntialiasing;
+
+    Libs_Board.fog = document.createElement('canvas');
+    Libs_Board.fog.width = (Libs_Board.Width*32)*Libs_Board.canvasScale;
+    Libs_Board.fog.height = (Libs_Board.Height*32)*Libs_Board.canvasScale;
+    Libs_Board.fogCTX = Libs_Board.fog.getContext('2d');
 
     Libs_Board.Area = area;
     Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
     Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
 
-    for(var item in Libs_Item) {
+    for(let item in Libs_Item) {
       Libs_Item[item].Image = new Image;
       Libs_Item[item].Image.src = Libs_Misc.getItemURL(Libs_Item[item].Id);
     }
@@ -41,6 +53,7 @@ var Libs_Board = {
     }, 1000/Libs_Board.FramerateLimit);
 
     setInterval(function() {
+//      console.log(Libs_Board.FramesRendered);
       Libs_Board.FramesRendered = 0;
     }, 1000);
 
@@ -48,6 +61,8 @@ var Libs_Board = {
 
   render: function(){
     Libs_Board.RenderingInProgress = true;
+    Libs_Board.lightSources = [];
+//    Libs_Board.boardCTX.clearRect(0, 0, Libs_Board.board.width, Libs_Board.board.height);
 
     var TopMargin = Libs_Hero.getTopMargin();
     var LeftMargin = Libs_Hero.getLeftMargin();
@@ -71,6 +86,7 @@ var Libs_Board = {
             Libs_Board.renderItems(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin);
             Libs_Board.renderHero(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin);
             Libs_Board.renderPlayers(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin);
+            Libs_Board.renderNPCs(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin);
             Libs_Board.renderItemsAlwaysTop(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin);
           }
 
@@ -80,13 +96,10 @@ var Libs_Board = {
       }
     }
 
-    // iterate over players on map to get & render nicknames
-    for(var playerId in Libs_Board.Players) if (Libs_Board.Players.hasOwnProperty(playerId)) {
-      Libs_Board.renderNicknames(TopMargin, LeftMargin, Libs_Board.Players[playerId]);
+    Libs_Board.renderNicknames(TopMargin, LeftMargin);
+    if(Libs_Board.LightEffectsEnabled) {
+      Libs_Board.renderFog();
     }
-
-    // hero nickname always over other players nicknames
-    Libs_Board.renderHeroNickname(TopMargin, LeftMargin, Libs_Hero);
 
     Libs_Board.RenderingInProgress = false;
     Libs_Board.FramesRendered++;
@@ -227,6 +240,23 @@ var Libs_Board = {
     }
   },
 
+  renderNPCs: function(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin) {
+    for(var npcId in Libs_Board.NPCs) if (Libs_Board.NPCs.hasOwnProperty(npcId)) {
+      var NPC = Libs_Board.NPCs[npcId];
+      if(parseInt(NPC.Y) === parseInt(Y_SERVER) && parseInt(NPC.X) === parseInt(X_SERVER)) {
+        Libs_Board.drawImage({
+          Top: ((Y_CLIENT * 32) - 40) + (TopMargin),
+          Left: ((X_CLIENT* 32) - 40) + (LeftMargin),
+          Width: 64,
+          Height: 64,
+          LeftOffset: 0, //Libs_Player.getLeftOffset(playerId),
+          TopOffset: 0, //Libs_Player.getTopOffset(playerId),
+          Image: NPC.Image
+        });
+      }
+    }
+  },
+
   renderItems: function(X_CLIENT, Y_CLIENT, X_SERVER, Y_SERVER, TopMargin, LeftMargin) {
     var SQM = Libs_Board.Area[Y_SERVER][X_SERVER];
     for(var stack in SQM) if (SQM.hasOwnProperty(stack)) {
@@ -235,6 +265,14 @@ var Libs_Board = {
         continue;
       }
       if(!([1,2].includes(Item.ItemTypeId))) {
+        if(Item.LightLevel > 0) {
+          Libs_Board.lightSources.push({
+            Top: (Y_CLIENT * 32) + (Item.Size * 16) + (TopMargin),
+            Left: (X_CLIENT * 32) + (Item.Size * 16) + (LeftMargin),
+            LightLevel: Item.LightLevel,
+            LightColor: Item.LightColor
+          });
+        }
         Libs_Board.drawImage({
           Top: (Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (TopMargin),
           Left: (X_CLIENT * 32) - ((Item.Size * 32) - 32) + (LeftMargin),
@@ -256,6 +294,14 @@ var Libs_Board = {
         continue;
       }
       if(!([1,2].includes(Item.ItemTypeId))) {
+        if(Item.LightLevel > 0) {
+          Libs_Board.lightSources.push({
+            Top: (Y_CLIENT * 32) + (Item.Size * 16) + (TopMargin),
+            Left: (X_CLIENT * 32) + (Item.Size * 16) + (LeftMargin),
+            LightLevel: Item.LightLevel,
+            LightColor: Item.LightColor
+          });
+        }
         Libs_Board.drawImage({
           Top: (Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (TopMargin),
           Left: (X_CLIENT * 32) - ((Item.Size * 32) - 32) + (LeftMargin),
@@ -269,61 +315,120 @@ var Libs_Board = {
     }
   },
 
-  renderHeroNickname: function(TopMargin, LeftMargin, Player) {
+  renderNicknames: function(TopMargin, LeftMargin) {
+    // players
+    for(let playerId in Libs_Board.Players) if (Libs_Board.Players.hasOwnProperty(playerId)) {
+      Libs_Board.renderNickname(TopMargin, LeftMargin, Libs_Board.Players[playerId], 'Player');
+    }
+    // NPCs
+    for(let npcId in Libs_Board.NPCs) if (Libs_Board.NPCs.hasOwnProperty(npcId)) {
+      Libs_Board.renderNickname(TopMargin, LeftMargin, Libs_Board.NPCs[npcId], 'NPC');
+    }
+    // hero
+    Libs_Board.renderNickname(TopMargin, LeftMargin, Libs_Hero, 'Hero');
+  },
+
+  renderNickname: function(TopMargin, LeftMargin, Creature, CreatureType) {
+    var Top, Left, Color, VirtualCoords;
+    if(CreatureType === 'Player') {
+      // If player is walking we have to pretend that he is still on previous SQM (for first 16 frames of animation) to keep good layer order
+      VirtualCoords = Libs_Board.getCreatureVirtualCoordinates(Creature);
+      Top = (VirtualCoords.Y * 32) - 14 + (TopMargin) + Libs_Player.getTopMargin(Creature.Id);
+      Left = (VirtualCoords.X * 32) + 4 + (LeftMargin) + Libs_Player.getLeftMargin(Creature.Id);
+      Color = '#43a94f';
+    }
+    if(CreatureType === 'NPC') {
+      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 14 + TopMargin;
+      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 4 + LeftMargin;
+      Color = '#fefff8';
+    }
+    if(CreatureType === 'Hero') {
+      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 14;
+      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 4;
+      Color = '#43a94f';
+    }
+
     Libs_Board.drawText({
-      Text: Player.Name,
+      Text: Creature.Name,
       Font: "bold 6px Tahoma",
-      Top: (Libs_Hero.Y - Libs_Board.AreaStart.Y) * 32 - 14,
-      Left: (Libs_Hero.X - Libs_Board.AreaStart.X) * 32 + 4,
-      Color: '#ffffff',
+      Top: Top,
+      Left: Left,
+      Color: Color,
       Stroke: true,
       StrokeColor: '#000000',
       StrokeWidth: 2
     });
   },
 
-  renderNicknames: function(TopMargin, LeftMargin, Player) {
+  renderFog: function() {
+    Libs_Board.fogCTX.clearRect(0, 0, Libs_Board.fog.width, Libs_Board.fog.height);
 
-    // If player is walking we have to pretend that he is still on previous SQM (for first 16 frames of animation) to keep good layer order
-    var VirtualCoords = Libs_Board.getPlayerVirtualCoordinates(Player);
+    for(let i in Libs_Board.lightSources) if(Libs_Board.lightSources.hasOwnProperty(i)) {
+      let lightSource = Libs_Board.lightSources[i];
+      Libs_Board.addLightSource(lightSource.Left,lightSource.Top,lightSource.LightLevel,lightSource.LightColor);
+    }
 
-    Libs_Board.drawText({
-      Text: Player.Name,
-      Font: "bold 6px Tahoma",
-      Top: (VirtualCoords.Y * 32) - 14 + (TopMargin) + Libs_Player.getTopMargin(Player.Id),
-      Left: (VirtualCoords.X * 32) + 4 + (LeftMargin) + Libs_Player.getLeftMargin(Player.Id),
-      Color: '#ffffff',
-      Stroke: true,
-      StrokeColor: '#000000',
-      StrokeWidth: 2
-    });
+    Libs_Board.boardCTX.globalAlpha = 0.5;
+    Libs_Board.boardCTX.globalCompositeOperation = 'overlay';
+    Libs_Board.boardCTX.drawImage(Libs_Board.fog, 0, 0);
+
+
+    Libs_Board.fogCTX.beginPath();
+    Libs_Board.fogCTX.rect(0, 0, Libs_Board.fog.width, Libs_Board.fog.height);
+    Libs_Board.fogCTX.fillStyle = "#000000";
+    Libs_Board.fogCTX.fill();
+    for(let i in Libs_Board.lightSources) if(Libs_Board.lightSources.hasOwnProperty(i)) {
+      let lightSource = Libs_Board.lightSources[i];
+      Libs_Board.addLightSource(lightSource.Left,lightSource.Top,lightSource.LightLevel,lightSource.LightColor);
+    }
+
+    Libs_Board.boardCTX.globalAlpha = 0.2;
+    Libs_Board.boardCTX.globalCompositeOperation = 'multiply';
+    Libs_Board.boardCTX.drawImage(Libs_Board.fog, 0, 0);
+
+    Libs_Board.boardCTX.globalAlpha = 1;
+    Libs_Board.boardCTX.globalCompositeOperation = 'source-over';
+
   },
+
+  addLightSource: function(left,top,level,color) {
+    var innerRadius = 1;
+    var totalRadius = 16 * level * 2;
+    var radgrad = Libs_Board.fogCTX.createRadialGradient(left,top,innerRadius,left,top,totalRadius);
+    radgrad.addColorStop(0, Libs_Misc.hexToRgba(color, 0.9));
+    radgrad.addColorStop(0.7, Libs_Misc.hexToRgba(color, 0.1));
+    radgrad.addColorStop(1, Libs_Misc.hexToRgba(color, 0));
+
+    Libs_Board.fogCTX.fillStyle = radgrad;
+    Libs_Board.fogCTX.fillRect(0,0,left+totalRadius,top+totalRadius);
+  },
+
 
   drawImage: function(params) {
-    Libs_Board.canvasCTX.drawImage(params.Image, params.LeftOffset, params.TopOffset, params.Width, params.Height, params.Left, params.Top, params.Width, params.Height);
+    Libs_Board.boardCTX.drawImage(params.Image, params.LeftOffset, params.TopOffset, params.Width, params.Height, params.Left, params.Top, params.Width, params.Height);
   },
 
   drawText: function(params) {
-    Libs_Board.canvasCTX.font = params.Font;
-    Libs_Board.canvasCTX.textAlign = "center";
+    Libs_Board.boardCTX.font = params.Font;
+    Libs_Board.boardCTX.textAlign = "center";
     if(params.Stroke) {
-      Libs_Board.canvasCTX.lineJoin="round";
-      Libs_Board.canvasCTX.miterLimit=2;
-      Libs_Board.canvasCTX.strokeStyle = params.StrokeColor;
-      Libs_Board.canvasCTX.lineWidth = params.StrokeWidth;
-      Libs_Board.canvasCTX.strokeText(params.Text, params.Left, params.Top);
+      Libs_Board.boardCTX.lineJoin="round";
+      Libs_Board.boardCTX.miterLimit=2;
+      Libs_Board.boardCTX.strokeStyle = params.StrokeColor;
+      Libs_Board.boardCTX.lineWidth = params.StrokeWidth;
+      Libs_Board.boardCTX.strokeText(params.Text, params.Left, params.Top);
     }
-    Libs_Board.canvasCTX.fillStyle = params.Color;
-    Libs_Board.canvasCTX.fillText(params.Text, params.Left, params.Top);
+    Libs_Board.boardCTX.fillStyle = params.Color;
+    Libs_Board.boardCTX.fillText(params.Text, params.Left, params.Top);
   },
 
-  getPlayerVirtualCoordinates: function(Player) {
-    var VirtualCoords = {
-      X: Player.X - Libs_Board.AreaStart.X,
-      Y: Player.Y - Libs_Board.AreaStart.Y
+  getCreatureVirtualCoordinates: function(Creature) {
+    let VirtualCoords = {
+      X: Creature.X - Libs_Board.AreaStart.X,
+      Y: Creature.Y - Libs_Board.AreaStart.Y
     };
-    if(Player.Animation.Playing && Player.Animation.CurrentFrame < 16) {
-      switch (Player.Direction) {
+    if(Creature.Animation.Playing && Creature.Animation.CurrentFrame < 16) {
+      switch (Creature.Direction) {
         case 'North':
           VirtualCoords.Y++;
           break;

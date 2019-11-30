@@ -12,6 +12,7 @@ class NPC extends Creature
   public $Name;
   public $X;
   public $Y;
+  public $Direction;
 
   // outfit
   public $Base;
@@ -31,6 +32,7 @@ class NPC extends Creature
     $this->Name = $tblNPC->Name;
     $this->X = $tblNPC->X;
     $this->Y = $tblNPC->Y;
+    $this->Direction = 'South';
 
     // outfit
     $this->Base = $tblNPC->Base;

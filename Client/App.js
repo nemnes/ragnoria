@@ -41,12 +41,9 @@ var App = {
     Libs_Hero.init(hero);
     Libs_Chat.init();
     Libs_Outfiter.init();
-    for(let i in players) if (players.hasOwnProperty(i)) {
-      Libs_Player.create(players[i]);
-    }
-//     for(let i in NPCs) if (NPCs.hasOwnProperty(i)) {
-//       Libs_NPC.create(NPCs[i]);
-//     }
+    Libs_Player.updateFromList(players);
+    Libs_NPC.updateFromList(NPCs);
+
 //     Libs_Effect.run(1,hero.X,hero.Y);
   },
 

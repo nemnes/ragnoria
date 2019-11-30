@@ -102,7 +102,7 @@ var Libs_Item = {
   3050: {Id: 3050, ItemTypeId: 3, Name: 'supporting beam', Size: 2, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 1, LightLevel: 0, LightColor: '#000000'},
   3051: {Id: 3051, ItemTypeId: 3, Name: 'supporting beam', Size: 2, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 1, LightLevel: 0, LightColor: '#000000'},
   3052: {Id: 3052, ItemTypeId: 3, Name: 'supporting beam', Size: 2, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 1, LightLevel: 0, LightColor: '#000000'},
-  4000: {Id: 4000, ItemTypeId: 4, Name: 'coal basin', Size: 1, IsBlocking: 1, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightLevel: 0, LightColor: '#000000'},
+  4000: {Id: 4000, ItemTypeId: 4, Name: 'coal basin', Size: 1, IsBlocking: 1, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightLevel: 5, LightColor: '#fff9d1'},
   4001: {Id: 4001, ItemTypeId: 4, Name: 'tree', Size: 2, IsBlocking: 1, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightLevel: 0, LightColor: '#000000'},
   4002: {Id: 4002, ItemTypeId: 4, Name: 'stone pillar', Size: 2, IsBlocking: 1, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightLevel: 0, LightColor: '#000000'},
   4003: {Id: 4003, ItemTypeId: 4, Name: 'table', Size: 2, IsBlocking: 1, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightLevel: 0, LightColor: '#000000'},

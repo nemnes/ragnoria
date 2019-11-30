@@ -13,7 +13,7 @@ var Libs_Hero = {
   },
 
   /** @return {number}*/
-  StepTime: function() {
+  getStepTime: function() {
     return 600-(Libs_Hero.Speed*5.5)+35;
   },
 

@@ -129,7 +129,7 @@ class Player extends Creature
         continue;
       }
       if(in_array($player->X, $sqm_range_x) && in_array($player->Y, $sqm_range_y)) {
-        $players[] = $player;
+        $players[$player->Id] = $player;
       }
     }
     return $players;
@@ -145,7 +145,7 @@ class Player extends Creature
     /** @var NPC $npc */
     foreach($this->getApp()->getWorld()->getNPCs() as $npc) {
       if(in_array($npc->X, $sqm_range_x) && in_array($npc->Y, $sqm_range_y)) {
-        $NPCs[] = $npc;
+        $NPCs[$npc->Id] = $npc;
       }
     }
     return $NPCs;

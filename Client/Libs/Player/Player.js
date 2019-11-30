@@ -1,6 +1,9 @@
 var Libs_Player = {
 
   create: function(player) {
+    if(typeof Libs_Board.Players[player.Id] !== 'undefined') {
+      return;
+    }
     player.Image = new Image;
     player.Image.src = Libs_Misc.getOutfitURL(player);
     player.Animation = {
@@ -15,7 +18,6 @@ var Libs_Player = {
       Libs_Player.create(player);
       return;
     }
-
     Libs_Board.Players[player.Id].X = player.X;
     Libs_Board.Players[player.Id].Y = player.Y;
     Libs_Board.Players[player.Id].Direction = player.Direction;
@@ -43,6 +45,19 @@ var Libs_Player = {
   remove: function(id) {
     if(Libs_Board.Players[id]) {
       delete Libs_Board.Players[id];
+    }
+  },
+
+  updateFromList: function(players) {
+    for(let playerId in Libs_Board.Players) if (Libs_Board.Players.hasOwnProperty(playerId)) {
+      if(typeof players[playerId] === 'undefined') {
+        Libs_Player.remove(playerId);
+      }
+    }
+    for(let playerId in players) if (players.hasOwnProperty(playerId)) {
+      if(typeof Libs_Board.Players[playerId] === 'undefined') {
+        Libs_Player.create(players[playerId]);
+      }
     }
   },
 
