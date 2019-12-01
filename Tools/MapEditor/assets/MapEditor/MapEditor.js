@@ -5,10 +5,6 @@
 var MapEditor = {
   ImagesURL: Config.itemsURL,
   ItemsURL: 'items.json',
-  LayersOpacity: false,
-  InactiveLayersOpacity: '0.8',
-  MaxWidth: '100',
-  MaxHeight: '100',
   ShiftDown: false,
 
   Tool: 1, // 1=Pencil, 2=Eraser
@@ -23,7 +19,6 @@ var MapEditor = {
     $('#Eraser', document).on('click', MapEditor.onEraser);
     $('#Search', document).on('keyup', MapEditor.resortItemContainer);
     $('#Layer', document).on('change', MapEditor.resortItemContainer);
-    $('#Layer', document).on('change', MapEditor.updateLayersOpacity);
     $('#SaveWorld', document).on('click', MapEditor.onSaveWorldClick);
     $('#File', document).on('change', MapEditor.onFile);
 
@@ -283,21 +278,6 @@ var MapEditor = {
 
   eraseOnSQM: function($sqm) {
     $sqm.find('.item').not($('#item-preview')).remove();
-  },
-
-  updateLayersOpacity: function() {
-    if(!MapEditor.LayersOpacity) {
-      return;
-    }
-    var layer = $(this).val();
-    $('div.item', document).each(function(){
-      if($(this).data('layer') == layer) {
-        $(this).css('opacity', 1);
-      }
-      else {
-        $(this).css('opacity', MapEditor.InactiveLayersOpacity);
-      }
-    });
   },
 
   rebind: function() {

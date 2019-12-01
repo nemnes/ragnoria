@@ -109,8 +109,13 @@ body {
 }
 .actual-item-image img,
 .secondary-item-image img {
-  width: 64px;
-  height: 64px;
+  object-fit: cover;
+  object-position: 0 0;
+  margin-left: 16px;
+  margin-top: 16px;
+  width: 32px;
+  height: 32px;
+  transform: scale(2);
 }
 .actual-item-details {
   position: absolute;
@@ -138,6 +143,9 @@ body {
 .item-select img {
   width: 32px;
   height: 32px;
+
+  object-fit: cover;
+  object-position: 0 0;
 }
 
 .map-row {

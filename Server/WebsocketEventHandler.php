@@ -136,7 +136,7 @@ class WebsocketEventHandler implements MessageComponentInterface
       if($this->getCookie($conn, 'PHPSESSID')) {
         $tblPlayer = $this->getApp()->getSQLMapper('tblPlayer');
         $tblPlayer->Name = 'Tester';
-        $tblPlayer->X = 50;
+        $tblPlayer->X = 150;
         $tblPlayer->Y = 50;
         $tblPlayer->save();
         $tblPlayer->Name = 'Tester #' .$tblPlayer->Id;

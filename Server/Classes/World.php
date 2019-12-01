@@ -18,7 +18,7 @@ class World extends BaseClass
 
   private function createGrid()
   {
-    $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']), true);
+    $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_01.json'), true);
     foreach($scheme as $y => $row) {
       foreach($row as $x => $tile) {
         $sqm = $this->getApp()->newSQM();
@@ -26,6 +26,16 @@ class World extends BaseClass
           $sqm->addItem($itemId);
         }
         $this->Grid[$x][$y] = $sqm;
+      }
+    }
+    $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_02.json'), true);
+    foreach($scheme as $y => $row) {
+      foreach($row as $x => $tile) {
+        $sqm = $this->getApp()->newSQM();
+        foreach($tile as $itemId) {
+          $sqm->addItem($itemId);
+        }
+        $this->Grid[$x+100][$y] = $sqm;
       }
     }
     unset($scheme);
@@ -42,6 +52,7 @@ class World extends BaseClass
 
   public function addPlayer(Player $player)
   {
+    /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.move', [$player, '-']);
       $playerOnArea->send('Libs_Effect.run', [1, $player->X, $player->Y]);
@@ -51,6 +62,7 @@ class World extends BaseClass
 
   public function removePlayer(Player $player)
   {
+    /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.remove', [$player->Id]);
       $playerOnArea->send('Libs_Effect.run', [2, $player->X, $player->Y]);

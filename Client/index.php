@@ -17,7 +17,7 @@ session_start();
   <link rel="stylesheet" type="text/css" href="Libs/Outfiter/Outfiter.css">
 
   <script src="assets/jquery/jquery-3.4.1.js"></script>
-  <script src="assets/jquery/jquery-ui-1.12.1.js"></script>
+<!--  <script src="assets/jquery/jquery-ui-1.12.1.js"></script>-->
   <script src="assets/keyboardjs/KeyboardJS.js"></script>
 </head>
 <body>
@@ -25,6 +25,7 @@ session_start();
   <script src="App.js"></script>
   <script src="Libs/Misc/Misc.js"></script>
   <script src="Libs/Console/Console.js"></script>
+  <script src="Libs/Renderer/Renderer.js"></script>
   <script src="Libs/Ping/Ping.js"></script>
   <script src="Libs/Board/Board.js"></script>
   <script src="Libs/Item/Item.js"></script>

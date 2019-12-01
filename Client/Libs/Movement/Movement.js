@@ -48,19 +48,19 @@ var Libs_Movement = {
       return;
     }
     // check sqm item collisions
-    for(var stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
+    for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
       if(Libs_Item[targetSQM[stack]].IsBlocking) {
         return;
       }
     }
     // check players collisions
-    for(var playerId in Libs_Board.Players) if(Libs_Board.Players.hasOwnProperty(playerId)) {
+    for(let playerId in Libs_Board.Players) if(Libs_Board.Players.hasOwnProperty(playerId)) {
       if(parseInt(Libs_Board.Players[playerId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.Players[playerId].Y) === parseInt(targetPOS.Y)) {
         return;
       }
     }
     // check players collisions
-    for(var npcId in Libs_Board.NPCs) if(Libs_Board.NPCs.hasOwnProperty(npcId)) {
+    for(let npcId in Libs_Board.NPCs) if(Libs_Board.NPCs.hasOwnProperty(npcId)) {
       if(parseInt(Libs_Board.NPCs[npcId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.NPCs[npcId].Y) === parseInt(targetPOS.Y)) {
         return;
       }
@@ -85,6 +85,7 @@ var Libs_Movement = {
     Libs_Hero.Direction = direction;
     Libs_Hero.movementBlocked = true;
 
+    let time = Date.now();
     clearInterval(Libs_Hero.Animation.Interval);
     Libs_Hero.Animation.CurrentFrame = 0;
     Libs_Hero.Animation.Playing = true;
@@ -93,8 +94,9 @@ var Libs_Movement = {
       if(Libs_Hero.Animation.CurrentFrame === 32) {
         clearInterval(Libs_Hero.Animation.Interval);
         Libs_Hero.Animation.Playing = false;
+        console.log('Latency: ' + (Date.now() - time - Libs_Hero.getStepTime()) + 'ms');
       }
-    }, (Libs_Hero.getStepTime()/32));
+    }, Libs_Hero.getStepTime()/32);
 
   },
 
@@ -121,7 +123,7 @@ var Libs_Movement = {
       }
       Libs_Hero.movementBlocked = false;
       Libs_Hero.Animation.CurrentFrame = 0;
-    }, 10);
+    }, 25);
   },
 
 }; 
