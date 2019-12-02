@@ -13,7 +13,7 @@ var Libs_Player = {
     Libs_Board.Players[player.Id] = player;
   },
 
-  move: function(player, direction) {
+  move: function(player, direction = false) {
     if(!(Libs_Board.Players[player.Id])) {
       Libs_Player.create(player);
       return;
@@ -21,21 +21,44 @@ var Libs_Player = {
     Libs_Board.Players[player.Id].X = player.X;
     Libs_Board.Players[player.Id].Y = player.Y;
     Libs_Board.Players[player.Id].Direction = player.Direction;
-    Libs_Board.Players[player.Id].Animation.CurrentFrame = 0;
-    App.clearInterval('Player_' +player.Id+ '_Movement');
-    Libs_Board.Players[player.Id].Animation.Playing = true;
-    App.addInterval('Player_' +player.Id+ '_Movement', function() {
-      if(typeof Libs_Board.Players[player.Id] === 'undefined') {
-        App.clearInterval('Player_' +player.Id+ '_Movement');
-        return;
+    if(direction) {
+
+      Libs_Board.Players[player.Id].Animation.CurrentFrame = 0;
+      Libs_Board.Players[player.Id].Animation.Playing = true;
+
+      /** OPTION 1 - setInterval */
+      // App.clearInterval('Player_' +player.Id+ '_Movement');
+      // App.addInterval('Player_' +player.Id+ '_Movement', function() {
+      //   if(typeof Libs_Board.Players[player.Id] === 'undefined') {
+      //     App.clearInterval('Player_' +player.Id+ '_Movement');
+      //     return;
+      //   }
+      //   Libs_Board.Players[player.Id].Animation.CurrentFrame++;
+      //   if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
+      //     App.clearInterval('Player_' +player.Id+ '_Movement');
+      //     Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
+      //     Libs_Board.Players[player.Id].Animation.Playing = false;
+      //   }
+      // }, (Libs_Player.getStepTime(player.Id)/32));
+
+      /** OPTION 2 - setTimeout in loop */
+      for(let i = 1; i <= 32; i++) {
+        App.clearTimeout('Player_' +player.Id+ '_Movement_' + i);
       }
-      Libs_Board.Players[player.Id].Animation.CurrentFrame++;
-      if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
-        App.clearInterval('Player_' +player.Id+ '_Movement');
-        Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
-        Libs_Board.Players[player.Id].Animation.Playing = false;
+      for(let i = 1; i <= 32; i++) {
+        App.addTimeout('Player_' +player.Id+ '_Movement_' + i, function(){
+          if(typeof Libs_Board.Players[player.Id] === 'undefined') {
+            return;
+          }
+          Libs_Board.Players[player.Id].Animation.CurrentFrame++;
+          if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
+            Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
+            Libs_Board.Players[player.Id].Animation.Playing = false;
+          }
+        }, (Libs_Hero.getStepTime()/32)*i);
       }
-    }, (Libs_Player.getStepTime(player.Id)/32));
+    }
+
   },
 
   rotate: function(id, direction) {

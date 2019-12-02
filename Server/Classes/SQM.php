@@ -10,14 +10,14 @@ class SQM extends BaseClass
   {
   }
 
-  public function addItem($item)
+  public function addItem($itemId, $quantity = null)
   {
-    $this->Items[] = $item;
+    $this->Items[] = $quantity ? [$itemId, $quantity] : [$itemId];
   }
 
   public function removeItem($itemId)
   {
-    if(!empty($this->Items) && end($this->Items) == $itemId) {
+    if(!empty($this->Items) && end($this->Items)[0] == $itemId) {
       array_pop($this->Items);
       return true;
     }
@@ -27,7 +27,7 @@ class SQM extends BaseClass
   public function isWalkable()
   {
     foreach($this->Items as $item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
       if($structure->IsBlocking) {
         return false;
       }

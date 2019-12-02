@@ -43,8 +43,7 @@ var App = {
     Libs_Outfiter.init();
     Libs_Player.updateFromList(players);
     Libs_NPC.updateFromList(NPCs);
-
-//     Libs_Effect.run(1,hero.X,hero.Y);
+    Libs_Effect.run(1,hero.X,hero.Y);
   },
 
   emit: function(method, args = []) {
@@ -60,6 +59,7 @@ var App = {
       return;
     }
     clearInterval(App.Intervals[name]);
+    delete App.Intervals[name];
   },
 
   addTimeout: function(name, fn, time) {
@@ -71,6 +71,7 @@ var App = {
       return;
     }
     clearTimeout(App.Timeouts[name]);
+    delete App.Timeouts[name];
   },
 
 };

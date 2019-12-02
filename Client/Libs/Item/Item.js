@@ -148,8 +148,8 @@ var Libs_Item = {
   6008: {Id: 6008, ItemTypeId: 6, Name: 'ham', Size: 1, IsStackable: 1, IsAnimating: 0, Altitude: 0, IsBlocking: 0, IsMoveable: 1, IsPickupable: 1, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
   6009: {Id: 6009, ItemTypeId: 6, Name: 'bread', Size: 1, IsStackable: 1, IsAnimating: 0, Altitude: 0, IsBlocking: 0, IsMoveable: 1, IsPickupable: 1, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
   6010: {Id: 6010, ItemTypeId: 6, Name: 'egg', Size: 1, IsStackable: 1, IsAnimating: 0, Altitude: 0, IsBlocking: 0, IsMoveable: 1, IsPickupable: 1, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
-  4025: {Id: 4025, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 6, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
-  4026: {Id: 4026, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 6, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
-  4027: {Id: 4027, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 6, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
-  4028: {Id: 4028, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 6, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
+  4025: {Id: 4025, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 9, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
+  4026: {Id: 4026, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 9, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
+  4027: {Id: 4027, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 9, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
+  4028: {Id: 4028, ItemTypeId: 4, Name: 'locker', Size: 1, IsAnimating: 0, Altitude: 9, IsBlocking: 0, IsMoveable: 0, IsPickupable: 0, IsAlwaysUnder: 0, IsAlwaysTop: 0, LightSize: 0, LightLevel: 0, LightColor: ''},
 };

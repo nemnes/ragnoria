@@ -44,4 +44,8 @@ var Libs_Misc = {
     return 'rgba('+r+','+g+','+b+','+opacity+')';
   },
 
+  generateUniqueId: function () {
+    return Date.now() + Math.random().toString();
+  },
+
 };

@@ -49,7 +49,7 @@ var Libs_Movement = {
     }
     // check sqm item collisions
     for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
-      if(Libs_Item[targetSQM[stack]].IsBlocking) {
+      if(Libs_Item[targetSQM[stack][0]].IsBlocking) {
         return;
       }
     }
@@ -84,19 +84,31 @@ var Libs_Movement = {
   go: function (direction) {
     Libs_Hero.Direction = direction;
     Libs_Hero.movementBlocked = true;
-
-    let time = Date.now();
-    clearInterval(Libs_Hero.Animation.Interval);
     Libs_Hero.Animation.CurrentFrame = 0;
     Libs_Hero.Animation.Playing = true;
-    Libs_Hero.Animation.Interval = setInterval(function(){
-      Libs_Hero.Animation.CurrentFrame++;
-      if(Libs_Hero.Animation.CurrentFrame === 32) {
-        clearInterval(Libs_Hero.Animation.Interval);
-        Libs_Hero.Animation.Playing = false;
-        console.log('Latency: ' + (Date.now() - time - Libs_Hero.getStepTime()) + 'ms');
-      }
-    }, Libs_Hero.getStepTime()/32);
+
+    /** OPTION 1 - setInterval */
+    // clearInterval(Libs_Hero.Animation.Interval);
+    // Libs_Hero.Animation.Interval = setInterval(function(){
+    //   Libs_Hero.Animation.CurrentFrame++;
+    //   if(Libs_Hero.Animation.CurrentFrame === 32) {
+    //     clearInterval(Libs_Hero.Animation.Interval);
+    //     Libs_Hero.Animation.Playing = false;
+    //   }
+    // }, Libs_Hero.getStepTime()/32);
+
+    /** OPTION 2 - setTimeout in loop */
+    for(let i = 1; i <= 32; i++) {
+      App.clearTimeout('Hero_Movement_' + i);
+    }
+    for(let i = 1; i <= 32; i++) {
+      App.addTimeout('Hero_Movement_' + i, function(){
+        Libs_Hero.Animation.CurrentFrame++;
+        if(Libs_Hero.Animation.CurrentFrame === 32) {
+          Libs_Hero.Animation.Playing = false;
+        }
+      }, (Libs_Hero.getStepTime()/32)*i);
+    }
 
   },
 
@@ -106,24 +118,28 @@ var Libs_Movement = {
         return
       }
       clearInterval(waitInterval);
-      Libs_Hero.Direction = direction;
-      Libs_Hero.X = parseInt(X);
-      Libs_Hero.Y = parseInt(Y);
-      if(positive) {
-        Libs_Board.Area = area;
-        Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
-        Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
-
-        // Update players after step - remove and create new
-        Libs_Player.updateFromList(players);
-
-        // Update NPCs after step - remove and create new
-        Libs_NPC.updateFromList(NPCs);
-
-      }
+      Libs_Movement.updatePosition(positive, X, Y, direction, area, players, NPCs);
       Libs_Hero.movementBlocked = false;
       Libs_Hero.Animation.CurrentFrame = 0;
     }, 25);
+  },
+
+  updatePosition: function(positive, X, Y, direction, area, players, NPCs) {
+    Libs_Hero.Direction = direction;
+    Libs_Hero.X = parseInt(X);
+    Libs_Hero.Y = parseInt(Y);
+    if(positive) {
+      Libs_Board.Area = area;
+      Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
+      Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
+
+      // Update players after step - remove and create new
+      Libs_Player.updateFromList(players);
+
+      // Update NPCs after step - remove and create new
+      Libs_NPC.updateFromList(NPCs);
+
+    }
   },
 
 }; 

@@ -58,6 +58,9 @@ var Libs_Keyboard = {
     // interval (required for smooth walking)
     setInterval(function() {
       Libs_Keyboard.ActiveKeys = KeyboardJS.activeKeys();
+      if(Libs_Keyboard.ActiveKeys.length === 0) {
+        return;
+      }
       if(!Libs_Console.isActive() && !Libs_Chat.isActive() && App.Connected) {
         if (Libs_Keyboard.isAnyClicked(['left', 'right', 'up', 'down', 'num1', 'num2', 'num3', 'num4', 'num6', 'num7', 'num8', 'num9', 'end', 'pagedown', 'home', 'pageup'])) {
           if (Libs_Keyboard.isClicked("ctrl") && (Libs_Keyboard.isClicked("left") || Libs_Keyboard.isClicked("num4"))) {
@@ -114,7 +117,7 @@ var Libs_Keyboard = {
         }
         return;
       }
-    }, 10);
+    }, 25);
 
   },
 
@@ -123,7 +126,7 @@ var Libs_Keyboard = {
   },
 
   isAnyClicked: function(keys) {
-    for(var i=0;i<keys.length;i++) {
+    for(let i=0;i<keys.length;i++) {
       if(Libs_Keyboard.ActiveKeys.includes(keys[i])) {
         return true;
       }

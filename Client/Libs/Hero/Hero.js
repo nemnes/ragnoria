@@ -89,6 +89,6 @@ var Libs_Hero = {
       case 'SouthWest': return Libs_Hero.Animation.CurrentFrame;
     }
     return 0;
-  }
+  },
 
 };

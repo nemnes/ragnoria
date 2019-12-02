@@ -33,7 +33,12 @@ class World extends BaseClass
       foreach($row as $x => $tile) {
         $sqm = $this->getApp()->newSQM();
         foreach($tile as $itemId) {
-          $sqm->addItem($itemId);
+          if(is_array($itemId)) {
+            $sqm->addItem($itemId[0], $itemId[1]);
+          }
+          else {
+            $sqm->addItem($itemId);
+          }
         }
         $this->Grid[$x+100][$y] = $sqm;
       }

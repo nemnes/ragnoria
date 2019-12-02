@@ -3,7 +3,7 @@
 class AddonDictionary
 {
   const BASE = [
-    1 => ['Layers' => [1]],
+    1 => ['Layers' => [1]]
   ];
   const HEAD = [
     1 => ['Layers' => [1]],
@@ -17,6 +17,7 @@ class AddonDictionary
   const BACK = [
     1 => ['Layers' => [1]],
     2 => ['Layers' => [1,2]],
+    3 => ['Layers' => [1]],
   ];
   const HANDS = [
     1 => ['Layers' => [1,3]]
