@@ -1,6 +1,7 @@
 var Libs_Board = {
 
   AnimationFrame: 0,
+  CursorPosition: {X: 0, Y: 0},
 
   Width: 31,
   Height: 17,
@@ -52,6 +53,13 @@ var Libs_Board = {
     }
 
     Libs_Renderer.init();
+
+    $('#board', document).on('mousemove', function(event){
+      let bounds = event.target.getBoundingClientRect();
+      let x = parseInt((parseInt(event.clientX) - parseInt(bounds.left)) / (32*Libs_Board.Scale));
+      let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top)) / (32*Libs_Board.Scale));
+      Libs_Board.CursorPosition = {X: x, Y: y};
+    });
   },
 
   setNight: function() {
@@ -100,7 +108,7 @@ var Libs_Board = {
       }
     }
     return VirtualCoords;
-  }
+  },
 
 
 };

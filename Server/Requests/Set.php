@@ -14,5 +14,9 @@ class Set extends BaseRequest
     if(strtolower($message) === 'day') {
       $player->send('Libs_Board.setDay', []);
     }
+    if(strtolower($message) === 'fire') {
+      $sqm = $this->getApp()->getWorld()->getSQM($player->X, $player->Y);
+      $sqm->addItem(4029);
+    }
   }
 }

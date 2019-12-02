@@ -85,6 +85,7 @@ var Libs_Renderer = {
       }
     }
 
+    Libs_Renderer.renderCursor();
     Libs_Renderer.renderNicknames();
     if(Libs_Renderer.LightEffects) {
       Libs_Renderer.renderFog();
@@ -307,8 +308,7 @@ var Libs_Renderer = {
   renderEffects: function(SQM) {
     for(let unique in Libs_Board.Effects) if (Libs_Board.Effects.hasOwnProperty(unique)) {
       if(Libs_Board.Effects[unique].X === parseInt(Libs_Renderer.X_SERVER) && Libs_Board.Effects[unique].Y === parseInt(Libs_Renderer.Y_SERVER)) {
-
-        let Altitude = 0;
+        let Altitude = Libs_Board.Effects[unique].Altitude;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           Altitude += Libs_Item[SQM[stack][0]].Altitude;
         }
@@ -355,6 +355,29 @@ var Libs_Renderer = {
         });
       }
     }
+  },
+
+  renderCursor: function() {
+    /** BOARD: */
+    // Libs_Board.boardCTX.strokeStyle = '#0044ff';
+    // Libs_Board.boardCTX.globalCompositeOperation = 'difference';
+    // Libs_Board.boardCTX.strokeRect(
+    //   Libs_Board.CursorPosition.X * (32) + (Libs_Renderer.LeftMargin),
+    //   Libs_Board.CursorPosition.Y * (32) + (Libs_Renderer.TopMargin),
+    //   32, 32
+    // );
+    // Libs_Board.boardCTX.globalCompositeOperation = 'source-over';
+
+    /** HUD: */
+    // Libs_Board.hudCTX.strokeStyle = '#0044ff';
+    // Libs_Board.hudCTX.globalAlpha = 0.4;
+    // Libs_Board.hudCTX.strokeRect(
+    //   Libs_Board.CursorPosition.X * (32 * Libs_Board.Scale) + (Libs_Renderer.LeftMargin * Libs_Board.Scale),
+    //   Libs_Board.CursorPosition.Y * (32 * Libs_Board.Scale) + (Libs_Renderer.TopMargin * Libs_Board.Scale),
+    //   32*Libs_Board.Scale, 32*Libs_Board.Scale
+    // );
+    // Libs_Board.hudCTX.globalAlpha = 1;
+
   },
 
   renderNicknames: function() {

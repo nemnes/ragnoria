@@ -97,6 +97,11 @@ class World extends BaseClass
     return count($this->Players);
   }
 
+  /**
+   * @param $x
+   * @param $y
+   * @return SQM|false
+   */
   public function getSQM($x, $y)
   {
     if(isset($this->Grid[$x][$y])) {

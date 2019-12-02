@@ -7,6 +7,7 @@ use Server\Classes\Item;
 use Server\Classes\NPC;
 use Server\Classes\Player;
 use Server\Classes\SQM;
+use Server\Classes\World;
 
 class App
 {
@@ -50,6 +51,7 @@ class App
     return $container->offsetGet($name);
   }
 
+  /** @return World */
   public function getWorld()
   {
     return $this->get('World');
