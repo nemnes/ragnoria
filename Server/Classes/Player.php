@@ -86,6 +86,30 @@ class Player extends Creature
     $this->Connection->close();
   }
 
+  public function teleport($x, $y) {
+    $playersOnAreaBeforeStep = $this->getPlayersOnArea();
+    $playersStillOnArea = array();
+
+    $this->X = $x;
+    $this->Y = $y;
+    $this->Direction = 'South';
+
+    $this->send('Libs_Movement.updatePosition', [true, $this->X, $this->Y, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
+    $this->send('Libs_Effect.run', [1, $this->X, $this->Y]);
+
+    /** @var Player $playerOnArea */
+    foreach($this->getPlayersOnArea() as $playerOnArea) {
+      $playerOnArea->send('Libs_Player.move', [$this]);
+      $playerOnArea->send('Libs_Effect.run', [1, $this->X, $this->Y]);
+      $playersStillOnArea[] = $playerOnArea->Id;
+    }
+    foreach($playersOnAreaBeforeStep as $playerOnArea) {
+      if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
+        $playerOnArea->send('Libs_Player.remove', [$this->Id]);
+      }
+    }
+  }
+
   public function send($method, $params = array())
   {
     $this->getConnection()->send(MiscHelper::prepareResponse($method, $params));

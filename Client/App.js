@@ -7,6 +7,7 @@ var App = {
   Timeouts: {},
 
   run: function () {
+    Libs_Loader.init();
     Libs_Console.init();
     Libs_Mouse.init();
     Libs_Keyboard.init();
@@ -43,7 +44,6 @@ var App = {
     Libs_Outfiter.init();
     Libs_Player.updateFromList(players);
     Libs_NPC.updateFromList(NPCs);
-    Libs_Effect.run(1,hero.X,hero.Y);
   },
 
   emit: function(method, args = []) {

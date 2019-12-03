@@ -60,6 +60,8 @@ class WebsocketEventHandler implements MessageComponentInterface
       MiscHelper::sendToClientConsole($from,$msg);
       return;
     }
+
+    $request = ucfirst($request);
     if(!file_exists(Settings::PATH['SERVER']. '/Requests/' .$request. '.php') || $request == 'BaseRequest') {
       $msg = json_encode($request). " is not recognized as an internal command.";
       $this->getApp()->log($msg);

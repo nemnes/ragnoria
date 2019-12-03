@@ -60,7 +60,9 @@ class Walk extends BaseRequest
       // interaction with sqm items on walk
       foreach($this->getWorld()->getSQM($player->X, $player->Y)->Items as $item) {
         if($item[0] === 4029) {
-          $player->send('Libs_Effect.run', [4, $player->X, $player->Y, 6]);
+          foreach($player->getPlayersOnArea(false) as $playerOnArea) {
+            $playerOnArea->send('Libs_Effect.run', [4, $player->X, $player->Y, true]);
+          }
         }
       }
 

@@ -1,32 +1,37 @@
 var Libs_Effect = {
 
-  // login
-  1: {frames: 7, speed: 60},
+  Amount: 4,
+  Loaded: 0,
+
+  // login/vis
+  1: {frames: 8, speed: 60},
   // logout
   2: {frames: 7, speed: 50},
-  // vis
-  3: {frames: 7, speed: 65},
+  // mort
+  3: {frames: 8, speed: 60},
   // fire
   4: {frames: 5, speed: 80},
 
   init: function() {
-    Libs_Effect[1].img = new Image();
-    Libs_Effect[1].img.src = 'assets/effects/1.png';
-
-    Libs_Effect[2].img = new Image();
-    Libs_Effect[2].img.src = 'assets/effects/2.png';
-
-    Libs_Effect[3].img = new Image();
-    Libs_Effect[3].img.src = 'assets/effects/3.png';
-
-    Libs_Effect[4].img = new Image();
-    Libs_Effect[4].img.src = 'assets/effects/4.png';
+    for(let i = 1; i<= Libs_Effect.Amount; i++) {
+      Libs_Effect[i].img = new Image();
+      Libs_Effect[i].img.src = 'assets/effects/' +i+ '.png';
+      Libs_Effect[i].img.onload = Libs_Effect.onImageLoaded;
+    }
   },
 
-  run: function(id,x,y,altitude = 0) {
+  onImageLoaded: function() {
+    Libs_Effect.Loaded++;
+    if(Libs_Effect.Loaded === Libs_Effect.Amount) {
+      Libs_Loader.reachedMilestone('Effects');
+    }
+  },
+
+  run: function(id,x,y,onCreature = false) {
     if(typeof Libs_Effect[id] !== 'object') {
       return;
     }
+    let altitude = onCreature ? 6 : 0;
     let effect = Libs_Effect[id];
     let unique = Libs_Misc.generateUniqueId();
 

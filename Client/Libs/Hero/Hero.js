@@ -12,11 +12,6 @@ var Libs_Hero = {
     CurrentFrame: null
   },
 
-  /** @return {number}*/
-  getStepTime: function() {
-    return 600-(Libs_Hero.Speed*5.5)+35;
-  },
-
   init: function(params) {
     Libs_Hero.Id = params.Id;
     Libs_Hero.Name = params.Name;
@@ -26,6 +21,9 @@ var Libs_Hero = {
     Libs_Hero.Speed = parseInt(params.Speed);
     Libs_Hero.Image = new Image;
     Libs_Hero.Image.src = Libs_Misc.getOutfitURL(params);
+    Libs_Hero.Image.onload = function() {
+      Libs_Loader.reachedMilestone('Hero');
+    };
 
     Libs_Outfiter.LookType = {
       Base: params.Base,
@@ -38,6 +36,11 @@ var Libs_Hero = {
       SecondaryColor: params.SecondaryColor,
       DetailColor: params.DetailColor
     };
+  },
+
+  /** @return {number}*/
+  getStepTime: function() {
+    return 600-(Libs_Hero.Speed*5.5)+35;
   },
 
   getTopOffset: function() {

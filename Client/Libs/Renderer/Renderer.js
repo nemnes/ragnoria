@@ -22,10 +22,6 @@ var Libs_Renderer = {
   Y_CLIENT: 0,
 
   init: function() {
-
-    Libs_Renderer.LightImage = new Image();
-    Libs_Renderer.LightImage.src = 'http://root.localhost/ragnoria/Client/assets/light/light.png';
-
     Libs_Renderer.run();
     setInterval(function() {
       Libs_Board.AnimationFrame = Libs_Board.AnimationFrame > 0 ? 0 : 1;

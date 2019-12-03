@@ -22,6 +22,9 @@ var Libs_Board = {
   light: null,
   lightCTX: null,
 
+  ItemsAmount: 0,
+  ItemsLoaded: 0,
+
 
   init: function(area) {
     $('<canvas id="board" width="' +(Libs_Board.Width*32)+ 'px" height="' +(Libs_Board.Height*32)+ 'px" style="transform: translate(-50%, -50%) scale(' +Libs_Board.Scale+ ');"></canvas>').appendTo($('body'));
@@ -47,12 +50,7 @@ var Libs_Board = {
     Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
 
     Libs_Effect.init();
-    for(let item in Libs_Item) {
-      Libs_Item[item].Image = new Image;
-      Libs_Item[item].Image.src = Libs_Misc.getItemURL(Libs_Item[item].Id);
-    }
-
-    Libs_Renderer.init();
+    Libs_Board.loadItems();
 
     $('#board', document).on('mousemove', function(event){
       let bounds = event.target.getBoundingClientRect();
@@ -60,6 +58,22 @@ var Libs_Board = {
       let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top)) / (32*Libs_Board.Scale));
       Libs_Board.CursorPosition = {X: x, Y: y};
     });
+
+    Libs_Loader.reachedMilestone('Board');
+  },
+
+  loadItems: function() {
+    Libs_Board.ItemsAmount = Object.keys(Libs_Item).length;
+    for(let item in Libs_Item) {
+      Libs_Item[item].Image = new Image;
+      Libs_Item[item].Image.src = Libs_Misc.getItemURL(Libs_Item[item].Id);
+      Libs_Item[item].Image.onload = function(){
+        Libs_Board.ItemsLoaded++;
+        if(Libs_Board.ItemsLoaded === Libs_Board.ItemsAmount) {
+          Libs_Loader.reachedMilestone('Items');
+        }
+      };
+    }
   },
 
   setNight: function() {
