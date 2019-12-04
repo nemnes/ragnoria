@@ -24,9 +24,20 @@ class ItemsImporter {
     foreach($tblItem->find(array()) as $row) {
       $item = new stdClass();
       $item->Id = $row->Id;
-      $item->Type = $row->ItemTypeId;
+      $item->ItemTypeId = $row->ItemTypeId;
       $item->Name = $row->Name;
       $item->Size = $row->Size;
+      $item->Altitude = $row->Altitude;
+      $item->IsAnimating = $row->IsAnimating > 0 ? true : false;
+      $item->IsBlocking = $row->IsBlocking > 0 ? true : false;
+      $item->IsMoveable = $row->IsMoveable > 0 ? true : false;
+      $item->IsPickupable = $row->IsPickupable > 0 ? true : false;
+      $item->IsStackable = $row->IsStackable > 0 ? true : false;
+      $item->IsAlwaysUnder = $row->IsAlwaysUnder > 0 ? true : false;
+      $item->IsAlwaysTop = $row->IsAlwaysTop > 0 ? true : false;
+      $item->LightSize = $row->LightSize;
+      $item->LightLevel = $row->LightLevel;
+      $item->LightColor = $row->LightColor;
       $items[$item->Id] = $item;
     }
     return $items;

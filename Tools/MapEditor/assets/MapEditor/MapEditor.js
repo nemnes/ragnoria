@@ -24,8 +24,14 @@ var MapEditor = {
 
     MapEditor.rebind();
 
+    $(document).on("mousedown mouseup click focus blur contextmenu mousewheel DOMMouseScroll wheel", function(e) {
+      if (e.which === 3) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
     $(document).on('mousedown', function(e) {
-      MapEditor.Dragging = e.which == 1;
+      MapEditor.Dragging = e.which === 1;
     });
     $(document).on('mouseup', function() {
       MapEditor.Dragging = false;
@@ -103,7 +109,7 @@ var MapEditor = {
     for (var Id in MapEditor.Items) if (MapEditor.Items.hasOwnProperty(Id)) {
       var Item = MapEditor.Items[Id];
       var html = [];
-      html.push('<div class="item-select" data-item-layer="' +Item.Type+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
+      html.push('<div class="item-select" data-item-layer="' +Item.ItemTypeId+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
       html.push('  <img src="' + MapEditor.ImagesURL + Item.Id + '"/>');
       html.push('</div>');
       $('.item-list', document).append(html.join(''));
@@ -164,7 +170,13 @@ var MapEditor = {
         if($(this).attr('id') == 'item-preview') {
           return;
         }
-        items.push($(this).data('item-id'));
+        if(MapEditor.Items[$(this).data('item-id')].IsStackable) {
+          var quantity = $(this).data('item-quantity') > 0 ? $(this).data('item-quantity') : 1;
+          items.push([$(this).data('item-id'), quantity]);
+        }
+        else {
+          items.push($(this).data('item-id'));
+        }
       });
       if(!map[y]) {
         map[y] = [];
@@ -220,9 +232,15 @@ var MapEditor = {
           if(i === 0) {
             continue;
           }
-          var item = MapEditor.Items[data[y][x][i]];
+          var item = Array.isArray(data[y][x][i]) ? MapEditor.Items[data[y][x][i][0]] : MapEditor.Items[data[y][x][i]];
+          var quantityString = '';
+          if(item.IsStackable) {
+            var quantity = Array.isArray(data[y][x][i]) ? data[y][x][i][1] : null;
+            quantityString = 'data-item-quantity="' +quantity+ '"';
+          }
+
           url = MapEditor.ImagesURL + item.Id;
-          html.push('<div class="item" data-layer="' + item.Type + '" data-item-id="' + item.Id + '" data-item-size="' + item.Size + '" style="background-image: url(' + url + ');"></div>');
+          html.push('<div class="item" data-layer="' + item.ItemTypeId + '" data-item-id="' + item.Id + '" data-item-size="' + item.Size + '" ' +quantityString+ ' style="background-image: url(' + url + ');"></div>');
         }
         html.push('</div>');
       }
@@ -249,7 +267,7 @@ var MapEditor = {
 
     var url;
     // Grounds
-    if(MapEditor.SelectedItem.Type == 1) {
+    if(MapEditor.SelectedItem.ItemTypeId == 1) {
       url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
       $sqm.data('item-id', MapEditor.SelectedItem.Id);
       $sqm.css('background-image', 'url(' +url+ ')');
@@ -257,14 +275,15 @@ var MapEditor = {
     }
 
     // Other layers
-    var layer = MapEditor.SelectedItem.Type;
+    var layer = MapEditor.SelectedItem.ItemTypeId;
     url = MapEditor.ImagesURL + MapEditor.SelectedItem.Id;
 
     if(!MapEditor.ShiftDown) {
       $sqm.find('.item[data-layer="' +layer+ '"]').not($('#item-preview', document)).remove();
     }
 
-    var item = '<div class="item" data-layer="' +layer+ '" data-item-id="' +MapEditor.SelectedItem.Id+ '" data-item-size="' +MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>';
+    var quantityString = MapEditor.SelectedItem.IsStackable ? 'data-item-quantity="1"' : '';
+    var item = '<div class="item" data-layer="' +layer+ '" data-item-id="' +MapEditor.SelectedItem.Id+ '" data-item-size="' +MapEditor.SelectedItem.Size+ '" ' +quantityString+ ' style="background-image: url(' +url+ ');"></div>';
     var $a = $sqm.find('.item').not($('#item-preview', document)).filter(function() {
       return parseInt($(this).data('layer')) <= layer;
     });
@@ -310,7 +329,24 @@ var MapEditor = {
       }
     });
     $sqm.on('mousedown', function(e) {
-      if(!(e.which == 1)) {
+      if(e.which === 3) {
+        if($('.item:not(#item-preview)', $(this)).last().length > 0) {
+          var $item = $('.item:not(#item-preview)', $(this)).last();
+          var item = MapEditor.Items[$item.attr('data-item-id')];
+          console.log('$item:');
+          console.log($item);
+          console.log('item:');
+          console.log(item);
+          if(item.IsStackable) {
+            var quantity = prompt("Enter quantity:", $item.attr('data-item-quantity'));
+            quantity = isNaN(parseFloat(quantity)) ? 0 : quantity;
+            quantity = quantity > 0 ? quantity : 1;
+            quantity = quantity > 100 ? 100 : quantity;
+            $item.attr('data-item-quantity', quantity);
+          }
+        }
+      }
+      if(!(e.which === 1)) {
         return;
       }
       if(MapEditor.Tool === 1) {
