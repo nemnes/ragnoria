@@ -87,6 +87,8 @@ var Libs_Renderer = {
       Libs_Renderer.renderFog();
     }
 
+    Libs_Renderer.renderChat();
+
     Libs_Renderer.RenderingInProgress = false;
     Libs_Renderer.FramesRendered++;
   },
@@ -428,6 +430,48 @@ var Libs_Renderer = {
     Libs_Board.hudCTX.fillRect(Left*Libs_Board.Scale-13.5, Top*Libs_Board.Scale+3.5, 27.5, 4.5);
     Libs_Board.hudCTX.fillStyle = Color;
     Libs_Board.hudCTX.fillRect(Left*Libs_Board.Scale-12.5, Top*Libs_Board.Scale+4.5, 25.5, 2);
+  },
+
+  renderChat: function() {
+    // iterate over pair player-sqm
+    for(let i in Libs_Chat.Messages) if (Libs_Chat.Messages.hasOwnProperty(i)) {
+      // iterate over messages
+      let count = 0;
+      let Altitude = -8 - (Object.entries(Libs_Chat.Messages[i]).length * 8);
+
+      for(let j in Libs_Chat.Messages[i]) if (Libs_Chat.Messages[i].hasOwnProperty(j)) {
+        let Message = Libs_Chat.Messages[i][j];
+
+        // if first message add: Author says:
+        if(count === 0) {
+          Libs_Renderer.drawText({
+            Text: Message.Author + ' says:',
+            Font: "bold 12px Tahoma",
+            Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale,
+            Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale,
+            Color: '#fcff00',
+            Stroke: true,
+            StrokeColor: '#000000',
+            StrokeWidth: 2
+          });
+          Altitude = Altitude + 8;
+        }
+        count++;
+
+        Libs_Renderer.drawText({
+          Text: Message.Message,
+          Font: "bold 12px Tahoma",
+          Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale,
+          Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale,
+          Color: '#fcff00',
+          Stroke: true,
+          StrokeColor: '#000000',
+          StrokeWidth: 2
+        });
+        Altitude = Altitude + 8;
+
+      }
+    }
   },
 
   renderFog: function() {

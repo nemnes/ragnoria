@@ -8,6 +8,11 @@ class Say extends BaseRequest
 {
   public function initialize(Player $player, $message)
   {
+    $message = trim($message);
+    if(strlen($message) === 0 || strlen($message) > 255) {
+      return;
+    }
+
     if(strtolower($message) === 'exori vis' || strtolower($message) === 'exori mort') {
 
       $targetX = $player->X;
@@ -46,9 +51,9 @@ class Say extends BaseRequest
       }
     }
 
-//    /** @var Player $playerOnArea */
-//    foreach($player->getPlayersOnArea(false) as $playerOnArea) {
-//      $playerOnArea->send('Libs_Chat.appendMessage', [$message, $player->Name, $player->X, $player->Y]);
-//    }
+    /** @var Player $playerOnArea */
+    foreach($player->getPlayersOnArea(false) as $playerOnArea) {
+      $playerOnArea->send('Libs_Chat.prepareMessage', [$message, $player->Name, $player->X, $player->Y]);
+    }
   }
 }

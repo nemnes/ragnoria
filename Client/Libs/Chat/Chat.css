@@ -9,56 +9,23 @@
   display: block;
   position: fixed;
   left: 0;
-  top: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
 }
 .chat.active .chat-input {
   display: block;
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  background-color: transparent;
-  border: 0;
+  border-style: inset;
+  border-width: 1px 0 1px 0;
+  border-color: #303030;
   color: #fff;
-  text-align: center;
-  font-size: 24px;
-  text-shadow: 0 0 5px #000,
-  0 0 5px #000,
-  0 0 5px #000,
-  0 0 5px #000,
-  0 0 5px #000;
+  font-size: 12px;
+  font-weight: bold;
+  height: 20px;
+  padding: 4px;
+  width: 100%;
+  background-color: rgba(30,30,30,0.8);
 }
 .chat.active .chat-input::selection {
   background: rgba(0,0,0,0.5);
   color: rgba(255,255,255,0.5);
-}
-
-.message {
-  position: absolute;
-  left: -64px;
-  bottom: 40px;
-  width: 145px;
-  font-size: 7px;
-  font-family: 'Tahoma';
-  font-weight: bold;
-  color: #ffe600;
-  text-align: center;
-  text-shadow:
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000,
-      0 0 0.75px #000;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  z-index: 9999999;
-}
-
-.message span {
-  display: block;
 }
