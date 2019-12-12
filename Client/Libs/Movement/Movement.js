@@ -1,5 +1,7 @@
 var Libs_Movement = {
 
+  AreaChangesWhileWalking: [],
+
   init: function() {
 
   },
@@ -129,6 +131,13 @@ var Libs_Movement = {
     Libs_Hero.X = parseInt(X);
     Libs_Hero.Y = parseInt(Y);
     if(positive) {
+      for(let sqm in Libs_Movement.AreaChangesWhileWalking) if(Libs_Movement.AreaChangesWhileWalking.hasOwnProperty(sqm)) {
+        sqm = Libs_Movement.AreaChangesWhileWalking[sqm];
+        if(typeof area[sqm.Y] != 'undefined' && typeof area[sqm.Y][sqm.X] != 'undefined') {
+          area[sqm.Y][sqm.X] = sqm.Stack;
+        }
+      }
+      Libs_Movement.AreaChangesWhileWalking = [];
       Libs_Board.Area = area;
       Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
       Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);

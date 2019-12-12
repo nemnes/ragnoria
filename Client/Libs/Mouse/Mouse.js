@@ -1,4 +1,5 @@
 var Libs_Mouse = {
+  Dragging: false,
 
   init: function() {
     Libs_Mouse.preventZoom();

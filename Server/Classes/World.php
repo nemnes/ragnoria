@@ -138,4 +138,21 @@ class World extends BaseClass
     return null;
   }
 
+  public function getPlayersOnArea($x, $y)
+  {
+    $factor_x = (ceil(Settings::GAME['CLIENT_SQM_WIDTH']/2)-1);
+    $factor_y = (ceil(Settings::GAME['CLIENT_SQM_HEIGHT']/2)-1);
+    $sqm_range_x = range(($x - $factor_x),($x + $factor_x));
+    $sqm_range_y = range(($y - $factor_y),($y + $factor_y));
+    $players = array();
+    /** @var Player $player */
+    foreach($this->getApp()->getWorld()->getPlayers() as $player) {
+      if(in_array($player->X, $sqm_range_x) && in_array($player->Y, $sqm_range_y)) {
+        $players[$player->Id] = $player;
+      }
+    }
+    return $players;
+  }
+
+
 }

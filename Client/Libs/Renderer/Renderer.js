@@ -357,14 +357,14 @@ var Libs_Renderer = {
 
   renderCursor: function() {
     /** BOARD: */
-    // Libs_Board.boardCTX.strokeStyle = '#0044ff';
-    // Libs_Board.boardCTX.globalCompositeOperation = 'difference';
-    // Libs_Board.boardCTX.strokeRect(
-    //   Libs_Board.CursorPosition.X * (32) + (Libs_Renderer.LeftMargin),
-    //   Libs_Board.CursorPosition.Y * (32) + (Libs_Renderer.TopMargin),
-    //   32, 32
-    // );
-    // Libs_Board.boardCTX.globalCompositeOperation = 'source-over';
+    Libs_Board.boardCTX.strokeStyle = '#0044ff';
+    Libs_Board.boardCTX.globalCompositeOperation = 'difference';
+    Libs_Board.boardCTX.strokeRect(
+      Libs_Board.CursorPosition.X * (32) + (Libs_Renderer.LeftMargin),
+      Libs_Board.CursorPosition.Y * (32) + (Libs_Renderer.TopMargin),
+      32, 32
+    );
+    Libs_Board.boardCTX.globalCompositeOperation = 'source-over';
 
     /** HUD: */
     // Libs_Board.hudCTX.strokeStyle = '#0044ff';

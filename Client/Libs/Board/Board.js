@@ -52,13 +52,32 @@ var Libs_Board = {
     Libs_Effect.init();
     Libs_Board.loadItems();
 
-    $('#board', document).on('mousemove', function(event){
+    $('#board', document).on('mousemove mousedown mouseup', function(event){
       let bounds = event.target.getBoundingClientRect();
-      let x = parseInt((parseInt(event.clientX) - parseInt(bounds.left)) / (32*Libs_Board.Scale));
-      let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top)) / (32*Libs_Board.Scale));
+      let x = parseInt((parseInt(event.clientX) - parseInt(bounds.left) - parseInt(Libs_Renderer.LeftMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale));
+      let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top) - parseInt(Libs_Renderer.TopMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale));
       Libs_Board.CursorPosition = {X: x, Y: y};
-    });
 
+      if(event.type === 'mousedown' && event.which === 1) {
+        let dragX = Libs_Board.CursorPosition.X + Libs_Board.AreaStart.X;
+        let dragY = Libs_Board.CursorPosition.Y + Libs_Board.AreaStart.Y;
+        let stack = Libs_Board.Area[dragY][dragX];
+        Libs_Mouse.Dragging = {X: dragX, Y: dragY, Item: stack[stack.length-1]};
+      }
+      if(event.type === 'mouseup') {
+        if(Libs_Mouse.Dragging && ((Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X) !== Libs_Mouse.Dragging.X) || ((Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y) !== Libs_Mouse.Dragging.Y)) {
+          if(Libs_Item[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
+            App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Item]);
+          }
+        }
+        document.body.style.cursor = 'default';
+        Libs_Mouse.Dragging = false;
+      }
+      if(event.type === 'mousemove' && Libs_Mouse.Dragging) {
+        document.body.style.cursor = 'url("assets/ui/cursor-crosshair.png") 10 10, default';
+      }
+
+    });
     Libs_Loader.reachedMilestone('Board');
   },
 
@@ -74,6 +93,15 @@ var Libs_Board = {
         }
       };
     }
+  },
+
+  updateSQM: function(x, y, stack) {
+    if(typeof Libs_Board.Area[y] == 'undefined') return;
+    if(typeof Libs_Board.Area[y][x] == 'undefined') return;
+    if(Libs_Hero.Animation.Playing) {
+      Libs_Movement.AreaChangesWhileWalking.push({X: x, Y: y, Stack: stack});
+    }
+    Libs_Board.Area[y][x] = stack;
   },
 
   setNight: function() {
