@@ -7,12 +7,6 @@ var Libs_Loader = {
   init: function() {
     Libs_Loader.$ = $('<div id="loader" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; text-align: center; background-color: #000000; color: #ffffff; z-index: 2; font-family: \'Tahoma\' "><h1>Loading...</h1><h2 style="opacity: 0.5;">Core</h2></div>');
     Libs_Loader.$.appendTo($('body'));
-
-    Libs_Renderer.LightImage = new Image();
-    Libs_Renderer.LightImage.src = 'assets/light/light.png';
-    Libs_Renderer.LightImage.onload = function() {
-      Libs_Loader.reachedMilestone('Light');
-    }
   },
 
   reachedMilestone: function(name) {

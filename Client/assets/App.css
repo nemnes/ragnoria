@@ -4,4 +4,6 @@ body {
   overflow-x: hidden;
   overflow-y: hidden;
   background-color: #000;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: contain;
 }

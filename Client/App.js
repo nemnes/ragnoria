@@ -9,11 +9,16 @@ var App = {
   run: function () {
     Libs_Loader.init();
     Libs_Console.init();
-    Libs_Mouse.init();
-    Libs_Keyboard.init();
     App.IO = new WebSocket(Config.protocol + '://' +Config.domain+ ':' +Config.port);
     App.IO.onopen = function (e) {
       App.Connected = true;
+      Libs_Mouse.init();
+      Libs_Keyboard.init();
+      Libs_Ping.init();
+      Libs_Movement.init();
+      Libs_Board.init();
+      Libs_Chat.init();
+      Libs_Outfiter.init();
     };
     App.IO.onmessage = function (e) {
       var args = JSON.parse(e.data)[1];
@@ -36,12 +41,8 @@ var App = {
   },
 
   initialize: function(hero, area, players, NPCs) {
-    Libs_Ping.init();
-    Libs_Movement.init();
-    Libs_Board.init(area);
+    Libs_Board.setArea(area);
     Libs_Hero.init(hero);
-    Libs_Chat.init();
-    Libs_Outfiter.init();
     Libs_Player.updateFromList(players);
     Libs_NPC.updateFromList(NPCs);
   },

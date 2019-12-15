@@ -45,12 +45,13 @@ var Libs_Board = {
     Libs_Board.fog.height = (Libs_Board.Height*32);
     Libs_Board.fogCTX = Libs_Board.fog.getContext('2d');
 
-    Libs_Board.Area = area;
-    Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
-    Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
-
     Libs_Effect.init();
     Libs_Board.loadItems();
+    Libs_Renderer.LightImage = new Image();
+    Libs_Renderer.LightImage.src = 'assets/light/light.png';
+    Libs_Renderer.LightImage.onload = function() {
+      Libs_Loader.reachedMilestone('Light');
+    }
 
     $('#board', document).on('mousemove mousedown mouseup', function(event){
       let bounds = event.target.getBoundingClientRect();
@@ -81,6 +82,12 @@ var Libs_Board = {
     Libs_Loader.reachedMilestone('Board');
   },
 
+  setArea: function(area) {
+    Libs_Board.Area = area;
+    Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
+    Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
+  },
+
   loadItems: function() {
     Libs_Board.ItemsAmount = Object.keys(Libs_Item).length;
     for(let item in Libs_Item) {
@@ -98,7 +105,7 @@ var Libs_Board = {
   updateSQM: function(x, y, stack) {
     if(typeof Libs_Board.Area[y] == 'undefined') return;
     if(typeof Libs_Board.Area[y][x] == 'undefined') return;
-    if(Libs_Hero.Animation.Playing) {
+    if(Libs_Hero.Animation.Playing || Libs_Hero.Animation.CurrentFrame > 0) {
       Libs_Movement.AreaChangesWhileWalking.push({X: x, Y: y, Stack: stack});
     }
     Libs_Board.Area[y][x] = stack;

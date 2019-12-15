@@ -81,7 +81,7 @@ var Libs_Renderer = {
       }
     }
 
-    Libs_Renderer.renderCursor();
+    // Libs_Renderer.renderCursor();
     Libs_Renderer.renderNicknames();
     if(Libs_Renderer.LightEffects) {
       Libs_Renderer.renderFog();

@@ -21,6 +21,9 @@ class Push extends BaseRequest
     if(!($toSQM = $this->getWorld()->getSQM($toX, $toY))) {
       return;
     }
+    if(!in_array($fromX, [$player->X, $player->X-1, $player->X+1]) || !in_array($fromY, [$player->Y, $player->Y-1, $player->Y+1])) {
+      return;
+    }
     if($fromSQM->removeItem($itemId)) {
       $toSQM->addItem($itemId);
     }
