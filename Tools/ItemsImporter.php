@@ -14,7 +14,7 @@ class ItemsImporter {
   public function __construct() {
     $this->PDO = new DBConnector(Settings::DATABASE['HOST'], Settings::DATABASE['USERNAME'], Settings::DATABASE['PASSWORD'], Settings::DATABASE['DATABASE']);
     $items = $this->import();
-    $this->createFile('MapEditor/items.json', json_encode($items));
+    $this->createFile('items.json', json_encode($items));
   }
 
   public function import()
