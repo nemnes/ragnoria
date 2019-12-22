@@ -22,9 +22,6 @@ var Libs_Board = {
   light: null,
   lightCTX: null,
 
-  ItemsAmount: 0,
-  ItemsLoaded: 0,
-
 
   init: function(area) {
     $('<canvas id="board" width="' +(Libs_Board.Width*32)+ 'px" height="' +(Libs_Board.Height*32)+ 'px" style="transform: translate(-50%, -50%) scale(' +Libs_Board.Scale+ ');"></canvas>').appendTo($('body'));
@@ -45,13 +42,11 @@ var Libs_Board = {
     Libs_Board.fog.height = (Libs_Board.Height*32);
     Libs_Board.fogCTX = Libs_Board.fog.getContext('2d');
 
-    Libs_Effect.init();
-    Libs_Board.loadItems();
     Libs_Renderer.LightImage = new Image();
     Libs_Renderer.LightImage.src = 'assets/light/light.png';
     Libs_Renderer.LightImage.onload = function() {
       Libs_Loader.reachedMilestone('Light');
-    }
+    };
 
     $('#board', document).on('mousemove mousedown mouseup', function(event){
       let bounds = event.target.getBoundingClientRect();
@@ -65,9 +60,9 @@ var Libs_Board = {
         let stack = Libs_Board.Area[dragY][dragX];
         Libs_Mouse.Dragging = {X: dragX, Y: dragY, Item: stack[stack.length-1]};
       }
-      if(event.type === 'mouseup') {
+      if(event.type === 'mouseup' && event.which === 1) {
         if(Libs_Mouse.Dragging && ((Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X) !== Libs_Mouse.Dragging.X) || ((Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y) !== Libs_Mouse.Dragging.Y)) {
-          if(Libs_Item[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
+          if(Libs_Item.Items[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
             App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Item]);
           }
         }
@@ -86,20 +81,6 @@ var Libs_Board = {
     Libs_Board.Area = area;
     Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
     Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
-  },
-
-  loadItems: function() {
-    Libs_Board.ItemsAmount = Object.keys(Libs_Item).length;
-    for(let item in Libs_Item) {
-      Libs_Item[item].Image = new Image;
-      Libs_Item[item].Image.src = Libs_Misc.getItemURL(Libs_Item[item].Id);
-      Libs_Item[item].Image.onload = function(){
-        Libs_Board.ItemsLoaded++;
-        if(Libs_Board.ItemsLoaded === Libs_Board.ItemsAmount) {
-          Libs_Loader.reachedMilestone('Items');
-        }
-      };
-    }
   },
 
   updateSQM: function(x, y, stack) {

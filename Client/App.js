@@ -16,6 +16,8 @@ var App = {
       Libs_Keyboard.init();
       Libs_Ping.init();
       Libs_Movement.init();
+      Libs_Item.init();
+      Libs_Effect.init();
       Libs_Board.init();
       Libs_Chat.init();
       Libs_Outfiter.init();

@@ -4,7 +4,7 @@
  */
 var MapEditor = {
   ImagesURL: Config.itemsURL,
-  ItemsURL: 'items.json',
+  ItemsURL: '../items.json',
   ShiftDown: false,
 
   Tool: 1, // 1=Pencil, 2=Eraser
@@ -255,7 +255,7 @@ var MapEditor = {
   onEraser: function() {
     MapEditor.Tool = 2;
     MapEditor.SelectedItem = null;
-    $('.actual-item-image', document).html('<img src="assets/MapEditor/eraser.png"/>');
+    $('.actual-item-image', document).html('<img src="assets/eraser.png"/>');
     $('.actual-item-details', document).html('Eraser');
     $('.item-select', document).removeClass('active');
   },
@@ -313,7 +313,7 @@ var MapEditor = {
         $(this).append('<div class="item" id="item-preview" data-item-size="' + MapEditor.SelectedItem.Size+ '" style="background-image: url(' +url+ ');"></div>');
       }
       if(MapEditor.Tool === 2) {
-        url = 'assets/MapEditor/eraser.png';
+        url = 'assets/eraser.png';
         $('#item-preview', document).remove();
         $(this).append('<div class="item" id="item-preview" data-item-size="1" style="background-image: url(' +url+ ');"></div>');
       }

@@ -2,6 +2,7 @@
 
 namespace Server\Classes;
 
+use Libs\MiscHelper;
 use Server\Settings;
 
 class World extends BaseClass
@@ -21,7 +22,7 @@ class World extends BaseClass
     $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_01.json'), true);
     foreach($scheme as $y => $row) {
       foreach($row as $x => $tile) {
-        $sqm = $this->getApp()->newSQM();
+        $sqm = $this->getApp()->newSQM($x,$y);
         foreach($tile as $itemId) {
           $sqm->addItem($itemId);
         }
@@ -31,7 +32,7 @@ class World extends BaseClass
     $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_02.json'), true);
     foreach($scheme as $y => $row) {
       foreach($row as $x => $tile) {
-        $sqm = $this->getApp()->newSQM();
+        $sqm = $this->getApp()->newSQM($x+100,$y);
         foreach($tile as $itemId) {
           if(is_array($itemId)) {
             $sqm->addItem($itemId[0], $itemId[1]);
@@ -108,6 +109,21 @@ class World extends BaseClass
       return $this->Grid[$x][$y];
     }
     return false;
+  }
+
+  public function getSQMsBetween(SQM $sqmFrom, SQM $sqmTo)
+  {
+    $result = array();
+    $fields = MiscHelper::getFieldsBetween(
+      ['X' => $sqmFrom->X, 'Y' => $sqmFrom->Y],
+      ['X' => $sqmTo->X, 'Y' => $sqmTo->Y]
+    );
+    foreach($fields as $y => $row) {
+      foreach($row as $x => $tile) {
+        $result[] = $this->getSQM($x, $y);
+      }
+    }
+    return $result;
   }
 
   public function getNPC($id)

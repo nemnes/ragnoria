@@ -13,7 +13,6 @@ session_start();
   <link rel="stylesheet" type="text/css" href="Libs/Console/Console.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Ping/Ping.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Board/Board.css<?= '?'.$v; ?>">
-  <link rel="stylesheet" type="text/css" href="Libs/Effect/Effect.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Chat/Chat.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Outfiter/Outfiter.css<?= '?'.$v; ?>">
 

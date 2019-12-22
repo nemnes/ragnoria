@@ -1,7 +1,7 @@
 var ItemEditor = {
 
   ImagesURL: 'http://root.localhost/ragnoria/Tools/Images/?nogif&id=',
-  ItemsURL: 'items.json',
+  ItemsURL: '../items.json',
   Items: {},
 
   init: function() {
@@ -9,6 +9,10 @@ var ItemEditor = {
     $('#save', document).on('click', function(){
       ItemEditor.save();
     });
+    $('input, select', document).on('change keydown keyup', function() {
+      ItemEditor.refreshInputs();
+    });
+    ItemEditor.refreshInputs();
   },
 
   getItems: function() {
@@ -16,10 +20,6 @@ var ItemEditor = {
       ItemEditor.Items = data;
       ItemEditor.renderItemContainer();
     });
-    $('input, select', document).on('change keydown keyup', function() {
-      ItemEditor.refreshInputs();
-    });
-    ItemEditor.refreshInputs();
   },
 
   renderItemContainer: function () {

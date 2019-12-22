@@ -3,6 +3,7 @@
 namespace Server\Requests;
 
 use Server\Classes\Player;
+use Server\Classes\SQM;
 
 class Push extends BaseRequest
 {
@@ -24,6 +25,21 @@ class Push extends BaseRequest
     if(!in_array($fromX, [$player->X, $player->X-1, $player->X+1]) || !in_array($fromY, [$player->Y, $player->Y-1, $player->Y+1])) {
       return;
     }
+    $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($itemId);
+    if(!$structure->IsMoveable) {
+      return;
+    }
+    if($toSQM->isBlockingItems()) {
+      return;
+    }
+    /** @var SQM $sqm */
+    foreach($this->getWorld()->getSQMsBetween($fromSQM, $toSQM) as $sqm) {
+      if($sqm->isBlockingProjectiles()) {
+        return;
+      }
+    }
+
+    // validation pass, we can move item
     if($fromSQM->removeItem($itemId)) {
       $toSQM->addItem($itemId);
     }

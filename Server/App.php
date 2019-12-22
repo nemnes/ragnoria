@@ -40,9 +40,9 @@ class App
     return new NPC($this, [$id]);
   }
 
-  public function newSQM()
+  public function newSQM($x, $y)
   {
-    return new SQM($this, []);
+    return new SQM($this, [$x, $y]);
   }
 
   public function get($name)

@@ -51,7 +51,7 @@ var Libs_Movement = {
     }
     // check sqm item collisions
     for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
-      if(Libs_Item[targetSQM[stack][0]].IsBlocking) {
+      if(Libs_Item.Items[targetSQM[stack][0]].IsBlocking) {
         return;
       }
     }

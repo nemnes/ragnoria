@@ -15,6 +15,8 @@ class ItemStructureCollection extends BaseClass
       $structure->Size = $row->Size;
       $structure->Name = $row->Name;
       $structure->IsBlocking = $row->IsBlocking;
+      $structure->IsBlockingItems = $row->IsBlockingItems;
+      $structure->IsBlockingProjectiles = $row->IsBlockingProjectiles;
       $structure->IsMoveable = $row->IsMoveable;
       $structure->IsPickupable = $row->IsPickupable;
       $structure->IsAlwaysUnder = $row->IsAlwaysUnder;

@@ -95,8 +95,8 @@ var Libs_Renderer = {
 
   renderFloor: function(SQM) {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item[SQM[stack][0]];
-      if([1,2].includes(Item.ItemTypeId)) {
+      let Item = Libs_Item.Items[SQM[stack][0]];
+      if(['1','2'].includes(Item.ItemTypeId)) {
         Libs_Renderer.drawImage({
           Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.TopMargin),
           Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin),
@@ -258,8 +258,8 @@ var Libs_Renderer = {
   renderItems: function(SQM) {
     let Altitude = 0;
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item[SQM[stack][0]];
-      if(!([1,2].includes(Item.ItemTypeId))) {
+      let Item = Libs_Item.Items[SQM[stack][0]];
+      if(!(['1','2'].includes(Item.ItemTypeId))) {
 
         let Quantity = 1;
         if(Item.IsAlwaysTop) {
@@ -298,7 +298,7 @@ var Libs_Renderer = {
           }(Quantity) : 0,
           Image: Item.Image,
         });
-        Altitude += Item.Altitude;
+        Altitude += parseInt(Item.Altitude);
       }
     }
   },
@@ -308,7 +308,7 @@ var Libs_Renderer = {
       if(Libs_Board.Effects[unique].X === parseInt(Libs_Renderer.X_SERVER) && Libs_Board.Effects[unique].Y === parseInt(Libs_Renderer.Y_SERVER)) {
         let Altitude = Libs_Board.Effects[unique].Altitude;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-          Altitude += Libs_Item[SQM[stack][0]].Altitude;
+          Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
         }
 
         let effect = Libs_Effect[Libs_Board.Effects[unique].Id];
@@ -327,7 +327,7 @@ var Libs_Renderer = {
 
   renderItemsAlwaysTop: function(SQM) {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack][0]];
       if(!(Item.IsAlwaysTop)) {
         continue;
       }
