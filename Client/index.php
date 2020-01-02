@@ -6,7 +6,7 @@ session_start();
 <html lang="en">
 <head>
   <title>Ragnoria</title>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
 
   <link rel="stylesheet" type="text/css" href="assets/App.css<?= '?'.$v; ?>">

@@ -2,7 +2,8 @@
 <html lang="">
 <head>
   <title>Ragnoria ItemEditor</title>
-  <link rel="stylesheet" type="text/css" href="assets/ItemEditor.css" >
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="assets/ItemEditor.css" />
   <script src="config.js"></script>
   <script src="assets/jquery/jquery-3.4.1.js"></script>
   <script src="assets/ItemEditor.js"></script>
@@ -53,19 +54,28 @@
           <option value="6">Shield</option>
           <option value="7">Amulet</option>
           <option value="8">Ring</option>
-          <option value="9">Ammunition</option>
+          <option value="9">Ammo</option>
         </select>
       </div>
     </div>
 
     <div>
-      <div class="form-label">Light Size</div>
-      <div class="form-input"><input name="LightSize" type="number"/></div>
+      <div class="form-label">Light Radius</div>
+      <div class="form-input"><input name="LightRadius" type="number" min="0" max="15" /></div>
     </div>
 
     <div>
       <div class="form-label">Light Level</div>
-      <div class="form-input"><input name="LightLevel" type="number"/></div>
+      <div class="form-input">
+        <select name="LightLevel">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
     </div>
 
     <div>
@@ -100,7 +110,6 @@
 
 </tr>
 </table>
-
 
 <script>
   $(document).ready(function() {

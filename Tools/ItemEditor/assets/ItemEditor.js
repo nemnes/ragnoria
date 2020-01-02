@@ -42,14 +42,14 @@ var ItemEditor = {
   selectItem: function(id) {
     $.ajax({
       type: "GET",
-      url: 'LoadItem.php',
+      url: 'load.php',
       data: {id: id},
       success: function(response) {
         let Item = JSON.parse(response);
         $('[name="Id"]', document).val(Item.Id);
         $('[name="Name"]', document).val(Item.Name);
         $('[name="ItemTypeId"]', document).val(Item.ItemTypeId);
-        $('[name="LightSize"]', document).val(Item.LightSize);
+        $('[name="LightRadius"]', document).val(Item.LightRadius);
         $('[name="LightLevel"]', document).val(Item.LightLevel);
         $('[name="LightColor"]', document).val(Item.LightColor);
         $('[name="IsAnimating"]', document).prop('checked', Item.IsAnimating === '1');
@@ -68,12 +68,12 @@ var ItemEditor = {
   save: function() {
     $.ajax({
       type: "POST",
-      url: 'SaveItem.php',
+      url: 'save.php',
       data: {
         Id: $('[name="Id"]', document).val(),
         Name: $('[name="Name"]', document).val(),
         ItemTypeId: $('[name="ItemTypeId"]', document).val(),
-        LightSize: $('[name="LightSize"]', document).val(),
+        LightRadius: $('[name="LightRadius"]', document).val(),
         LightLevel: $('[name="LightLevel"]', document).val(),
         LightColor: $('[name="LightColor"]', document).val(),
         IsAnimating: $('[name="IsAnimating"]', document).prop('checked') ? '1' : '0',
@@ -98,7 +98,7 @@ var ItemEditor = {
     else {
       $('[name="Slot"]', document).val('').attr('disabled', 'disabled');
     }
-    if($('[name="LightSize"]', document).val() > 0) {
+    if($('[name="LightRadius"]', document).val() > 0) {
       $('[name="LightLevel"]', document).removeAttr('disabled');
       $('[name="LightColor"]', document).removeAttr('disabled');
     }

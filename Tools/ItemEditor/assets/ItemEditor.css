@@ -12,7 +12,7 @@ body {
   font-family: 'Tahoma', monospace;
   font-size: 12px;
   overflow-x: hidden;
-  line-height: 1.42857143;
+  line-height: 1;
   color: #333;
   padding: 0;
   margin: 0;
@@ -73,6 +73,8 @@ select[disabled], input[disabled] {
   cursor: pointer;
   user-select: none;
   border: 2px outset #181f26;
+  width: 36px;
+  height: 36px;
 }
 .item-select.active {
   border: 2px inset #b37f00;

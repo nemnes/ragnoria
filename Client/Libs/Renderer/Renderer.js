@@ -10,7 +10,7 @@ var Libs_Renderer = {
   // light
   LightEffects: true,
   LightPower: 0.35, // 0.35 seems be ok
-  FogDensity: 0.25, // 0.2 seems be ok
+  FogDensity: 0.25, // 0.25 seems be ok
   LightImage: null,
 
   // rendering auxiliary fields
@@ -168,7 +168,7 @@ var Libs_Renderer = {
           Left: (X_CLIENT_VIRTUAL * 32) + 10,
           LightLevel: 5,
           LightColor: 'orange',
-          LightSize: 3,
+          LightRadius: 3,
           Margins: 0
         });
       }
@@ -269,13 +269,13 @@ var Libs_Renderer = {
           Quantity = SQM[stack][1];
         }
 
-        if(Item.LightLevel > 0 && Item.LightSize > 0 && Libs_Renderer.LightEffects) {
+        if(Item.LightLevel > 0 && Item.LightRadius > 0 && Libs_Renderer.LightEffects) {
           Libs_Renderer.addLightSource({
             Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.TopMargin),
             Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.LeftMargin),
             LightLevel: Item.LightLevel,
             LightColor: Item.LightColor,
-            LightSize: Item.LightSize,
+            LightRadius: Item.LightRadius,
             Margins: Altitude*(-1)
           });
         }
@@ -332,13 +332,13 @@ var Libs_Renderer = {
         continue;
       }
       if(!([1,2].includes(Item.ItemTypeId))) {
-        if(Item.LightLevel > 0 && Item.LightSize > 0 && Libs_Renderer.LightEffects) {
+        if(Item.LightLevel > 0 && Item.LightRadius > 0 && Libs_Renderer.LightEffects) {
           Libs_Renderer.addLightSource({
             Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.TopMargin),
             Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.LeftMargin),
             LightLevel: Item.LightLevel,
             LightColor: Item.LightColor,
-            LightSize: Item.LightSize,
+            LightRadius: Item.LightRadius,
             Margins: 0
           });
         }
@@ -513,10 +513,10 @@ var Libs_Renderer = {
         default: leftOffset = 0; break;
       }
       let topOffset = (params.LightLevel * 32) - 32;
-      params.LightSize = params.LightSize*2;
-      params.Left = params.Left - ((32*params.LightSize)/2);
-      params.Top = params.Top - ((32*params.LightSize)/2);
-      Libs_Board.lightCTX.drawImage(Libs_Renderer.LightImage, leftOffset,topOffset,32,32, params.Left + params.Margins, params.Top + params.Margins, 32*params.LightSize, 32*params.LightSize);
+      params.LightRadius = params.LightRadius*2;
+      params.Left = params.Left - ((32*params.LightRadius)/2);
+      params.Top = params.Top - ((32*params.LightRadius)/2);
+      Libs_Board.lightCTX.drawImage(Libs_Renderer.LightImage, leftOffset,topOffset,32,32, params.Left + params.Margins, params.Top + params.Margins, 32*params.LightRadius, 32*params.LightRadius);
     }
   },
 

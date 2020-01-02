@@ -8,7 +8,8 @@ require('../../Libs/DBConnector.php');
 require('../../Libs/SQLMapper.php');
 require('../../Server/Settings.php');
 
-class LoadItem {
+class LoadItem
+{
   public $PDO;
 
   public function __construct() {
@@ -17,9 +18,10 @@ class LoadItem {
     echo json_encode($item);
   }
 
-  public function getSQLMapper($table, $pk = null)
+  private function getSQLMapper($table, $pk = null)
   {
     return new SQLMapper($this->PDO->getConnection(), $table, $pk);
   }
+
 }
 new LoadItem();
