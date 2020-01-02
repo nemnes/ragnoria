@@ -6,21 +6,14 @@ if(isset($_GET['id'])) {
   if(!is_numeric($id) || $id < 0) {
     die();
   }
-  $noGIF = isset($_GET['nogif']);
   $imagesPath = __DIR__ . '/item/';
 
-  if(!$noGIF) {
-    if(file_exists($imagesPath.$id.'.gif')) {
-      header('Content-Type: image/gif');
-      readfile($imagesPath.$id.'.gif');
-      die();
-    }
-  }
   if(file_exists($imagesPath.$id.'.png')) {
     header('Content-Type: image/png');
     readfile($imagesPath.$id.'.png');
     die();
   }
+
   die();
 }
 

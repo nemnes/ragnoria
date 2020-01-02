@@ -1,10 +1,7 @@
-/*
- * Ragnoria Map Editor v1.91
- * Created by Adam Lozynski
- */
+/* Ragnoria Map Editor by Adam Lozynski */
 var MapEditor = {
-  ImagesURL: Config.itemsURL,
-  ItemsURL: '../items.json',
+  ImagesURL: Config.ImagesURL,
+  ItemsURL: Config.ItemsURL,
   ShiftDown: false,
 
   Tool: 1, // 1=Pencil, 2=Eraser

@@ -1,7 +1,8 @@
+/* Ragnoria Item Editor by Adam Lozynski */
 var ItemEditor = {
 
-  ImagesURL: 'http://root.localhost/ragnoria/Tools/Images/?nogif&id=',
-  ItemsURL: '../items.json',
+  ImagesURL: Config.ImagesURL,
+  ItemsURL: Config.ItemsURL,
   Items: {},
 
   init: function() {
