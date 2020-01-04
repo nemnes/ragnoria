@@ -14,6 +14,10 @@ class App
   public function __construct()
   {
     ini_set('memory_limit','258M');
+    if(!class_exists('Server\Settings')) {
+      $this->log("File '~/Server/Settings.php' not found.", true);
+      exit();
+    }
     if (is_resource($fp = @fsockopen($host = Settings::SERVER['HOST'], $port = Settings::SERVER['PORT']))) {
       fclose($fp);
       $this->log("Socket $host:$port is already open!", true);

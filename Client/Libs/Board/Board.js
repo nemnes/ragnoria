@@ -93,7 +93,7 @@ var Libs_Board = {
   },
 
   setNight: function() {
-    Libs_Renderer.FogDensity = 1;
+    Libs_Renderer.FogDensity = 0.9;
   },
 
   setDay: function() {

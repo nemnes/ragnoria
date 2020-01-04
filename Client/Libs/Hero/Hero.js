@@ -11,6 +11,7 @@ var Libs_Hero = {
     Interval: null,
     CurrentFrame: null
   },
+  Altitude: 0,
 
   init: function(params) {
     Libs_Hero.Id = params.Id;

@@ -81,10 +81,24 @@ select[disabled], input[disabled] {
   background-color: rgba(0, 0, 0, 0.47);
   color: #fff;
 }
-.item-select img {
+.item-select img,
+.item-add img {
   width: 32px;
   height: 32px;
-
   object-fit: cover;
   object-position: 0 0;
+}
+.item-add {
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+  border: 2px solid transparent;
+  width: 36px;
+  height: 36px;
+}
+hr {
+  margin: 5px 0 10px 0;
+  padding: 0px;
+  border: 1px solid #888;
+  border-bottom: 0px;
 }

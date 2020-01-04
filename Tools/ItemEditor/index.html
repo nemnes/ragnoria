@@ -22,9 +22,21 @@
       <div class="form-input"><input name="Id" type="text" disabled/></div>
     </div>
 
+    <hr/>
+
     <div>
       <div class="form-label">Name</div>
       <div class="form-input"><input name="Name" type="text"/></div>
+    </div>
+
+    <div>
+      <div class="form-label">Size</div>
+      <div class="form-input">
+        <select name="Size">
+          <option value="1">x1 (32x32)</option>
+          <option value="2">x2 (64x64)</option>
+        </select>
+      </div>
     </div>
 
     <div>
@@ -58,6 +70,15 @@
         </select>
       </div>
     </div>
+
+    <hr/>
+
+    <div>
+      <div class="form-label">Altitude</div>
+      <div class="form-input"><input name="Altitude" type="number" min="0" max="10" /></div>
+    </div>
+
+    <hr/>
 
     <div>
       <div class="form-label">Light Radius</div>

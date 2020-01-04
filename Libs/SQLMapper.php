@@ -147,7 +147,8 @@ class SQLMapper
   {
     if (!$this->SQLMapperProperties->PrimaryKeyValue) {
       if(SQLMapper::ADD_INSTEAD_SAVING_WHEN_PRIMARY_KEY_VALUE_NOT_SET) {
-        return $this->add();
+        $newKey = isset($this->{$this->SQLMapperProperties->PrimaryKeyColumn}) && !empty($this->{$this->SQLMapperProperties->PrimaryKeyColumn}) ? $this->{$this->SQLMapperProperties->PrimaryKeyColumn} : NULL;
+        return $this->add($newKey);
       }
       else{
         $this->setNotice(SQLMapper::NOTICE_PRIMARY_KEY_VALUE_NOT_SET_WHILE_SAVING);

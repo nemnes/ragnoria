@@ -24,9 +24,10 @@ var ItemEditor = {
   },
 
   renderItemContainer: function () {
-    for (var Id in ItemEditor.Items) if (ItemEditor.Items.hasOwnProperty(Id)) {
-      var Item = ItemEditor.Items[Id];
-      var html = [];
+    let html;
+    for (let Id in ItemEditor.Items) if (ItemEditor.Items.hasOwnProperty(Id)) {
+      let Item = ItemEditor.Items[Id];
+      html = [];
       html.push('<div class="item-select" data-item-layer="' + Item.ItemTypeId + '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
       html.push('  <img src="' + ItemEditor.ImagesURL + Item.Id + '"/>');
       html.push('</div>');
@@ -36,6 +37,42 @@ var ItemEditor = {
       $('.item-select', document).removeClass('active');
       $(this).addClass('active');
       ItemEditor.selectItem($(this).data('item-id'));
+    });
+
+    html = [];
+    html.push('<div class="item-add">');
+    html.push('  <img src="assets/add.png"/>');
+    html.push('</div>');
+    $('.item-list', document).append(html.join(''));
+    $('.item-add', document).on('click', function(){
+      let id = prompt("Enter ID", "");
+      if (id == null || id == "") {
+        return;
+      } else {
+        $.ajax({
+          type: "POST",
+          url: 'save.php',
+          data: {
+            Id: id,
+            Name: 'undefined',
+            ItemTypeId: '1',
+            LightRadius: '0',
+            LightLevel: '',
+            LightColor: '',
+            IsAnimating: '0',
+            IsBlocking: '0',
+            IsBlockingProjectiles: '0',
+            IsBlockingItems: '0',
+            IsMoveable: '0',
+            IsPickupable: '0',
+            IsStackable: '0',
+            IsAlwaysTop: '0'
+          },
+          success: function() {
+            alert('created');
+          }
+        });
+      }
     });
   },
 
@@ -48,6 +85,8 @@ var ItemEditor = {
         let Item = JSON.parse(response);
         $('[name="Id"]', document).val(Item.Id);
         $('[name="Name"]', document).val(Item.Name);
+        $('[name="Size"]', document).val(Item.Size);
+        $('[name="Altitude"]', document).val(Item.Altitude);
         $('[name="ItemTypeId"]', document).val(Item.ItemTypeId);
         $('[name="LightRadius"]', document).val(Item.LightRadius);
         $('[name="LightLevel"]', document).val(Item.LightLevel);
@@ -60,6 +99,7 @@ var ItemEditor = {
         $('[name="IsPickupable"]', document).prop('checked', Item.IsPickupable === '1');
         $('[name="IsStackable"]', document).prop('checked', Item.IsStackable === '1');
         $('[name="IsAlwaysTop"]', document).prop('checked', Item.IsAlwaysTop === '1');
+
         ItemEditor.refreshInputs();
       }
     });
@@ -73,6 +113,8 @@ var ItemEditor = {
         Id: $('[name="Id"]', document).val(),
         Name: $('[name="Name"]', document).val(),
         ItemTypeId: $('[name="ItemTypeId"]', document).val(),
+        Size: $('[name="Size"]', document).val(),
+        Altitude: $('[name="Altitude"]', document).val(),
         LightRadius: $('[name="LightRadius"]', document).val(),
         LightLevel: $('[name="LightLevel"]', document).val(),
         LightColor: $('[name="LightColor"]', document).val(),

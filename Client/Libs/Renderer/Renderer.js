@@ -1,17 +1,20 @@
 var Libs_Renderer = {
 
+  // customizable parameters
   FramerateLimit: 80,
+  MaxAltitude: 24,
+  CreaturesOffset: 40,
+  LightImage: null,
+  LightEffects: true,
+  LightPower: 0.35, // 0.35 seems be ok
+  FogDensity: 0.25, // 0.25 seems be ok
+
+  // renderer state fields
   RenderingInProgress: false,
   RenderingStopped: false,
   FramesDropped: 0,
   FramesRendered: 0,
   CurrentFramerate: 0,
-
-  // light
-  LightEffects: true,
-  LightPower: 0.35, // 0.35 seems be ok
-  FogDensity: 0.25, // 0.25 seems be ok
-  LightImage: null,
 
   // rendering auxiliary fields
   TopMargin: 0,
@@ -68,9 +71,9 @@ var Libs_Renderer = {
           }
           if(areaIteration === 2) {
             Libs_Renderer.renderItems(SQM);
-            Libs_Renderer.renderHero();
-            Libs_Renderer.renderPlayers();
-            Libs_Renderer.renderNPCs();
+            Libs_Renderer.renderHero(SQM);
+            Libs_Renderer.renderPlayers(SQM);
+            Libs_Renderer.renderNPCs(SQM);
             Libs_Renderer.renderEffects(SQM);
             Libs_Renderer.renderItemsAlwaysTop(SQM);
           }
@@ -110,7 +113,7 @@ var Libs_Renderer = {
     }
   },
 
-  renderHero: function() {
+  renderHero: function(SQM) {
     let X_HERO_VIRTUAL = Libs_Hero.X;
     let Y_HERO_VIRTUAL = Libs_Hero.Y;
     let X_CLIENT_VIRTUAL = Libs_Renderer.X_CLIENT;
@@ -161,7 +164,11 @@ var Libs_Renderer = {
     }
 
     if(parseInt(Y_HERO_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_HERO_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
-
+      Libs_Hero.Altitude = 0;
+      for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
+        Libs_Hero.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+      }
+      Libs_Hero.Altitude = Libs_Hero.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Libs_Hero.Altitude;
       if(Libs_Renderer.LightEffects) {
         Libs_Renderer.addLightSource({
           Top: (Y_CLIENT_VIRTUAL * 32) + 13,
@@ -173,8 +180,8 @@ var Libs_Renderer = {
         });
       }
       Libs_Renderer.drawImage({
-        Top: ((Y_CLIENT_VIRTUAL * 32) - 40),
-        Left: ((X_CLIENT_VIRTUAL * 32) - 40),
+        Top: ((Y_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
+        Left: ((X_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
         Width: 64,
         Height: 64,
         LeftOffset: Libs_Hero.getLeftOffset(),
@@ -184,7 +191,7 @@ var Libs_Renderer = {
     }
   },
 
-  renderPlayers: function() {
+  renderPlayers: function(SQM) {
     for(let playerId in Libs_Board.Players) if (Libs_Board.Players.hasOwnProperty(playerId)) {
       let Player = Libs_Board.Players[playerId];
 
@@ -225,9 +232,14 @@ var Libs_Renderer = {
       }
 
       if(parseInt(Y_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
+        Player.Altitude = 0;
+        for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
+          Player.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+        }
+        Player.Altitude = Player.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Player.Altitude;
         Libs_Renderer.drawImage({
-          Top: ((Libs_Renderer.Y_CLIENT * 32) - 40) + (Libs_Renderer.TopMargin) + Libs_Player.getTopMargin(playerId),
-          Left: ((Libs_Renderer.X_CLIENT* 32) - 40) + (Libs_Renderer.LeftMargin) + Libs_Player.getLeftMargin(playerId),
+          Top: ((Libs_Renderer.Y_CLIENT * 32) - Libs_Renderer.CreaturesOffset) + (Libs_Renderer.TopMargin) + Libs_Player.getTopMargin(playerId) - Player.Altitude,
+          Left: ((Libs_Renderer.X_CLIENT* 32) - Libs_Renderer.CreaturesOffset) + (Libs_Renderer.LeftMargin) + Libs_Player.getLeftMargin(playerId) - Player.Altitude,
           Width: 64,
           Height: 64,
           LeftOffset: Libs_Player.getLeftOffset(playerId),
@@ -238,13 +250,18 @@ var Libs_Renderer = {
     }
   },
 
-  renderNPCs: function() {
+  renderNPCs: function(SQM) {
     for(let npcId in Libs_Board.NPCs) if (Libs_Board.NPCs.hasOwnProperty(npcId)) {
       let NPC = Libs_Board.NPCs[npcId];
       if(parseInt(NPC.Y) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(NPC.X) === parseInt(Libs_Renderer.X_SERVER)) {
+        NPC.Altitude = 0;
+        for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
+          NPC.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+        }
+        NPC.Altitude = NPC.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : NPC.Altitude;
         Libs_Renderer.drawImage({
-          Top: ((Libs_Renderer.Y_CLIENT * 32) - 40) + (Libs_Renderer.TopMargin),
-          Left: ((Libs_Renderer.X_CLIENT* 32) - 40) + (Libs_Renderer.LeftMargin),
+          Top: ((Libs_Renderer.Y_CLIENT * 32) - Libs_Renderer.CreaturesOffset) + (Libs_Renderer.TopMargin) - NPC.Altitude,
+          Left: ((Libs_Renderer.X_CLIENT* 32) - Libs_Renderer.CreaturesOffset) + (Libs_Renderer.LeftMargin) - NPC.Altitude,
           Width: 64,
           Height: 64,
           LeftOffset: 0, //Libs_Player.getLeftOffset(playerId),
@@ -260,6 +277,7 @@ var Libs_Renderer = {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
       let Item = Libs_Item.Items[SQM[stack][0]];
       if(!(['1','2'].includes(Item.ItemTypeId))) {
+        Altitude = Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Altitude;
 
         let Quantity = 1;
         if(Item.IsAlwaysTop) {
@@ -310,6 +328,7 @@ var Libs_Renderer = {
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
         }
+        Altitude = Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Altitude;
 
         let effect = Libs_Effect[Libs_Board.Effects[unique].Id];
         Libs_Renderer.drawImage({
@@ -417,8 +436,8 @@ var Libs_Renderer = {
     Libs_Renderer.drawText({
       Text: Creature.Name,
       Font: "bold 12px Tahoma",
-      Top: Top*Libs_Board.Scale,
-      Left: Left*Libs_Board.Scale,
+      Top: Top*Libs_Board.Scale - (Creature.Altitude*Libs_Board.Scale),
+      Left: Left*Libs_Board.Scale - (Creature.Altitude*Libs_Board.Scale),
       Color: Color,
       Stroke: true,
       StrokeColor: '#000000',
@@ -427,9 +446,9 @@ var Libs_Renderer = {
 
     // draw hp bar
     Libs_Board.hudCTX.fillStyle = '#000000';
-    Libs_Board.hudCTX.fillRect(Left*Libs_Board.Scale-13.5, Top*Libs_Board.Scale+3.5, 27.5, 4.5);
+    Libs_Board.hudCTX.fillRect((Left*Libs_Board.Scale-13.5)-(Creature.Altitude*Libs_Board.Scale), (Top*Libs_Board.Scale+3.5)-(Creature.Altitude*Libs_Board.Scale), 27.5, 4.5);
     Libs_Board.hudCTX.fillStyle = Color;
-    Libs_Board.hudCTX.fillRect(Left*Libs_Board.Scale-12.5, Top*Libs_Board.Scale+4.5, 25.5, 2);
+    Libs_Board.hudCTX.fillRect((Left*Libs_Board.Scale-12.5)-(Creature.Altitude*Libs_Board.Scale), (Top*Libs_Board.Scale+4.5)-(Creature.Altitude*Libs_Board.Scale), 25.5, 2);
   },
 
   renderChat: function() {

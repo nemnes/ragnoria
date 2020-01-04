@@ -12,6 +12,7 @@ var Libs_NPC = {
       Playing: false,
       CurrentFrame: null
     };
+    npc.Altitude = 0;
     Libs_Board.NPCs[npc.Id] = npc;
   },
 

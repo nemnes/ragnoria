@@ -10,6 +10,7 @@ var Libs_Player = {
       Playing: false,
       CurrentFrame: null
     };
+    player.Altitude = 0;
     Libs_Board.Players[player.Id] = player;
   },
 

@@ -3,17 +3,18 @@
 // ITEM
 if(isset($_GET['id'])) {
   $id = $_GET['id'];
-  if(!is_numeric($id) || $id < 0) {
+  if(!is_numeric($id) || $id < 0 || $id > 50000) {
     die();
   }
   $imagesPath = __DIR__ . '/item/';
 
+  header('Content-Type: image/png');
   if(file_exists($imagesPath.$id.'.png')) {
-    header('Content-Type: image/png');
     readfile($imagesPath.$id.'.png');
-    die();
   }
-
+  else {
+    readfile($imagesPath.'undefined.png');
+  }
   die();
 }
 
