@@ -3,7 +3,7 @@ var Libs_Renderer = {
   // customizable parameters
   FramerateLimit: 80,
   MaxAltitude: 24,
-  CreaturesOffset: 40,
+  CreaturesOffset: 38,
   LightImage: null,
   LightEffects: true,
   LightPower: 0.35, // 0.35 seems be ok
@@ -415,20 +415,20 @@ var Libs_Renderer = {
     if(CreatureType === 'Player') {
       // If player is walking we have to pretend that he is still on previous SQM (for first 16 frames of animation) to keep good layer order
       VirtualCoords = Libs_Board.getCreatureVirtualCoordinates(Creature);
-      Top = (VirtualCoords.Y * 32) - 14 + (Libs_Renderer.TopMargin) + Libs_Player.getTopMargin(Creature.Id);
-      Left = (VirtualCoords.X * 32) + 4 + (Libs_Renderer.LeftMargin) + Libs_Player.getLeftMargin(Creature.Id);
+      Top = (VirtualCoords.Y * 32) - 13 + (Libs_Renderer.TopMargin) + Libs_Player.getTopMargin(Creature.Id);
+      Left = (VirtualCoords.X * 32) + 6 + (Libs_Renderer.LeftMargin) + Libs_Player.getLeftMargin(Creature.Id);
       Color = '#00c000';
     }
     if(CreatureType === 'NPC') {
-      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 14 + Libs_Renderer.TopMargin;
-      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 4 + Libs_Renderer.LeftMargin;
+      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 13 + Libs_Renderer.TopMargin;
+      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 6 + Libs_Renderer.LeftMargin;
 //      Color = '#f86060';
 //      Color = '#60f8f8';
       Color = '#20a0ff';
     }
     if(CreatureType === 'Hero') {
-      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 14;
-      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 4;
+      Top = (Creature.Y - Libs_Board.AreaStart.Y) * 32 - 13;
+      Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 6;
       Color = '#00c000';
     }
 

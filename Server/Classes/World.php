@@ -19,29 +19,34 @@ class World extends BaseClass
 
   private function createGrid()
   {
-    $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_01.json'), true);
-    foreach($scheme as $y => $row) {
-      foreach($row as $x => $tile) {
-        $sqm = $this->getApp()->newSQM($x,$y);
-        foreach($tile as $itemId) {
-          $sqm->addItem($itemId);
-        }
-        $this->Grid[$x][$y] = $sqm;
+    foreach(glob(Settings::PATH['DATA']. '/World/*') as $worldDir) {
+
+      // only level 0
+      if(basename($worldDir) > 0) {
+        break;
       }
-    }
-    $scheme = json_decode(file_get_contents(Settings::PATH['WORLD']. '/World_01_02.json'), true);
-    foreach($scheme as $y => $row) {
-      foreach($row as $x => $tile) {
-        $sqm = $this->getApp()->newSQM($x+100,$y);
-        foreach($tile as $itemId) {
-          if(is_array($itemId)) {
-            $sqm->addItem($itemId[0], $itemId[1]);
-          }
-          else {
-            $sqm->addItem($itemId);
+
+      foreach(glob($worldDir. '/*', GLOB_BRACE) as $areaDir) {
+        $areaZ = (int) basename($worldDir);
+        $areaY = (int) explode('-', str_replace('.json', '', basename($areaDir)))[0];
+        $areaX = (int) explode('-', str_replace('.json', '', basename($areaDir)))[1];
+
+        $scheme = json_decode(file_get_contents($areaDir), true);
+        foreach($scheme as $y => $row) {
+          foreach($row as $x => $tile) {
+            $sqm = $this->getApp()->newSQM($x+($areaX*100),$y+($areaY*100));
+            foreach($tile as $itemId) {
+              if(is_array($itemId)) {
+                $sqm->addItem($itemId[0], $itemId[1]);
+              }
+              else {
+                $sqm->addItem($itemId);
+              }
+            }
+            $this->Grid[$x+($areaX*100)][$y+($areaY*100)] = $sqm;
           }
         }
-        $this->Grid[$x+100][$y] = $sqm;
+
       }
     }
     unset($scheme);
