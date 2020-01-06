@@ -23,6 +23,7 @@ var Libs_Renderer = {
   Y_SERVER: 0,
   X_CLIENT: 0,
   Y_CLIENT: 0,
+  Z: 0,
 
   init: function() {
     Libs_Renderer.run();
@@ -58,29 +59,37 @@ var Libs_Renderer = {
 
     // iterate over area SQMs
     let areaIterations = 2;
-    for(let areaIteration=1;areaIteration<=areaIterations;areaIteration++) {
-      Libs_Renderer.Y_CLIENT = 0;
-      for(Libs_Renderer.Y_SERVER in Libs_Board.Area) if (Libs_Board.Area.hasOwnProperty(Libs_Renderer.Y_SERVER)) {
-        Libs_Renderer.X_CLIENT = 0;
-        for (Libs_Renderer.X_SERVER in Libs_Board.Area[Libs_Renderer.Y_SERVER]) if (Libs_Board.Area[Libs_Renderer.Y_SERVER].hasOwnProperty(Libs_Renderer.X_SERVER)) {
+    Libs_Renderer.Z = 0;
+    for(Libs_Renderer.Z in Libs_Board.Area) if (Libs_Board.Area.hasOwnProperty(Libs_Renderer.Z)) {
+      if(Libs_Renderer.stopFloorRendering()) {
+        break;
+      }
 
-          let SQM = Libs_Board.Area[Libs_Renderer.Y_SERVER][Libs_Renderer.X_SERVER];
+      for(let areaIteration=1;areaIteration<=areaIterations;areaIteration++) {
+        Libs_Renderer.Y_CLIENT = 0;
+        for(Libs_Renderer.Y_SERVER in Libs_Board.Area[Libs_Renderer.Z]) if (Libs_Board.Area[Libs_Renderer.Z].hasOwnProperty(Libs_Renderer.Y_SERVER)) {
+          Libs_Renderer.X_CLIENT = 0;
+          for (Libs_Renderer.X_SERVER in Libs_Board.Area[Libs_Renderer.Z][Libs_Renderer.Y_SERVER]) if (Libs_Board.Area[Libs_Renderer.Z][Libs_Renderer.Y_SERVER].hasOwnProperty(Libs_Renderer.X_SERVER)) {
 
-          if(areaIteration === 1) {
-            Libs_Renderer.renderFloor(SQM);
+            let SQM = Libs_Board.Area[Libs_Renderer.Z][Libs_Renderer.Y_SERVER][Libs_Renderer.X_SERVER];
+
+            if(areaIteration === 1) {
+              Libs_Renderer.renderFloor(SQM);
+            }
+            if(areaIteration === 2) {
+              Libs_Renderer.renderItems(SQM);
+              Libs_Renderer.renderHero(SQM);
+              Libs_Renderer.renderPlayers(SQM);
+              Libs_Renderer.renderNPCs(SQM);
+              Libs_Renderer.renderEffects(SQM);
+              Libs_Renderer.renderItemsAlwaysTop(SQM);
+            }
+
+            Libs_Renderer.X_CLIENT++;
           }
-          if(areaIteration === 2) {
-            Libs_Renderer.renderItems(SQM);
-            Libs_Renderer.renderHero(SQM);
-            Libs_Renderer.renderPlayers(SQM);
-            Libs_Renderer.renderNPCs(SQM);
-            Libs_Renderer.renderEffects(SQM);
-            Libs_Renderer.renderItemsAlwaysTop(SQM);
-          }
-
-          Libs_Renderer.X_CLIENT++;
+          Libs_Renderer.Y_CLIENT++;
         }
-        Libs_Renderer.Y_CLIENT++;
+
       }
     }
 
@@ -99,6 +108,9 @@ var Libs_Renderer = {
   renderFloor: function(SQM) {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
       let Item = Libs_Item.Items[SQM[stack][0]];
+      if(Item.Id === '0') {
+        continue;
+      }
       if(['1','2'].includes(Item.ItemTypeId)) {
         Libs_Renderer.drawImage({
           Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.TopMargin),
@@ -163,7 +175,7 @@ var Libs_Renderer = {
       }
     }
 
-    if(parseInt(Y_HERO_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_HERO_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
+    if(parseInt(Libs_Hero.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_HERO_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_HERO_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
       Libs_Hero.Altitude = 0;
       for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
         Libs_Hero.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
@@ -231,7 +243,7 @@ var Libs_Renderer = {
         }
       }
 
-      if(parseInt(Y_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
+      if(parseInt(Player.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
         Player.Altitude = 0;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           Player.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
@@ -253,7 +265,7 @@ var Libs_Renderer = {
   renderNPCs: function(SQM) {
     for(let npcId in Libs_Board.NPCs) if (Libs_Board.NPCs.hasOwnProperty(npcId)) {
       let NPC = Libs_Board.NPCs[npcId];
-      if(parseInt(NPC.Y) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(NPC.X) === parseInt(Libs_Renderer.X_SERVER)) {
+      if(parseInt(NPC.Z) === parseInt(Libs_Renderer.Z) && parseInt(NPC.Y) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(NPC.X) === parseInt(Libs_Renderer.X_SERVER)) {
         NPC.Altitude = 0;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           NPC.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
@@ -323,7 +335,7 @@ var Libs_Renderer = {
 
   renderEffects: function(SQM) {
     for(let unique in Libs_Board.Effects) if (Libs_Board.Effects.hasOwnProperty(unique)) {
-      if(Libs_Board.Effects[unique].X === parseInt(Libs_Renderer.X_SERVER) && Libs_Board.Effects[unique].Y === parseInt(Libs_Renderer.Y_SERVER)) {
+      if(Libs_Board.Effects[unique].Z === parseInt(Libs_Renderer.Z) && Libs_Board.Effects[unique].X === parseInt(Libs_Renderer.X_SERVER) && Libs_Board.Effects[unique].Y === parseInt(Libs_Renderer.Y_SERVER)) {
         let Altitude = Libs_Board.Effects[unique].Altitude;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
@@ -411,6 +423,9 @@ var Libs_Renderer = {
   },
 
   renderCreatureHUD: function(Creature, CreatureType) {
+    if(parseInt(Creature.Z) !== parseInt(Libs_Hero.Z)) {
+      return;
+    }
     let Top, Left, Color, VirtualCoords;
     if(CreatureType === 'Player') {
       // If player is walking we have to pretend that he is still on previous SQM (for first 16 frames of animation) to keep good layer order
@@ -431,6 +446,8 @@ var Libs_Renderer = {
       Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 6;
       Color = '#00c000';
     }
+    Top = Top - (32*Libs_Hero.Z);
+    Left = Left - (32*Libs_Hero.Z);
 
     // draw nicknames
     Libs_Renderer.drawText({
@@ -461,13 +478,18 @@ var Libs_Renderer = {
       for(let j in Libs_Chat.Messages[i]) if (Libs_Chat.Messages[i].hasOwnProperty(j)) {
         let Message = Libs_Chat.Messages[i][j];
 
+
+        if(parseInt(Message.Z) !== parseInt(Libs_Hero.Z)) {
+          continue;
+        }
+
         // if first message add: Author says:
         if(count === 0) {
           Libs_Renderer.drawText({
             Text: Message.Author + ' says:',
             Font: "bold 12px Tahoma",
-            Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale,
-            Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale,
+            Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
+            Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
             Color: '#fcff00',
             Stroke: true,
             StrokeColor: '#000000',
@@ -480,8 +502,8 @@ var Libs_Renderer = {
         Libs_Renderer.drawText({
           Text: Message.Message,
           Font: "bold 12px Tahoma",
-          Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale,
-          Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale,
+          Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
+          Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
           Color: '#fcff00',
           Stroke: true,
           StrokeColor: '#000000',
@@ -562,5 +584,50 @@ var Libs_Renderer = {
     Libs_Board.hudCTX.fillStyle = params.Color;
     Libs_Board.hudCTX.fillText(params.Text, params.Left, params.Top);
   },
+
+  stopFloorRendering: function() {
+    if(Libs_Renderer.Z > Libs_Hero.Z) {
+
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+        return true;
+      }
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y+1,Libs_Renderer.Z, true))) {
+        return true;
+      }
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+1,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+        return true;
+      }
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+1,Libs_Hero.Y+1,Libs_Renderer.Z, true))) {
+        return true;
+      }
+
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X-1,Libs_Hero.Y,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X-1,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+          return true;
+        }
+      }
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X,Libs_Hero.Y-1,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y-1,Libs_Renderer.Z, true))) {
+          return true;
+        }
+      }
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X+1,Libs_Hero.Y,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+2,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+          return true;
+        }
+      }
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X,Libs_Hero.Y+1,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y+2,Libs_Renderer.Z, true))) {
+          return true;
+        }
+      }
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X+1,Libs_Hero.Y+1,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+2,Libs_Hero.Y+2,Libs_Renderer.Z, true))) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
 };

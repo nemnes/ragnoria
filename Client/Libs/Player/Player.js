@@ -21,6 +21,7 @@ var Libs_Player = {
     }
     Libs_Board.Players[player.Id].X = player.X;
     Libs_Board.Players[player.Id].Y = player.Y;
+    Libs_Board.Players[player.Id].Z = player.Z;
     Libs_Board.Players[player.Id].Direction = player.Direction;
     if(direction) {
 

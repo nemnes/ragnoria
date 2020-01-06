@@ -8,6 +8,7 @@ use Ratchet\Session\SessionProvider;
 use Ratchet\WebSocket\WsServer;
 use Server\Classes\ItemStructureCollection;
 use Server\Classes\World;
+use Server\Data\Actions\Actions;
 use Server\Settings;
 use Server\WebsocketEventHandler;
 
@@ -56,4 +57,10 @@ $container['World'] = function ($c) {
   global $app;
   $app->log('Preparing World...');
   return new World($app);
+};
+
+$container['Actions'] = function ($c) {
+  global $app;
+  $app->log('Preparing Actions...');
+  return new Actions();
 };

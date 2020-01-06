@@ -48,4 +48,29 @@ var Libs_Misc = {
     return Date.now() + Math.random().toString();
   },
 
+  isSQMEmpty: function (x,y,z,ignoreEdges = false) {
+    let SQM = Libs_Board.Area[z][y][x];
+    for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
+      let Item = Libs_Item.Items[SQM[stack][0]];
+      if(ignoreEdges) {
+        if(Item.ItemTypeId !== '2') {
+          return false;
+        }
+      }
+    }
+    return true;
+  },
+
+  isSQMBlockingUpperView: function(x,y,z) {
+    let itemsBlockingProjectilesButNotBlockingUpperView = ['3045','3047'];
+    let SQM = Libs_Board.Area[z][y][x];
+    for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
+      let Item = Libs_Item.Items[SQM[stack][0]];
+      if(Item.IsBlockingProjectiles && !(itemsBlockingProjectilesButNotBlockingUpperView.includes(Item.Id))) {
+        return true;
+      }
+    }
+    return false;
+  },
+
 };

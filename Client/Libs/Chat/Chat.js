@@ -47,11 +47,11 @@ var Libs_Chat = {
     }
   },
 
-  prepareMessage: function(message, author, x, y) {
+  prepareMessage: function(message, author, x, y, z) {
     var msgTime = 2000+(message.length * 25);
     var splitted = Libs_Chat.splitMessage(message);
     for(let line in splitted) if(splitted.hasOwnProperty(line)) {
-      Libs_Chat.appendMessage(splitted[line], author, x, y, msgTime);
+      Libs_Chat.appendMessage(splitted[line], author, x, y, z, msgTime);
     }
   },
 
@@ -74,21 +74,22 @@ var Libs_Chat = {
     return r;
   },
 
-  appendMessage: function(message, author, x, y, msgTime) {
+  appendMessage: function(message, author, x, y, z, msgTime) {
     var msgId = Libs_Misc.generateUniqueId();
-    if(typeof Libs_Chat.Messages[author+'_'+x+'_'+y] == 'undefined') {
-      Libs_Chat.Messages[author+'_'+x+'_'+y] = {};
+    if(typeof Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z] == 'undefined') {
+      Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z] = {};
     }
-    Libs_Chat.Messages[author+'_'+x+'_'+y][msgId] = {
+    Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z][msgId] = {
       Author: author,
       Message: message,
       X: x,
-      Y: y
+      Y: y,
+      Z: z
     };
     setTimeout(function(){
-      delete Libs_Chat.Messages[author+'_'+x+'_'+y][msgId];
-      if(Object.entries(Libs_Chat.Messages[author+'_'+x+'_'+y]).length === 0) {
-        delete Libs_Chat.Messages[author+'_'+x+'_'+y];
+      delete Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z][msgId];
+      if(Object.entries(Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z]).length === 0) {
+        delete Libs_Chat.Messages[author+'_'+x+'_'+y+'_'+z];
       }
     }, msgTime);
   }

@@ -12,6 +12,7 @@ class ItemStructureCollection extends BaseClass
     foreach($tblItem->find(array()) as $row) {
       $structure = new \stdClass();
       $structure->Id = $row->Id;
+      $structure->ItemTypeId = $row->ItemTypeId;
       $structure->Size = $row->Size;
       $structure->Name = $row->Name;
       $structure->IsBlocking = $row->IsBlocking;

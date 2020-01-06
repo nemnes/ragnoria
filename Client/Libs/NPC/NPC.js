@@ -1,7 +1,5 @@
 var Libs_NPC = {
 
-  Player: [],
-
   create: function(npc) {
     if(typeof Libs_Board.NPCs[npc.Id] !== 'undefined') {
       return;

@@ -14,56 +14,70 @@ var Libs_Movement = {
     var targetPOS = null;
     switch(direction) {
       case 'North':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X];
-        targetPOS = {Y: Libs_Hero.Y-1, X: Libs_Hero.X};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y-1][Libs_Hero.X];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y-1, X: Libs_Hero.X};
         break;
       case 'NorthEast':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X+1];
-        targetPOS = {Y: Libs_Hero.Y-1, X: Libs_Hero.X+1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y-1][Libs_Hero.X+1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y-1, X: Libs_Hero.X+1};
         break;
       case 'East':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y][Libs_Hero.X+1];
-        targetPOS = {Y: Libs_Hero.Y, X: Libs_Hero.X+1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y][Libs_Hero.X+1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y, X: Libs_Hero.X+1};
         break;
       case 'SouthEast':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X+1];
-        targetPOS = {Y: Libs_Hero.Y+1, X: Libs_Hero.X+1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y+1][Libs_Hero.X+1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y+1, X: Libs_Hero.X+1};
         break;
       case 'South':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X];
-        targetPOS = {Y: Libs_Hero.Y+1, X: Libs_Hero.X};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y+1][Libs_Hero.X];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y+1, X: Libs_Hero.X};
         break;
       case 'SouthWest':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y+1][Libs_Hero.X-1];
-        targetPOS = {Y: Libs_Hero.Y+1, X: Libs_Hero.X-1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y+1][Libs_Hero.X-1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y+1, X: Libs_Hero.X-1};
         break;
       case 'West':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y][Libs_Hero.X-1];
-        targetPOS = {Y: Libs_Hero.Y, X: Libs_Hero.X-1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y][Libs_Hero.X-1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y, X: Libs_Hero.X-1};
         break;
       case 'NorthWest':
-        targetSQM = Libs_Board.Area[Libs_Hero.Y-1][Libs_Hero.X-1];
-        targetPOS = {Y: Libs_Hero.Y-1, X: Libs_Hero.X-1};
+        targetSQM = Libs_Board.Area[Libs_Hero.Z][Libs_Hero.Y-1][Libs_Hero.X-1];
+        targetPOS = {Z: Libs_Hero.Z, Y: Libs_Hero.Y-1, X: Libs_Hero.X-1};
         break;
     }
     if(!targetSQM) {
       return;
     }
-    // check sqm item collisions
+
+    // check sqm has floor
+    let floorFound = false;
+    for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
+      if(Libs_Item.Items[targetSQM[stack][0]].ItemTypeId === '1') {
+        floorFound = true;
+      }
+    }
+    if(!floorFound) {
+      return;
+    }
+
+    // check item collisions
     for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
       if(Libs_Item.Items[targetSQM[stack][0]].IsBlocking) {
         return;
       }
     }
+
     // check players collisions
     for(let playerId in Libs_Board.Players) if(Libs_Board.Players.hasOwnProperty(playerId)) {
-      if(parseInt(Libs_Board.Players[playerId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.Players[playerId].Y) === parseInt(targetPOS.Y)) {
+      if(parseInt(Libs_Board.Players[playerId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.Players[playerId].Y) === parseInt(targetPOS.Y) && parseInt(Libs_Board.Players[playerId].Z) === parseInt(targetPOS.Z)) {
         return;
       }
     }
-    // check players collisions
+
+    // check npc collisions
     for(let npcId in Libs_Board.NPCs) if(Libs_Board.NPCs.hasOwnProperty(npcId)) {
-      if(parseInt(Libs_Board.NPCs[npcId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.NPCs[npcId].Y) === parseInt(targetPOS.Y)) {
+      if(parseInt(Libs_Board.NPCs[npcId].X) === parseInt(targetPOS.X) && parseInt(Libs_Board.NPCs[npcId].Y) === parseInt(targetPOS.Y) && parseInt(Libs_Board.NPCs[npcId].Z) === parseInt(targetPOS.Z)) {
         return;
       }
     }
@@ -114,40 +128,40 @@ var Libs_Movement = {
 
   },
 
-  confirmStep: function(positive, X, Y, direction, area, players, NPCs) {
+  confirmStep: function(positive, X, Y, Z, direction, area, players, NPCs) {
     var waitInterval = setInterval(function(){
       if(Libs_Hero.Animation.Playing) {
         return
       }
       clearInterval(waitInterval);
-      Libs_Movement.updatePosition(positive, X, Y, direction, area, players, NPCs);
+      Libs_Movement.updatePosition(positive, X, Y, Z, direction, area, players, NPCs);
       Libs_Hero.movementBlocked = false;
       Libs_Hero.Animation.CurrentFrame = 0;
     }, 25);
   },
 
-  updatePosition: function(positive, X, Y, direction, area, players, NPCs) {
+  updatePosition: function(positive, X, Y, Z, direction, area, players, NPCs) {
     Libs_Hero.Direction = direction;
     Libs_Hero.X = parseInt(X);
     Libs_Hero.Y = parseInt(Y);
+    Libs_Hero.Z = parseInt(Z);
     if(positive) {
       for(let sqm in Libs_Movement.AreaChangesWhileWalking) if(Libs_Movement.AreaChangesWhileWalking.hasOwnProperty(sqm)) {
         sqm = Libs_Movement.AreaChangesWhileWalking[sqm];
-        if(typeof area[sqm.Y] != 'undefined' && typeof area[sqm.Y][sqm.X] != 'undefined') {
-          area[sqm.Y][sqm.X] = sqm.Stack;
+        if(typeof area[sqm.Z] != 'undefined' && typeof area[sqm.Z][sqm.Y] != 'undefined' && typeof area[sqm.Z][sqm.Y][sqm.X] != 'undefined') {
+          area[sqm.Z][sqm.Y][sqm.X] = sqm.Stack;
         }
       }
       Libs_Movement.AreaChangesWhileWalking = [];
       Libs_Board.Area = area;
-      Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
-      Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
+      Libs_Board.AreaStart.Y = parseInt(Object.keys(area[0])[0]);
+      Libs_Board.AreaStart.X = parseInt(Object.keys(area[0][Libs_Board.AreaStart.Y])[0]);
 
       // Update players after step - remove and create new
       Libs_Player.updateFromList(players);
 
       // Update NPCs after step - remove and create new
       Libs_NPC.updateFromList(NPCs);
-
     }
   },
 

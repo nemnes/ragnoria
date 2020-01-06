@@ -17,6 +17,7 @@ class Say extends BaseRequest
 
       $targetX = $player->X;
       $targetY = $player->Y;
+      $targetZ = $player->Z;
       switch($player->Direction) {
         case "NorthEast":
         case "East":
@@ -39,21 +40,21 @@ class Say extends BaseRequest
       if(strtolower($message) === 'exori vis') {
         /** @var Player $playerOnArea */
         foreach($player->getPlayersOnArea(false) as $playerOnArea) {
-          $playerOnArea->send('Libs_Effect.run', [1, $targetX, $targetY]);
+          $playerOnArea->send('Libs_Effect.run', [1, $targetX, $targetY, $targetZ]);
         }
       }
 
       if(strtolower($message) === 'exori mort') {
         /** @var Player $playerOnArea */
         foreach($player->getPlayersOnArea(false) as $playerOnArea) {
-          $playerOnArea->send('Libs_Effect.run', [3, $targetX, $targetY]);
+          $playerOnArea->send('Libs_Effect.run', [3, $targetX, $targetY, $targetZ]);
         }
       }
     }
 
     /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea(false) as $playerOnArea) {
-      $playerOnArea->send('Libs_Chat.prepareMessage', [$message, $player->Name, $player->X, $player->Y]);
+      $playerOnArea->send('Libs_Chat.prepareMessage', [$message, $player->Name, $player->X, $player->Y, $player->Z]);
     }
   }
 }

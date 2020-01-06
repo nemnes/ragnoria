@@ -51,6 +51,10 @@ var Libs_Keyboard = {
         if ([17,37,38,39,40,97,98,99,100,101,102,103,104,105,33,34,35,36].includes(e.keyCode)) {
           e.preventDefault();
         }
+        // prevent default for '/' and backspace
+        if([191,8].includes(e.keyCode)) {
+          e.preventDefault();
+        }
       }
 
     });

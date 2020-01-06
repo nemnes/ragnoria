@@ -20,30 +20,27 @@ class World extends BaseClass
   private function createGrid()
   {
     foreach(glob(Settings::PATH['DATA']. '/World/*') as $worldDir) {
-
-      // only level 0
-      if(basename($worldDir) > 0) {
-        break;
-      }
-
+      $z = (int) basename($worldDir);
       foreach(glob($worldDir. '/*', GLOB_BRACE) as $areaDir) {
-        $areaZ = (int) basename($worldDir);
         $areaY = (int) explode('-', str_replace('.json', '', basename($areaDir)))[0];
         $areaX = (int) explode('-', str_replace('.json', '', basename($areaDir)))[1];
-
         $scheme = json_decode(file_get_contents($areaDir), true);
         foreach($scheme as $y => $row) {
+          $y = $y+($areaY*100);
           foreach($row as $x => $tile) {
-            $sqm = $this->getApp()->newSQM($x+($areaX*100),$y+($areaY*100));
+            $x = $x+($areaX*100);
+            $sqm = $this->getApp()->newSQM($x,$y,$z);
             foreach($tile as $itemId) {
               if(is_array($itemId)) {
                 $sqm->addItem($itemId[0], $itemId[1]);
               }
               else {
-                $sqm->addItem($itemId);
+                if($itemId > 0) {
+                  $sqm->addItem($itemId);
+                }
               }
             }
-            $this->Grid[$x+($areaX*100)][$y+($areaY*100)] = $sqm;
+            $this->Grid[$z][$x][$y] = $sqm;
           }
         }
 
@@ -66,7 +63,7 @@ class World extends BaseClass
     /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.move', [$player, '-']);
-      $playerOnArea->send('Libs_Effect.run', [1, $player->X, $player->Y]);
+      $playerOnArea->send('Libs_Effect.run', [1, $player->X, $player->Y, $player->Z]);
     }
     $this->Players[$player->Id] = $player;
   }
@@ -76,7 +73,7 @@ class World extends BaseClass
     /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.remove', [$player->Id]);
-      $playerOnArea->send('Libs_Effect.run', [2, $player->X, $player->Y]);
+      $playerOnArea->send('Libs_Effect.run', [2, $player->X, $player->Y, $player->Z]);
     }
     if(isset($this->Players[$player->Id])) {
       unset($this->Players[$player->Id]);
@@ -106,12 +103,13 @@ class World extends BaseClass
   /**
    * @param $x
    * @param $y
+   * @param int $z
    * @return SQM|false
    */
-  public function getSQM($x, $y)
+  public function getSQM($x, $y, $z)
   {
-    if(isset($this->Grid[$x][$y])) {
-      return $this->Grid[$x][$y];
+    if(isset($this->Grid[$z][$x][$y])) {
+      return $this->Grid[$z][$x][$y];
     }
     return false;
   }
@@ -125,7 +123,7 @@ class World extends BaseClass
     );
     foreach($fields as $y => $row) {
       foreach($row as $x => $tile) {
-        $result[] = $this->getSQM($x, $y);
+        $result[] = $this->getSQM($x, $y, $sqmFrom->Z);
       }
     }
     return $result;
@@ -144,15 +142,15 @@ class World extends BaseClass
     return $this->NPCs;
   }
 
-  public function getCreatureBySQM($X, $Y)
+  public function getCreatureBySQM($X, $Y, $Z)
   {
     foreach($this->Players as $player) {
-      if($player->X == $X && $player->Y == $Y) {
+      if($player->X == $X && $player->Y == $Y && $player->Z == $Z) {
         return $player;
       }
     }
     foreach($this->NPCs as $npc) {
-      if($npc->X == $X && $npc->Y == $Y) {
+      if($npc->X == $X && $npc->Y == $Y && $npc->Z == $Z) {
         return $npc;
       }
     }

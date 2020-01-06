@@ -330,10 +330,6 @@ var MapEditor = {
         if($('.item:not(#item-preview)', $(this)).last().length > 0) {
           var $item = $('.item:not(#item-preview)', $(this)).last();
           var item = MapEditor.Items[$item.attr('data-item-id')];
-          console.log('$item:');
-          console.log($item);
-          console.log('item:');
-          console.log(item);
           if(item.IsStackable) {
             var quantity = prompt("Enter quantity:", $item.attr('data-item-quantity'));
             quantity = isNaN(parseFloat(quantity)) ? 0 : quantity;

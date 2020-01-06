@@ -29,6 +29,7 @@ class App
   public function run()
   {
     $this->get('PDO');
+    $this->get('Actions');
     $this->get('World');
     $this->get('IoServer')->run();
   }
@@ -44,9 +45,9 @@ class App
     return new NPC($this, [$id]);
   }
 
-  public function newSQM($x, $y)
+  public function newSQM($x, $y, $z)
   {
-    return new SQM($this, [$x, $y]);
+    return new SQM($this, [$x, $y, $z]);
   }
 
   public function get($name)
@@ -76,9 +77,15 @@ class App
     if($separated) echo date('H:i:s') . " | \n";
   }
 
+  public function getAction($type, $itemId)
+  {
+    return $this->get('Actions')->getAction($type, $itemId);
+  }
+
 }
 
 require __DIR__ . '/../vendor/autoload.php';
+
 $app = new App();
 include('dependencies.php');
 $app->run();

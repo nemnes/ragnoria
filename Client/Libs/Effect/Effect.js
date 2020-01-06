@@ -27,7 +27,7 @@ var Libs_Effect = {
     }
   },
 
-  run: function(id,x,y,onCreature = false) {
+  run: function(id,x,y,z,onCreature = false) {
     if(typeof Libs_Effect[id] !== 'object') {
       return;
     }
@@ -35,7 +35,7 @@ var Libs_Effect = {
     let effect = Libs_Effect[id];
     let unique = Libs_Misc.generateUniqueId();
 
-    Libs_Board.Effects[unique] = {X: parseInt(x), Y: parseInt(y), Id: id, Frame: 0, Altitude: altitude};
+    Libs_Board.Effects[unique] = {X: parseInt(x), Y: parseInt(y), Z: parseInt(z), Id: id, Frame: 0, Altitude: altitude};
     for(let i=1;i<effect.frames;i++) {
       setTimeout(function() {
         Libs_Board.Effects[unique].Frame++;

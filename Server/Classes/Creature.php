@@ -6,6 +6,7 @@ abstract class Creature extends BaseClass
 {
   public $X;
   public $Y;
+  public $Z;
   public $Direction;
   public $Speed;
 
@@ -51,7 +52,7 @@ abstract class Creature extends BaseClass
 
   private function go($direction)
   {
-    $targetPosition = array('X' => $this->X, 'Y' => $this->Y);
+    $targetPosition = array('X' => $this->X, 'Y' => $this->Y, 'Z' => $this->Z);
     switch($direction) {
       case 'North':
         $targetPosition['Y']--;
@@ -85,15 +86,16 @@ abstract class Creature extends BaseClass
         return false;
     }
 
-    if($this->getWorld()->getCreatureBySQM($targetPosition['X'], $targetPosition['Y'])) {
+    if($this->getWorld()->getCreatureBySQM($targetPosition['X'], $targetPosition['Y'], $targetPosition['Z'])) {
       return false;
     }
 
     /** @var SQM $SQM */
-    $SQM = $this->getWorld()->getSQM(($targetPosition['X']), $targetPosition['Y']);
-    if($SQM->isWalkable()) {
+    $SQM = $this->getWorld()->getSQM(($targetPosition['X']), $targetPosition['Y'], $targetPosition['Z']);
+    if($SQM->isWalkable() && $SQM->hasFloor()) {
       $this->X = $targetPosition['X'];
       $this->Y = $targetPosition['Y'];
+      $this->Z = $targetPosition['Z'];
       $this->Direction = $direction;
       return true;
     }

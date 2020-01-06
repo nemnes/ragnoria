@@ -12,6 +12,7 @@ class Player extends Creature
   public $Name;
   public $X;
   public $Y;
+  public $Z;
   public $Direction;
   public $Speed;
   public $Locks;
@@ -37,6 +38,7 @@ class Player extends Creature
     $this->Name = $tblPlayer->Name;
     $this->X = $tblPlayer->X;
     $this->Y = $tblPlayer->Y;
+    $this->Z = $tblPlayer->Z;
     $this->Direction = $tblPlayer->Direction;
     $this->Speed = (int) $tblPlayer->Speed;
 
@@ -68,6 +70,7 @@ class Player extends Creature
     $tblPlayer->Name = $this->Name;
     $tblPlayer->X = $this->X;
     $tblPlayer->Y = $this->Y;
+    $tblPlayer->Z = $this->Z;
     $tblPlayer->Direction = $this->Direction;
     $tblPlayer->Base = $this->Base;
     $tblPlayer->Head = $this->Head;
@@ -86,21 +89,21 @@ class Player extends Creature
     $this->Connection->close();
   }
 
-  public function teleport($x, $y) {
+  public function teleport(SQM $SQM) {
     $playersOnAreaBeforeStep = $this->getPlayersOnArea();
     $playersStillOnArea = array();
 
-    $this->X = $x;
-    $this->Y = $y;
-    $this->Direction = 'South';
+    $this->X = $SQM->X;
+    $this->Y = $SQM->Y;
+    $this->Z = $SQM->Z;
 
-    $this->send('Libs_Movement.updatePosition', [true, $this->X, $this->Y, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
-    $this->send('Libs_Effect.run', [1, $this->X, $this->Y]);
+    $this->send('Libs_Movement.updatePosition', [true, $this->X, $this->Y, $this->Z, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
+    $this->send('Libs_Effect.run', [1, $this->X, $this->Y, $this->Z]);
 
     /** @var Player $playerOnArea */
     foreach($this->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.move', [$this]);
-      $playerOnArea->send('Libs_Effect.run', [1, $this->X, $this->Y]);
+      $playerOnArea->send('Libs_Effect.run', [1, $this->X, $this->Y, $this->Z]);
       $playersStillOnArea[] = $playerOnArea->Id;
     }
     foreach($playersOnAreaBeforeStep as $playerOnArea) {
@@ -132,9 +135,13 @@ class Player extends Creature
     $sqm_range_x = range(($this->X - $factor_x),($this->X + $factor_x));
     $sqm_range_y = range(($this->Y - $factor_y),($this->Y + $factor_y));
     $area = array();
-    foreach($sqm_range_y as $y) {
-      foreach($sqm_range_x as $x) {
-        $area[$y][$x] = $this->getWorld()->getSQM($x,$y)->Items;
+    foreach([0,1,2] as $z) {
+      foreach ($sqm_range_y as $y) {
+        $y = $y+($z-$this->Z);
+        foreach ($sqm_range_x as $x) {
+          $x = $x+($z-$this->Z);
+          $area[$z][$y][$x] = $this->getWorld()->getSQM($x, $y, $z) ? $this->getWorld()->getSQM($x, $y, $z)->Items : [];
+        }
       }
     }
     return $area;

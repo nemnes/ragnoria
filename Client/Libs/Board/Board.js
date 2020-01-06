@@ -23,7 +23,7 @@ var Libs_Board = {
   lightCTX: null,
 
 
-  init: function(area) {
+  init: function() {
     $('<canvas id="board" width="' +(Libs_Board.Width*32)+ 'px" height="' +(Libs_Board.Height*32)+ 'px" style="transform: translate(-50%, -50%) scale(' +Libs_Board.Scale+ ');"></canvas>').appendTo($('body'));
     Libs_Board.board = document.getElementById("board");
     Libs_Board.boardCTX = Libs_Board.board.getContext("2d");
@@ -50,20 +50,23 @@ var Libs_Board = {
 
     $('#board', document).on('mousemove mousedown mouseup', function(event){
       let bounds = event.target.getBoundingClientRect();
-      let x = parseInt((parseInt(event.clientX) - parseInt(bounds.left) - parseInt(Libs_Renderer.LeftMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale));
-      let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top) - parseInt(Libs_Renderer.TopMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale));
+      let x = parseInt((parseInt(event.clientX) - parseInt(bounds.left) - parseInt(Libs_Renderer.LeftMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale)) + Libs_Hero.Z;
+      let y = parseInt((parseInt(event.clientY) - parseInt(bounds.top) - parseInt(Libs_Renderer.TopMargin*Libs_Board.Scale)) / (32*Libs_Board.Scale)) + Libs_Hero.Z;
       Libs_Board.CursorPosition = {X: x, Y: y};
 
       if(event.type === 'mousedown' && event.which === 1) {
         let dragX = Libs_Board.CursorPosition.X + Libs_Board.AreaStart.X;
         let dragY = Libs_Board.CursorPosition.Y + Libs_Board.AreaStart.Y;
-        let stack = Libs_Board.Area[dragY][dragX];
-        Libs_Mouse.Dragging = {X: dragX, Y: dragY, Item: stack[stack.length-1]};
+        let dragZ = Libs_Hero.Z;
+        if(typeof Libs_Board.Area[dragZ][dragY][dragX] !== 'undefined') {
+          let stack = Libs_Board.Area[dragZ][dragY][dragX];
+          Libs_Mouse.Dragging = {X: dragX, Y: dragY, Z: dragZ, Item: stack[stack.length-1]};
+        }
       }
       if(event.type === 'mouseup' && event.which === 1) {
         if(Libs_Mouse.Dragging && ((Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X) !== Libs_Mouse.Dragging.X) || ((Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y) !== Libs_Mouse.Dragging.Y)) {
           if(Libs_Item.Items[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
-            App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Item]);
+            App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, Libs_Mouse.Dragging.Z, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Z, Libs_Mouse.Dragging.Item]);
           }
         }
         document.body.style.cursor = 'default';
@@ -79,17 +82,18 @@ var Libs_Board = {
 
   setArea: function(area) {
     Libs_Board.Area = area;
-    Libs_Board.AreaStart.Y = parseInt(Object.keys(area)[0]);
-    Libs_Board.AreaStart.X = parseInt(Object.keys(area[Libs_Board.AreaStart.Y])[0]);
+    Libs_Board.AreaStart.Y = parseInt(Object.keys(area[0])[0]);
+    Libs_Board.AreaStart.X = parseInt(Object.keys(area[0][Libs_Board.AreaStart.Y])[0]);
   },
 
-  updateSQM: function(x, y, stack) {
-    if(typeof Libs_Board.Area[y] == 'undefined') return;
-    if(typeof Libs_Board.Area[y][x] == 'undefined') return;
+  updateSQM: function(x, y, z, stack) {
+    if(typeof Libs_Board.Area[z] == 'undefined') return;
+    if(typeof Libs_Board.Area[z][y] == 'undefined') return;
+    if(typeof Libs_Board.Area[z][y][x] == 'undefined') return;
     if(Libs_Hero.Animation.Playing || Libs_Hero.Animation.CurrentFrame > 0) {
-      Libs_Movement.AreaChangesWhileWalking.push({X: x, Y: y, Stack: stack});
+      Libs_Movement.AreaChangesWhileWalking.push({X: x, Y: y, Z: z, Stack: stack});
     }
-    Libs_Board.Area[y][x] = stack;
+    Libs_Board.Area[z][y][x] = stack;
   },
 
   setNight: function() {
