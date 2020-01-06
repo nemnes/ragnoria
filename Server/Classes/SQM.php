@@ -106,4 +106,23 @@ class SQM extends BaseClass
     return $players;
   }
 
+  public function walkOn(Player $player)
+  {
+    foreach($this->Items as $item) {
+      if($action = $this->getApp()->getAction('WalkOn', $item[0])) {
+        $action->run($player, $item[0], $this);
+      }
+    }
+  }
+
+  public function walkOut(Player $player)
+  {
+    foreach($this->Items as $item) {
+      if($action = $this->getApp()->getAction('WalkOut', $item[0])) {
+        $action->run($player, $item[0], $this);
+      }
+    }
+  }
+
+
 }

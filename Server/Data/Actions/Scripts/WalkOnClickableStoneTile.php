@@ -2,13 +2,12 @@
 
 namespace Server\Data\Actions\Scripts;
 
-use Server\App;
 use Server\Classes\Player;
 use Server\Classes\SQM;
 
-class WalkOnClickableStoneTile
+class WalkOnClickableStoneTile extends BaseAction
 {
-  public function run(App $app, Player $player, $itemId, SQM $sqm, &$levelChanged)
+  public function run(Player $player, $itemId, SQM $sqm)
   {
     $sqm->updateItem('1017', '1018');
     /** @var Player $playerOnArea */

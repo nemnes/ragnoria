@@ -1,0 +1,158 @@
+
+Press [enter] to open chat box
+Press [~] to open console
+Press [tab] to open outfitter
+
+--------- Spells / Commands ---------
+
+Enter in chat box:
+- exori vis
+- exori mort
+- /a [0-9]
+- /up
+- /down
+- /temple
+- /depot
+
+--------- Requests ---------
+
+Enter in console:
+- set day
+- set night
+
+--------- Changelog --------
+
+6 Jan 2019
+- Floors % stairs
+- New event handlers: 'WalkOn', 'WalkOut', 'ItemPushOn'
+- Removed "Tp" request
+- Added new commands: /a, /up, /down, /temple, /depot
+
+5 Jan 2019
+- '~/Data' moved to '~/Server/Data'
+- Added renderer params: 'MaxAltitude' and 'CreaturesOffset'
+
+4 Jan 2019
+- Altitude is now impacting on creatures
+- Size and altitude parameters added to ItemEditor
+- Added "add new item" feature in ItemEditor
+
+2 Jan 2019
+- Project structure update: '~/Tools/Images' moved to '~/Static'
+- Effect altitude fix (client)
+- Minor structure fixes
+
+22 Dec 2019
+- Fixed pushing through the walls (IsBlockingProjectiles)
+- Items.json is now shared between client and map editor
+- ItemsImporter - fixed json save path
+
+15 Dec 2019
+- Pushing distance fix
+- New tool: ItemEditor
+
+12 Dec 2019
+- Items pushing (drag&drop)
+
+9 Dec 2019
+- Chat (client)
+
+4 Dec 2019
+- Adapting the map editor to stackable items
+- Dependencies update
+
+3 Dec 2019
+- Loader (client)
+- New Player method - "teleport" (server)
+- First letter of the request name is no longer case-sensitive
+
+2 Dec 2019
+- Stackable items
+- "Tp" request
+- "Set" request (set day/set night)
+- Preparation for incantations feature
+- Interaction with items while walking
+
+1 Dec 2019
+- New js lib: "Libs_Renderer" (client)
+- 100x100 areas are merging into one while creating world (server)
+- New item params: "Altitude", "IsStacking" and "IsAnimating"
+
+30 Nov 2019
+- Light effects
+- NPCs display fix
+- Improved light effects
+- Fixed rotating
+
+29 Nov 2019
+- Game board rendering method changed from divs to canvas (big update, most of features may not work anymore)
+- Movement speed is no longer constant for all players
+- Added possibility to walk diagonally
+
+26 Nov 2019
+- Updated board structure: board[y][x] = items stack
+- MapEditor updated to compatibility with new board structure
+- Client updated to hold compatibility  with new board structure
+- Added new library: Item.js
+- IsWalkable fix (server)
+
+14 Nov 2019
+- Map editor - added secondary item
+- Map editor - removed bootstrap
+
+13 Nov 2019
+- MapEditor - multiple items on layer while holding shift
+- new addons
+
+7 Nov 2019
+- new js lib: "Libs_Outfiter" (client)
+- new request: "SetOutfit" (server)
+
+6 Nov 2019
+- updated OutfitGenerator
+- directory tree - images
+
+4 Nov 2019
+- Outfits (client)
+- OutfitGenerator (server)
+- Graphic corrections
+
+2 Nov 2019
+- MapEditor update
+
+1 Nov 2019
+- New js lib: "Libs_NPC" (client)
+- New class: NPC (server)
+- Improved chatting (client)
+- Fixed "is sqm walkable" (client, server)
+- updated items
+
+30 Oct 2019
+- Sending messages (client)
+- New request "Say" (server)
+
+26 Oct 2019
+- New js lib: "Libs_Chat" (client)
+- Logout effect (client)
+- Logout walking animation bug (client)
+
+22 Oct 2019
+- New js lib: "Libs_Effect" (client)
+- Login effect (client)
+- Rotate player (client/server)
+- Map-overlay (client)
+
+20 Oct 2019
+- Players can now see each other on game board (client)
+- Reworked walking (client/server)
+- Show player on map on login/hide on logout (client)
+- New js lib: "Libs_Player" (client)
+- SQM Layers "Walls" and "Blocks" are now separated (client/server)
+- Items Image Provider - ignore gifs option
+- Walking animation interval fix (client)
+
+17 Oct 2019
+- Added js Lib: "Libs_Hero" (client)
+- Walking refactor (client/server)
+- Item image provider now handle gifs
+- z-index fix (client)

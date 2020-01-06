@@ -51,7 +51,7 @@ class Push extends BaseRequest
     // onItemPush Actions
     foreach($toSQM->Items as $item) {
       if($action = $this->getApp()->getAction('ItemPushOn', $item[0])) {
-        $action->run($this->getApp(), $player, $item[0], $fromSQM, $toSQM);
+        $action->run($player, $item[0], $fromSQM, $toSQM);
       }
     }
 

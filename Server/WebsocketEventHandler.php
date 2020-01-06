@@ -140,6 +140,7 @@ class WebsocketEventHandler implements MessageComponentInterface
         $tblPlayer->Name = 'Tester';
         $tblPlayer->X = 150;
         $tblPlayer->Y = 50;
+        $tblPlayer->Z = 0;
         $tblPlayer->save();
         $tblPlayer->Name = 'Tester #' .$tblPlayer->Id;
         $tblPlayer->save();

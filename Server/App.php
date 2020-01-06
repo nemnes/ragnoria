@@ -23,7 +23,7 @@ class App
       $this->log("Socket $host:$port is already open!", true);
       exit();
     }
-    $this->log("-- RagnoriaSrv v1.1 --", true);
+    $this->log("-- RagnoriaSrv --", true);
   }
 
   public function run()

@@ -62,5 +62,5 @@ $container['World'] = function ($c) {
 $container['Actions'] = function ($c) {
   global $app;
   $app->log('Preparing Actions...');
-  return new Actions();
+  return new Actions($app);
 };

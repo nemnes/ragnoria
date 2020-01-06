@@ -10,7 +10,7 @@ var Libs_Effect = {
   // mort
   3: {frames: 8, speed: 60},
   // fire
-  4: {frames: 5, speed: 80},
+  4: {frames: 5, speed: 90},
 
   init: function() {
     for(let i = 1; i<= Libs_Effect.Amount; i++) {

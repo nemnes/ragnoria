@@ -47,6 +47,7 @@ var App = {
     Libs_Hero.init(hero);
     Libs_Player.updateFromList(players);
     Libs_NPC.updateFromList(NPCs);
+    $('body').append('<a target="_blank" href="info.txt"><div class="info">i</div></a>');
   },
 
   emit: function(method, args = []) {

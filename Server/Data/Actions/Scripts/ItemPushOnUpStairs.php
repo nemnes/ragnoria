@@ -2,13 +2,12 @@
 
 namespace Server\Data\Actions\Scripts;
 
-use Server\App;
 use Server\Classes\Player;
 
-class ItemPushOnUpStairs
+class ItemPushOnUpStairs extends BaseAction
 {
-  public function run(App $app, Player $player, $itemId, &$fromSQM, &$toSQM)
+  public function run(Player $player, $itemId, &$fromSQM, &$toSQM)
   {
-    $toSQM = $app->getWorld()->getSQM($toSQM->X, $toSQM->Y-1, $toSQM->Z+1);
+    $toSQM = $this->getApp()->getWorld()->getSQM($toSQM->X, $toSQM->Y-1, $toSQM->Z+1);
   }
 }

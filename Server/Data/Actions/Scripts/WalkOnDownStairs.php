@@ -2,17 +2,15 @@
 
 namespace Server\Data\Actions\Scripts;
 
-use Server\App;
 use Server\Classes\Player;
 use Server\Classes\SQM;
 
-class WalkOnDownStairs
+class WalkOnDownStairs extends BaseAction
 {
-  public function run(App $app, Player $player, $itemId, SQM $sqm, &$levelChanged)
+  public function run(Player $player, $itemId, SQM $sqm)
   {
     $player->Y++;
     $player->Z--;
     $player->Direction = 'South';
-    $levelChanged = true;
   }
 }

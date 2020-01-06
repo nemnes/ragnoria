@@ -2,6 +2,8 @@
 
 namespace Server\Data\Actions;
 
+use Server\App;
+
 class Actions
 {
   public $ActionList = [
@@ -28,11 +30,11 @@ class Actions
 
   public $Actions = [];
 
-  public function __construct()
+  public function __construct(App $app)
   {
     foreach($this->ActionList as $action) {
       $class = 'Server\Data\Actions\Scripts\\' . $action[2];
-      $this->Actions[$action[0]][$action[1]] = new $class;
+      $this->Actions[$action[0]][$action[1]] = new $class($app);
     }
   }
 

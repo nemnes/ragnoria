@@ -52,9 +52,80 @@ class Say extends BaseRequest
       }
     }
 
+    if($message[0] === '/') {
+      $split = explode(' ', $message);
+      $cmd = $split[0];
+      $param1 = isset($split[1]) ? $split[1] : null;
+      $param2 = isset($split[2]) ? $split[2] : null;
+      $this->runCommand($cmd, $param1, $param2, $player);
+      return;
+    }
+
     /** @var Player $playerOnArea */
     foreach($player->getPlayersOnArea(false) as $playerOnArea) {
       $playerOnArea->send('Libs_Chat.prepareMessage', [$message, $player->Name, $player->X, $player->Y, $player->Z]);
     }
+  }
+
+  public function runCommand($cmd, $param1, $param2, Player $player)
+  {
+    if($cmd === '/up') {
+      $SQM = $this->getWorld()->getSQM($player->X, $player->Y, $player->Z+1);
+      if($SQM && $SQM->hasFloor()) {
+        $player->teleport($SQM);
+      }
+      return;
+    }
+
+    if($cmd === '/down') {
+      $SQM = $this->getWorld()->getSQM($player->X, $player->Y, $player->Z-1);
+      if($SQM && $SQM->hasFloor()) {
+        $player->teleport($SQM);
+      }
+      return;
+    }
+
+    if($cmd === '/a') {
+      if($param1 && is_numeric($param1) && (int) $param1 == $param1 && (int) $param1 <= 9 && (int) $param1 > 0) {
+        $SQM = false;
+        $range = (int) $param1;
+        switch($player->Direction) {
+          case 'South':
+            $SQM = $this->getWorld()->getSQM($player->X, $player->Y+$range, $player->Z);
+            break;
+          case 'East':
+            $SQM = $this->getWorld()->getSQM($player->X+$range, $player->Y, $player->Z);
+            break;
+          case 'North':
+            $SQM = $this->getWorld()->getSQM($player->X, $player->Y-$range, $player->Z);
+            break;
+          case 'West':
+            $SQM = $this->getWorld()->getSQM($player->X-$range, $player->Y, $player->Z);
+            break;
+        }
+        if($SQM && $SQM->hasFloor()) {
+          $player->teleport($SQM);
+        }
+        return;
+      }
+    }
+
+    if($cmd === '/temple') {
+      $SQM = $this->getWorld()->getSQM(173, 47, 0);
+      if($SQM && $SQM->hasFloor()) {
+        $player->teleport($SQM);
+      }
+      return;
+    }
+
+    if($cmd === '/depot') {
+      $SQM = $this->getWorld()->getSQM(150, 50, 0);
+      if($SQM && $SQM->hasFloor()) {
+        $player->teleport($SQM);
+      }
+      return;
+    }
+
+    return;
   }
 }

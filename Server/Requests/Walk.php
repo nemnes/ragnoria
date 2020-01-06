@@ -47,29 +47,17 @@ class Walk extends BaseRequest
     $sqmTo = $this->getWorld()->getSQM($player->X, $player->Y, $player->Z);
 
     if($stepDone) {
-      $levelChanged = false;
 
-      // WalkOut Actions
-      foreach($this->getWorld()->getSQM($sqmFrom->X, $sqmFrom->Y, $sqmFrom->Z)->Items as $item) {
-        if($action = $this->getApp()->getAction('WalkOut', $item[0])) {
-          $action->run($this->getApp(), $player, $item[0], $sqmFrom, $levelChanged);
-        }
-      }
-
-      // WalkOn Actions
-      foreach($this->getWorld()->getSQM($sqmTo->X, $sqmTo->Y, $sqmTo->Z)->Items as $item) {
-        if($action = $this->getApp()->getAction('WalkOn', $item[0])) {
-          $action->run($this->getApp(),$player, $item[0], $sqmTo, $levelChanged);
-        }
-      }
+      $this->getWorld()->getSQM($sqmFrom->X, $sqmFrom->Y, $sqmFrom->Z)->walkOut($player);
+      $this->getWorld()->getSQM($sqmTo->X, $sqmTo->Y, $sqmTo->Z)->walkOn($player);
 
       /** @var Player $playerOnArea */
       foreach($player->getPlayersOnArea() as $playerOnArea) {
-        if($levelChanged) {
-          $playerOnArea->send('Libs_Player.move', [$player]);
+        if($sqmFrom->Z == $player->Z) {
+          $playerOnArea->send('Libs_Player.move', [$player, $direction]);
         }
         else {
-          $playerOnArea->send('Libs_Player.move', [$player, $direction]);
+          $playerOnArea->send('Libs_Player.move', [$player]);
         }
         $playersStillOnArea[] = $playerOnArea->Id;
       }

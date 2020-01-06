@@ -5,7 +5,7 @@ var Libs_Loader = {
   MilestonesReached: 0,
 
   init: function() {
-    Libs_Loader.$ = $('<div id="loader" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; text-align: center; background-color: #000000; color: #ffffff; z-index: 2; font-family: \'Tahoma\' "><h1>Loading...</h1><h2 style="opacity: 0.5;">Core</h2></div>');
+    Libs_Loader.$ = $('<div id="loader" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; text-align: center; background-color: #000000; color: #ffffff; z-index: 2; font-family: \'Tahoma\' "><h1>Loading...</h1><h2 style="opacity: 0.5;">Core</h2><h3 style="opacity: 0.25;">If game is not loading press CTRL+F5 <br/> Jeżeli gra się nie wczytuje wciśnij CTRL+F5</h3></div>');
     Libs_Loader.$.appendTo($('body'));
   },
 

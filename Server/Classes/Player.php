@@ -60,6 +60,7 @@ class Player extends Creature
     $this->Connection->Player = $this;
 
     $this->getWorld()->addPlayer($this);
+    $this->getWorld()->getSQM($tblPlayer->X, $tblPlayer->Y, $tblPlayer->Z)->walkOn($this);
     $this->getApp()->log("Player " .$conn->Player->Name. " logged in. Players online: " .$this->getWorld()->getPlayersOnline());
   }
 
@@ -84,32 +85,47 @@ class Player extends Creature
     $tblPlayer->save();
 
     $this->getWorld()->removePlayer($this);
+    $this->getWorld()->getSQM($tblPlayer->X, $tblPlayer->Y, $tblPlayer->Z)->walkOut($this);
     $this->getApp()->log("Player " .$this->Name. " logged out. Players online: " .$this->getWorld()->getPlayersOnline());
+
     unset($this->Connection->Player);
     $this->Connection->close();
   }
 
-  public function teleport(SQM $SQM) {
+  public function move(SQM $SQM, $direction = false) {
     $playersOnAreaBeforeStep = $this->getPlayersOnArea();
     $playersStillOnArea = array();
 
+    $this->getWorld()->getSQM($this->X, $this->Y, $this->Z)->walkOut($this);
     $this->X = $SQM->X;
     $this->Y = $SQM->Y;
     $this->Z = $SQM->Z;
+    if($direction) {
+      $this->Direction = $direction;
+    }
+    $this->getWorld()->getSQM($SQM->X, $SQM->Y, $SQM->Z)->walkOn($this);
 
     $this->send('Libs_Movement.updatePosition', [true, $this->X, $this->Y, $this->Z, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
-    $this->send('Libs_Effect.run', [1, $this->X, $this->Y, $this->Z]);
 
     /** @var Player $playerOnArea */
     foreach($this->getPlayersOnArea() as $playerOnArea) {
       $playerOnArea->send('Libs_Player.move', [$this]);
-      $playerOnArea->send('Libs_Effect.run', [1, $this->X, $this->Y, $this->Z]);
       $playersStillOnArea[] = $playerOnArea->Id;
     }
     foreach($playersOnAreaBeforeStep as $playerOnArea) {
       if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
         $playerOnArea->send('Libs_Player.remove', [$this->Id]);
       }
+    }
+  }
+
+  public function teleport(SQM $SQM) {
+    $this->move($SQM);
+
+    /** @var Player $playerOnArea */
+    foreach($this->getPlayersOnArea(false) as $playerOnArea) {
+      $playerOnArea->send('Libs_Effect.run', [1, $this->X, $this->Y, $this->Z]);
+      $playersStillOnArea[] = $playerOnArea->Id;
     }
   }
 
