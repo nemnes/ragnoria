@@ -128,24 +128,36 @@ var Libs_Movement = {
 
   },
 
-  confirmStep: function(positive, X, Y, Z, direction, area, players, NPCs) {
-    var waitInterval = setInterval(function(){
+  confirmStep: function(status, X, Y, Z, direction, area, players, NPCs) {
+    if(status === 'aborted') {
+      for(let i = 1; i <= 32; i++) {
+        App.clearTimeout('Hero_Movement_' + i);
+      }
+      Libs_Hero.Animation.Playing = 0;
+      Libs_Movement.updatePosition(status, X, Y, Z, direction, area, players, NPCs);
+      Libs_Hero.Animation.CurrentFrame = 0;
+      App.addTimeout('movement_blocked_after_aborted_step', function(){
+        Libs_Hero.movementBlocked = false;
+      }, 200);
+      return;
+    }
+    let waitInterval = setInterval(function(){
       if(Libs_Hero.Animation.Playing) {
         return
       }
       clearInterval(waitInterval);
-      Libs_Movement.updatePosition(positive, X, Y, Z, direction, area, players, NPCs);
+      Libs_Movement.updatePosition(status, X, Y, Z, direction, area, players, NPCs);
       Libs_Hero.movementBlocked = false;
       Libs_Hero.Animation.CurrentFrame = 0;
     }, 25);
   },
 
-  updatePosition: function(positive, X, Y, Z, direction, area, players, NPCs) {
+  updatePosition: function(status, X, Y, Z, direction, area, players, NPCs) {
     Libs_Hero.Direction = direction;
     Libs_Hero.X = parseInt(X);
     Libs_Hero.Y = parseInt(Y);
     Libs_Hero.Z = parseInt(Z);
-    if(positive) {
+    if(status === 'success') {
       for(let sqm in Libs_Movement.AreaChangesWhileWalking) if(Libs_Movement.AreaChangesWhileWalking.hasOwnProperty(sqm)) {
         sqm = Libs_Movement.AreaChangesWhileWalking[sqm];
         if(typeof area[sqm.Z] != 'undefined' && typeof area[sqm.Z][sqm.Y] != 'undefined' && typeof area[sqm.Z][sqm.Y][sqm.X] != 'undefined') {

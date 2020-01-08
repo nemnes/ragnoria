@@ -105,7 +105,7 @@ class Player extends Creature
     }
     $this->getWorld()->getSQM($SQM->X, $SQM->Y, $SQM->Z)->walkOn($this);
 
-    $this->send('Libs_Movement.updatePosition', [true, $this->X, $this->Y, $this->Z, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
+    $this->send('Libs_Movement.updatePosition', ['success', $this->X, $this->Y, $this->Z, $this->Direction, $this->getArea(), $this->getPlayersOnArea(), $this->getNPCsOnArea()]);
 
     /** @var Player $playerOnArea */
     foreach($this->getPlayersOnArea() as $playerOnArea) {
@@ -197,4 +197,10 @@ class Player extends Creature
     }
     return $NPCs;
   }
+
+  public function getPos()
+  {
+    return [$this->X, $this->Y, $this->Z];
+  }
+
 }

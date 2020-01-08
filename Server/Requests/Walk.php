@@ -9,8 +9,10 @@ class Walk extends BaseRequest
   public function initialize(Player $player, $direction)
   {
     if($player->Locks->Movement > microtime(true)) {
-      $player->send('Libs_Movement.confirmStep', [false, $player->X, $player->Y, $player->Z, $player->Direction]);
+      $player->send('Libs_Movement.confirmStep', ['failed', $player->X, $player->Y, $player->Z, $player->Direction]);
 //      $this->getApp()->log($player->Name. ' - movement locked');
+//      $this->getApp()->log($player->Name. ' - movement locked until ' .$player->Locks->Movement);
+//      $this->getApp()->log('Now is: ' .microtime(true));
       return;
     }
 
@@ -51,25 +53,33 @@ class Walk extends BaseRequest
       $this->getWorld()->getSQM($sqmFrom->X, $sqmFrom->Y, $sqmFrom->Z)->walkOut($player);
       $this->getWorld()->getSQM($sqmTo->X, $sqmTo->Y, $sqmTo->Z)->walkOn($player);
 
-      /** @var Player $playerOnArea */
-      foreach($player->getPlayersOnArea() as $playerOnArea) {
-        if($sqmFrom->Z == $player->Z) {
-          $playerOnArea->send('Libs_Player.move', [$player, $direction]);
+      if($sqmTo->X == $player->X && $sqmTo->Y == $player->Y && $sqmTo->Z == $player->Z) {
+
+        /** @var Player $playerOnArea */
+        foreach($player->getPlayersOnArea() as $playerOnArea) {
+          if($sqmFrom->Z == $player->Z) {
+            $playerOnArea->send('Libs_Player.move', [$player, $direction]);
+          }
+          else {
+            $playerOnArea->send('Libs_Player.move', [$player]);
+          }
+          $playersStillOnArea[] = $playerOnArea->Id;
         }
-        else {
-          $playerOnArea->send('Libs_Player.move', [$player]);
+        foreach($playersOnAreaBeforeStep as $playerOnArea) {
+          if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
+            $playerOnArea->send('Libs_Player.remove', [$player->Id]);
+          }
         }
-        $playersStillOnArea[] = $playerOnArea->Id;
+        $player->send('Libs_Movement.confirmStep', ['success', $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
+        return;
       }
-      foreach($playersOnAreaBeforeStep as $playerOnArea) {
-        if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
-          $playerOnArea->send('Libs_Player.remove', [$player->Id]);
-        }
+      else {
+        $player->Locks->Movement = microtime(true) + (0.1);
+        $player->send('Libs_Movement.confirmStep', ['aborted', $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
+        return;
       }
-      $player->send('Libs_Movement.confirmStep', [true, $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
-      return;
     }
 
-    $player->send('Libs_Movement.confirmStep', [false, $player->X, $player->Y, $player->Z, $player->Direction]);
+    $player->send('Libs_Movement.confirmStep', ['failed', $player->X, $player->Y, $player->Z, $player->Direction]);
   }
 }

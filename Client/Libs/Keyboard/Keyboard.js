@@ -1,10 +1,32 @@
 var Libs_Keyboard = {
+  F1: null,
+  F2: null,
+  F3: null,
+  F4: null,
   ActiveKeys: [],
   
   init: function() {
 
     // simple bindings
     document.addEventListener("keydown", function(e) {
+
+      // hotkeys
+      if (e.keyCode === 112) {
+        e.preventDefault();
+        App.emit('Say', [Libs_Keyboard.F1]);
+      }
+      if (e.keyCode === 113) {
+        e.preventDefault();
+        App.emit('Say', [Libs_Keyboard.F2]);
+      }
+      if (e.keyCode === 114) {
+        e.preventDefault();
+        App.emit('Say', [Libs_Keyboard.F3]);
+      }
+      if (e.keyCode === 115) {
+        e.preventDefault();
+        App.emit('Say', [Libs_Keyboard.F4]);
+      }
 
       // disable [tab]
       if (e.keyCode === 9) {

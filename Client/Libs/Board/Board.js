@@ -4,8 +4,8 @@ var Libs_Board = {
   CursorPosition: {X: 0, Y: 0},
 
   Width: 31,
-  Height: 17,
-  Scale: 2.2,
+  Height: 19,
+  Scale: 2.20,
 
   AreaStart: {X: null, Y: null},
   Area: {},
@@ -63,9 +63,15 @@ var Libs_Board = {
           Libs_Mouse.Dragging = {X: dragX, Y: dragY, Z: dragZ, Item: stack[stack.length-1]};
         }
       }
+      if(event.type === 'mouseup' && event.which === 3) {
+        let useX = Libs_Board.CursorPosition.X + Libs_Board.AreaStart.X;
+        let useY = Libs_Board.CursorPosition.Y + Libs_Board.AreaStart.Y;
+        let useZ = Libs_Hero.Z;
+        App.emit('UseItem', [useX,useY,useZ]);
+      }
       if(event.type === 'mouseup' && event.which === 1) {
         if(Libs_Mouse.Dragging && ((Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X) !== Libs_Mouse.Dragging.X) || ((Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y) !== Libs_Mouse.Dragging.Y)) {
-          if(Libs_Item.Items[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
+          if(typeof Libs_Mouse.Dragging.Item != 'undefined' && Libs_Item.Items[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
             App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, Libs_Mouse.Dragging.Z, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Z, Libs_Mouse.Dragging.Item]);
           }
         }

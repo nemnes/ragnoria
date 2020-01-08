@@ -112,12 +112,22 @@ var Libs_Renderer = {
         continue;
       }
       if(['1','2'].includes(Item.ItemTypeId)) {
+        if(Item.LightLevel > 0 && Item.LightRadius > 0 && Libs_Renderer.LightEffects) {
+          Libs_Renderer.addLightSource({
+            Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.TopMargin),
+            Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.LeftMargin),
+            LightLevel: Item.LightLevel,
+            LightColor: Item.LightColor,
+            LightRadius: Item.LightRadius,
+            Margins: 0
+          });
+        }
         Libs_Renderer.drawImage({
           Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.TopMargin),
           Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin),
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
-          LeftOffset: 0,
+          LeftOffset: Item.IsAnimating ? (Libs_Board.AnimationFrame * 32) * Item.Size : 0,
           TopOffset: 0,
           Image: Item.Image,
         });

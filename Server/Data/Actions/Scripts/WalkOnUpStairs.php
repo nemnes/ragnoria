@@ -9,8 +9,7 @@ class WalkOnUpStairs extends BaseAction
 {
   public function run(Player $player, $itemId, SQM $sqm)
   {
-    $player->Y--;
-    $player->Z++;
-    $player->Direction = 'North';
+    $targetSQM = $this->getApp()->getWorld()->getSQM($player->X, $player->Y-1, $player->Z+1);
+    $player->move($targetSQM, 'North');
   }
 }

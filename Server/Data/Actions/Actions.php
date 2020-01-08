@@ -7,6 +7,7 @@ use Server\App;
 class Actions
 {
   public $ActionList = [
+    ['WalkOn', '4009', 'WalkOnMagicForceField'],
     ['WalkOn', '4029', 'WalkOnFireField'],
     ['WalkOn', '3055', 'WalkOnUpStairs'],
     ['WalkOn', '3056', 'WalkOnUpStairs'],
@@ -19,6 +20,7 @@ class Actions
 
     ['WalkOut', '1018', 'WalkOutClickableStoneTile'],
 
+    ['ItemPushOn', '4009', 'ItemPushOnMagicForceField'],
     ['ItemPushOn', '3055', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3056', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3057', 'ItemPushOnUpStairs'],
@@ -26,6 +28,13 @@ class Actions
     ['ItemPushOn', '1014', 'ItemPushOnDownStairs'],
     ['ItemPushOn', '1015', 'ItemPushOnDownStairs'],
     ['ItemPushOn', '1016', 'ItemPushOnDownStairs'],
+
+    ['ItemUse', '3045', 'ItemUseDoor'],
+    ['ItemUse', '3046', 'ItemUseDoor'],
+    ['ItemUse', '3047', 'ItemUseDoor'],
+    ['ItemUse', '3048', 'ItemUseDoor'],
+    ['ItemUse', '4039', 'ItemUseStreetLamp'],
+    ['ItemUse', '4040', 'ItemUseStreetLamp'],
   ];
 
   public $Actions = [];

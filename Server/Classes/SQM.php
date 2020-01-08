@@ -37,7 +37,21 @@ class SQM extends BaseClass
     foreach($this->Items as &$item) {
       if($item[0] == $fromItemId) {
         $item[0] = $toItemId;
+        foreach($this->getPlayersOnArea() as $playerOnArea) {
+          $playerOnArea->send('Libs_Board.updateSQM', [$this->X, $this->Y, $this->Z, $this->Items]);
+        }
         return true;
+      }
+    }
+    return false;
+  }
+
+  public function getItemFromTop()
+  {
+    foreach(array_reverse($this->Items, true) as &$item) {
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      if($structure->Name) {
+        return $item;
       }
     }
     return false;
@@ -124,5 +138,9 @@ class SQM extends BaseClass
     }
   }
 
+  public function getPos()
+  {
+    return [$this->X, $this->Y, $this->Z];
+  }
 
 }
