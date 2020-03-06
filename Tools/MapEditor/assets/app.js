@@ -91,6 +91,7 @@ var App = {
           ctx.clearRect(0, 0, 32, 32);
           ctx.drawImage(SpritesX1, -x, -y);
           App.Sprites[1][i] = new Image();
+          App.Sprites[1][i].crossOrigin = "anonymous";
           App.Sprites[1][i].src = canvasSpritesX1.toDataURL();
           i++;
         }
@@ -111,6 +112,7 @@ var App = {
             ctx.clearRect(0, 0, 64, 64);
             ctx.drawImage(SpritesX2, -x, -y);
             App.Sprites[2][i] = new Image();
+            App.Sprites[2][i].crossOrigin = "anonymous";
             App.Sprites[2][i].src = canvasSpritesX2.toDataURL();
             i++;
           }

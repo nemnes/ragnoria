@@ -275,6 +275,7 @@ var ItemEditor = {
           ctx.clearRect(0, 0, 32, 32);
           ctx.drawImage(SpritesX1, -x, -y);
           ItemEditor.Sprites[1][i] = new Image();
+          ItemEditor.Sprites[1][i].crossOrigin = "anonymous";
           ItemEditor.Sprites[1][i].src = canvasSpritesX1.toDataURL();
           i++;
         }
@@ -295,6 +296,7 @@ var ItemEditor = {
             ctx.clearRect(0, 0, 64, 64);
             ctx.drawImage(SpritesX2, -x, -y);
             ItemEditor.Sprites[2][i] = new Image();
+            ItemEditor.Sprites[2][i].crossOrigin = "anonymous";
             ItemEditor.Sprites[2][i].src = canvasSpritesX2.toDataURL();
             i++;
           }

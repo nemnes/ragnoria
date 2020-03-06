@@ -26,6 +26,7 @@ var Libs_Item = {
           ctx.clearRect(0, 0, 32, 32);
           ctx.drawImage(SpritesX1, -x, -y);
           Libs_Item.Sprites[1][i] = new Image();
+          Libs_Item.Sprites[1][i].crossOrigin = "anonymous";
           Libs_Item.Sprites[1][i].src = canvasSpritesX1.toDataURL();
           i++;
         }
@@ -47,6 +48,7 @@ var Libs_Item = {
           ctx.clearRect(0, 0, 64, 64);
           ctx.drawImage(SpritesX2, -x, -y);
           Libs_Item.Sprites[2][i] = new Image();
+          Libs_Item.Sprites[2][i].crossOrigin = "anonymous";
           Libs_Item.Sprites[2][i].src = canvasSpritesX2.toDataURL();
           i++;
         }
