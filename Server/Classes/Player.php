@@ -117,10 +117,13 @@ class Player extends Creature
         $playerOnArea->send('Libs_Player.remove', [$this->Id]);
       }
     }
+
+    $this->Locks->Movement = microtime(true) + (0.1);
+    $this->send('Libs_Movement.abortStep', []);
   }
 
-  public function teleport(SQM $SQM) {
-    $this->move($SQM);
+  public function teleport(SQM $SQM, $direction = false) {
+    $this->move($SQM, $direction);
 
     /** @var Player $playerOnArea */
     foreach($this->getPlayersOnArea(false) as $playerOnArea) {
@@ -151,7 +154,9 @@ class Player extends Creature
     $sqm_range_x = range(($this->X - $factor_x),($this->X + $factor_x));
     $sqm_range_y = range(($this->Y - $factor_y),($this->Y + $factor_y));
     $area = array();
-    foreach([0,1,2] as $z) {
+
+    $levels = $this->Z >= 0 ? [0,1,2,3] : [-3, -2,-1];
+    foreach($levels as $z) {
       foreach ($sqm_range_y as $y) {
         $y = $y+($z-$this->Z);
         foreach ($sqm_range_x as $x) {

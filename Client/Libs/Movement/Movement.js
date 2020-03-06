@@ -1,6 +1,7 @@
 var Libs_Movement = {
 
   AreaChangesWhileWalking: [],
+  QueuedConfirmStep: false,
 
   init: function() {
 
@@ -128,22 +129,28 @@ var Libs_Movement = {
 
   },
 
-  confirmStep: function(status, X, Y, Z, direction, area, players, NPCs) {
-    if(status === 'aborted') {
-      for(let i = 1; i <= 32; i++) {
-        App.clearTimeout('Hero_Movement_' + i);
-      }
-      Libs_Hero.Animation.Playing = 0;
-      Libs_Movement.updatePosition(status, X, Y, Z, direction, area, players, NPCs);
-      Libs_Hero.Animation.CurrentFrame = 0;
-      App.addTimeout('movement_blocked_after_aborted_step', function(){
-        Libs_Hero.movementBlocked = false;
-      }, 200);
-      return;
+  abortStep: function() {
+    for(let i = 1; i <= 32; i++) {
+      App.clearTimeout('Hero_Movement_' + i);
     }
+    Libs_Movement.QueuedConfirmStep = false;
+    Libs_Hero.Animation.Playing = 0;
+    Libs_Hero.Animation.CurrentFrame = 0;
+    Libs_Hero.movementBlocked = true;
+    App.addTimeout('movement_blocked_after_aborted_step', function(){
+      Libs_Hero.movementBlocked = false;
+    }, 200);
+  },
+
+  confirmStep: function(status, X, Y, Z, direction, area, players, NPCs) {
+    Libs_Movement.QueuedConfirmStep = true;
     let waitInterval = setInterval(function(){
+      if(!Libs_Movement.QueuedConfirmStep) {
+        clearInterval(waitInterval);
+        return;
+      }
       if(Libs_Hero.Animation.Playing) {
-        return
+        return;
       }
       clearInterval(waitInterval);
       Libs_Movement.updatePosition(status, X, Y, Z, direction, area, players, NPCs);
@@ -153,6 +160,7 @@ var Libs_Movement = {
   },
 
   updatePosition: function(status, X, Y, Z, direction, area, players, NPCs) {
+    Libs_Movement.QueuedConfirmStep = false;
     Libs_Hero.Direction = direction;
     Libs_Hero.X = parseInt(X);
     Libs_Hero.Y = parseInt(Y);
@@ -165,9 +173,7 @@ var Libs_Movement = {
         }
       }
       Libs_Movement.AreaChangesWhileWalking = [];
-      Libs_Board.Area = area;
-      Libs_Board.AreaStart.Y = parseInt(Object.keys(area[0])[0]);
-      Libs_Board.AreaStart.X = parseInt(Object.keys(area[0][Libs_Board.AreaStart.Y])[0]);
+      Libs_Board.setArea(area);
 
       // Update players after step - remove and create new
       Libs_Player.updateFromList(players);

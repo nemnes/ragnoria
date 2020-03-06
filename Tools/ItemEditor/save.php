@@ -29,6 +29,7 @@ class SaveItem
   private function updateItem()
   {
     $tblItem = $this->getSQLMapper('tblItem', $_POST['Id']);
+    $_POST['Sprites'] = json_encode($_POST['Sprites']);
     foreach($_POST as $attr=>$value) {
       $tblItem->{$attr} = $value;
     }
@@ -56,6 +57,7 @@ class SaveItem
       $item->LightRadius = (int) $row->LightRadius;
       $item->LightLevel = (int) $row->LightLevel;
       $item->LightColor = $row->LightColor;
+      $item->Sprites = $row->Sprites;
       $this->Items[$item->Id] = $item;
     }
   }

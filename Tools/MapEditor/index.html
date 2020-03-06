@@ -1,51 +1,103 @@
 <!doctype html>
-<html lang="">
+<html lang="en">
 <head>
   <title>Ragnoria MapEditor</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="assets/MapEditor.css" >
+  <meta http-equiv="Content-Type" content="text/html;  charset=iso-8859-2">
+  <link type="text/css" rel="stylesheet" href="assets/app.css"/>
+  <link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="config.js"></script>
-  <script src="assets/jquery/jquery-3.4.1.js"></script>
-  <script src="assets/MapEditor.js"></script>
+  <script src="assets/app.js"></script>
 </head>
-
 <body>
-  <div class="item-container">
-    <div class="actual-item">
-      <div class="actual-item-image"></div>
-      <div class="secondary-item-image"></div>
-      <div class="actual-item-details">- (0)</div>
+
+<div class="item-container">
+  <div class="actual-item">
+    <div class="actual-item-image"></div>
+    <div class="secondary-item-image"></div>
+    <div class="actual-item-details">- (0)</div>
+  </div>
+  <select id="Layer">
+    <option value="1" selected>Grounds</option>
+    <option value="2">Edges</option>
+    <option value="3">Building</option>
+    <option value="4">Nature</option>
+    <option value="5">Terior</option>
+    <option value="6">Ornaments</option>
+    <option value="7">Accessories</option>
+    <option value="8">Equipment</option>
+    <option value="9">Other</option>
+    <option value="10">Corpses</option>
+  </select>
+  <input id="Search" type="hidden" class="form-control" placeholder="Search..." style="border-radius: 0;"/>
+  <div class="item-list">
+
+  </div>
+</div>
+
+<div class="map-container">
+  <canvas id="map"></canvas>
+</div>
+
+<div class="menu-container">
+
+  <div class="menu-buttons">
+    <div data-tool="pointer" class="menu-button active">
+      <i class="fa fa-mouse-pointer"></i>
     </div>
-    <select id="Layer">
-      <option value="1" selected>[Layer 1] Grounds</option>
-      <option value="2">[Layer 2] Edges</option>
-      <option value="3">[Layer 3] Walls</option>
-      <option value="4">[Layer 4] Blocks</option>
-      <option value="5">[Layer 5] Ornaments</option>
-      <option value="6">[Layer 6] Accessories</option>
+    <div data-tool="brush" class="menu-button">
+      <i class="fa fa-pencil"></i>
+    </div>
+    <div data-tool="eraser" class="menu-button">
+      <i class="fa fa-eraser"></i>
+    </div>
+
+    <select id="BrushSize" class="menu-button">
+      <option value="1" selected>1x1</option>
+      <option value="3">3x3</option>
     </select>
-    <input id="Search" type="hidden" class="form-control" placeholder="Search..." style="border-radius: 0;"/>
-    <div class="item-list">
 
+    <div class="menu-separator"></div>
+
+    <div data-action="save" class="menu-button">
+      <i class="fa fa-save"></i> Save
     </div>
+
+    <div data-action="load" class="menu-button">
+      <i class="fa fa-folder-open"></i> Load
+    </div>
+
   </div>
 
-  <div class="map-container">
+  <div class="pos">
+    <div class="pos-x">X:</div>
+    <div class="pos-y">Y:</div>
+    <div class="pos-z">Z:</div>
   </div>
+</div>
 
-  <div class="menu-container">
-    <button id="Eraser"><i class="glyphicon glyphicon-erase"></i> Eraser</button>
-    <label id="LoadWorld" for="File"><i class="glyphicon glyphicon-import"></i> Load</label>
-    <button id="SaveWorld" type="button"><i class="glyphicon glyphicon-floppy-disk"></i> Save</button>
-    <input id="File" type="file" accept=".txt, .json" style="display: none;"/>
-    <div id="Coords" class="pull-right">X: 0, Y: 0</div>
+<canvas id="minimap"></canvas>
+
+<div id="load-box">
+  <div class="container">
+    From X: <input name="FromX" type="text" value="2475"/><br/>
+    From Y: <input name="FromY" type="text" value="2475"/><br/>
+    <input type="button" id="load" value="Load"/>
   </div>
+</div>
 
-  <script>
-    $(document).ready(function() {
-      MapEditor.init();
-    });
-  </script>
+<div id="wait">
+  <i class="fa fa-refresh fa-spin fa-3x"></i>
+</div>
 
+<div id="loader">
+  <i class="fa fa-refresh fa-spin fa-3x"></i>
+</div>
+
+<script>
+  $(function() {
+    App.init();
+  });
+</script>
 </body>
 </html>

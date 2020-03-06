@@ -9,11 +9,11 @@ class ItemUseStreetLamp extends BaseAction
 {
   public function run(Player $player, $itemId, SQM $sqm)
   {
-    if($itemId == '4039') {
-      $sqm->updateItem('4039', '4040');
+    if($itemId == '5066') {
+      $sqm->updateItem('5066', '5067');
     }
-    if($itemId == '4040') {
-      $sqm->updateItem('4040', '4039');
+    if($itemId == '5067') {
+      $sqm->updateItem('5067', '5066');
     }
   }
 }

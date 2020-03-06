@@ -3,6 +3,9 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+a, a:active, a:focus, select, select:active, select:focus, input, input:active, input:focus, option, option:active, option:focus {
+  outline:none !important;
+}
 html {
   font-size: 10px;
   font-family: sans-serif;
@@ -13,10 +16,11 @@ body {
   font-size: 12px;
   overflow-x: hidden;
   line-height: 1;
-  color: #333;
   padding: 0;
   margin: 0;
   user-select: none;
+  background-color: #101419;
+  color: #ccc;
 }
 label {
   display: block;
@@ -27,12 +31,19 @@ td {
   vertical-align: top;
 }
 select, input {
-  background-color: #ffffff;
-  border: 1px solid #858585;
+  background-color: #0d0d0d;
+  border: 1px solid #000;
+  color: #ccc;
+}
+select:active, input:active,
+select:focus, input:focus {
+  border: 1px solid #b48300;
 }
 select[disabled], input[disabled] {
-  background-color: #cccccc;
-  border: 1px solid #858585;
+  background-color: #919191;
+  border: 1px solid #9b9b9b;
+  color: #000;
+  opacity: 0.5;
 }
 .form-label {
   display: inline-block;
@@ -42,12 +53,12 @@ select[disabled], input[disabled] {
 }
 .form-input {
   display: inline-block;
-  width: 100px;
+  width: 120px;
 }
 .form-input input,
 .form-input select{
   display: inline-block;
-  width: 100px;
+  width: 120px;
 }
 
 .item-container {
@@ -98,7 +109,53 @@ select[disabled], input[disabled] {
 }
 hr {
   margin: 5px 0 10px 0;
-  padding: 0px;
+  padding: 0;
   border: 1px solid #888;
-  border-bottom: 0px;
+  border-bottom: 0;
+}
+.stack-label {
+  font-size: 14px;
+  margin: 0 0 3px 0;
+}
+.sprite-box {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #000;
+  background-color: #0d0d0d;
+  background-size: cover;
+  display: inline-block;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.sprite-box:hover {
+  border: 1px solid #b48300;
+  background-color: rgba(255,255,255,0.5);
+}
+.sprite-modal {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  background-color: #202b33;
+  overflow-y: scroll;
+  padding: 5px;
+  -webkit-box-shadow: -5px 0px 9px 5px rgba(0,0,0,0.75);
+  -moz-box-shadow: -5px 0px 9px 5px rgba(0,0,0,0.75);
+  box-shadow: -5px 0px 9px 5px rgba(0,0,0,0.75);
+}
+.sprite-modal.x1{
+  width: 435px;
+}
+.sprite-modal.x2{
+  width: 555px;
+}
+.sprite {
+  display: inline-block;
+  border: 1px solid #000000;
+  background-color: #171d27;
+  cursor: pointer;
+}
+.sprite:hover {
+  border: 1px solid #b48300;
+  background-color: #586e87;
 }

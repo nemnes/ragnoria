@@ -1,7 +1,7 @@
 var Libs_Loader = {
   $: null,
 
-  Milestones: 5,
+  Milestones: 6,
   MilestonesReached: 0,
 
   init: function() {

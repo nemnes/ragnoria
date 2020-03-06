@@ -7,7 +7,8 @@ var Libs_Renderer = {
   LightImage: null,
   LightEffects: true,
   LightPower: 0.35, // 0.35 seems be ok
-  FogDensity: 0.25, // 0.25 seems be ok
+  FogDensitySurface: 0.25, // 0.25 seems be ok
+  FogDensityUnderground: 0.75, // 0.75 seems be ok
 
   // renderer state fields
   RenderingInProgress: false,
@@ -28,10 +29,10 @@ var Libs_Renderer = {
   init: function() {
     Libs_Renderer.run();
     setInterval(function() {
-      Libs_Board.AnimationFrame = Libs_Board.AnimationFrame > 0 ? 0 : 1;
+      Libs_Board.AnimationFrame = Libs_Board.AnimationFrame >= 4 ? 1 : ++Libs_Board.AnimationFrame;
       Libs_Renderer.CurrentFramerate = Libs_Renderer.FramesRendered;
       Libs_Renderer.FramesRendered = 0;
-    }, 1000);
+    }, 250);
   },
 
   run: function() {
@@ -127,9 +128,9 @@ var Libs_Renderer = {
           Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin),
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
-          LeftOffset: Item.IsAnimating ? (Libs_Board.AnimationFrame * 32) * Item.Size : 0,
+          LeftOffset: 0,
           TopOffset: 0,
-          Image: Item.Image,
+          Image: Libs_Item.getItemImage(Item),
         });
       }
     }
@@ -324,19 +325,9 @@ var Libs_Renderer = {
           Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin) - Altitude,
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
-          LeftOffset: Item.IsAnimating ? (Libs_Board.AnimationFrame * 32) * Item.Size : 0,
-          TopOffset: Item.IsStackable ? function(Quantity) {
-            if(Quantity === 1) { return 0; }
-            if(Quantity === 2) { return 32; }
-            if(Quantity === 3) { return 32*2; }
-            if(Quantity === 4) { return 32*3; }
-            if(Quantity >= 5 && Quantity < 10) { return 32*4; }
-            if(Quantity >= 10 && Quantity < 25) { return 32*5; }
-            if(Quantity >= 25 && Quantity < 50) { return 32*6; }
-            if(Quantity >= 50) { return 32*7; }
-            return 0;
-          }(Quantity) : 0,
-          Image: Item.Image,
+          LeftOffset: 0,
+          TopOffset: 0,
+          Image: Libs_Item.getItemImage(Item, Quantity),
         });
         Altitude += parseInt(Item.Altitude);
       }
@@ -388,9 +379,9 @@ var Libs_Renderer = {
           Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin),
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
-          LeftOffset: Item.IsAnimating ? (Libs_Board.AnimationFrame * 32) * Item.Size : 0,
+          LeftOffset: 0,
           TopOffset: 0,
-          Image: Item.Image,
+          Image: Libs_Item.getItemImage(Item),
         });
       }
     }
@@ -456,8 +447,13 @@ var Libs_Renderer = {
       Left = (Creature.X - Libs_Board.AreaStart.X) * 32 + 6;
       Color = '#00c000';
     }
-    Top = Top - (32*Libs_Hero.Z);
-    Left = Left - (32*Libs_Hero.Z);
+    if(Libs_Hero.Z >= 0) {
+      Top = Top - (32*Libs_Hero.Z);
+      Left = Left - (32*Libs_Hero.Z);
+    } else {
+      Top = Top - (32*(Libs_Hero.Z+1));
+      Left = Left - (32*(Libs_Hero.Z+1));
+    }
 
     // draw nicknames
     Libs_Renderer.drawText({
@@ -493,13 +489,20 @@ var Libs_Renderer = {
           continue;
         }
 
+        let FloorMargin = 0;
+        if(Libs_Hero.Z >= 0) {
+          FloorMargin = (32*Libs_Hero.Z*Libs_Board.Scale);
+        } else {
+          FloorMargin = (32*(Libs_Hero.Z+1)*Libs_Board.Scale);
+        }
+
         // if first message add: Author says:
         if(count === 0) {
           Libs_Renderer.drawText({
             Text: Message.Author + ' says:',
             Font: "bold 12px Tahoma",
-            Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
-            Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
+            Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - FloorMargin,
+            Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - FloorMargin,
             Color: '#fcff00',
             Stroke: true,
             StrokeColor: '#000000',
@@ -512,8 +515,8 @@ var Libs_Renderer = {
         Libs_Renderer.drawText({
           Text: Message.Message,
           Font: "bold 12px Tahoma",
-          Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
-          Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - (32*Libs_Hero.Z*Libs_Board.Scale),
+          Top: ((Message.Y - Libs_Board.AreaStart.Y) * 32 + (Libs_Renderer.TopMargin) + Altitude) * Libs_Board.Scale - FloorMargin,
+          Left: ((Message.X - Libs_Board.AreaStart.X) * 32 + (Libs_Renderer.LeftMargin) + 8) * Libs_Board.Scale - FloorMargin,
           Color: '#fcff00',
           Stroke: true,
           StrokeColor: '#000000',
@@ -541,7 +544,11 @@ var Libs_Renderer = {
     Libs_Board.fogCTX.drawImage(Libs_Board.light, 0, 0);
 
     // draw fog on board
-    Libs_Board.boardCTX.globalAlpha = Libs_Renderer.FogDensity;
+    if(Libs_Hero.Z >= 0) {
+      Libs_Board.boardCTX.globalAlpha = Libs_Renderer.FogDensitySurface;
+    } else {
+      Libs_Board.boardCTX.globalAlpha = Libs_Renderer.FogDensityUnderground;
+    }
     Libs_Board.boardCTX.globalCompositeOperation = 'multiply';
     Libs_Board.boardCTX.drawImage(Libs_Board.fog, 0, 0);
 
@@ -628,11 +635,6 @@ var Libs_Renderer = {
       }
       if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X,Libs_Hero.Y+1,Libs_Hero.Z))) {
         if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y+2,Libs_Renderer.Z, true))) {
-          return true;
-        }
-      }
-      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X+1,Libs_Hero.Y+1,Libs_Hero.Z))) {
-        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+2,Libs_Hero.Y+2,Libs_Renderer.Z, true))) {
           return true;
         }
       }

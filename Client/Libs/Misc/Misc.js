@@ -18,10 +18,6 @@ var Libs_Misc = {
     location = location.href;
   },
 
-  getItemURL: function(id) {
-    return Config.itemsURL + id;
-  },
-
   getOutfitURL: function(creature) {
     return Config.outfitURL + ([
       creature.Base,
@@ -53,7 +49,7 @@ var Libs_Misc = {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
       let Item = Libs_Item.Items[SQM[stack][0]];
       if(ignoreEdges) {
-        if(Item.ItemTypeId !== '2') {
+        if(Item.ItemTypeId !== '2' && Item.Id !== '3') {
           return false;
         }
       }

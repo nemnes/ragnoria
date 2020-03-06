@@ -57,7 +57,7 @@ class Push extends BaseRequest
 
     // validation pass, we can move item
     if($fromSQM->removeItem($itemId)) {
-      $toSQM->addItem($itemId);
+      $toSQM->addItem($itemId, $quantity);
     }
 
     /** @var Player $playerOnArea */

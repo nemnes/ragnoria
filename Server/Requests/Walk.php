@@ -53,31 +53,27 @@ class Walk extends BaseRequest
       $this->getWorld()->getSQM($sqmFrom->X, $sqmFrom->Y, $sqmFrom->Z)->walkOut($player);
       $this->getWorld()->getSQM($sqmTo->X, $sqmTo->Y, $sqmTo->Z)->walkOn($player);
 
-      if($sqmTo->X == $player->X && $sqmTo->Y == $player->Y && $sqmTo->Z == $player->Z) {
+      if($sqmTo->getPos() != $player->getPos()) {
+        return;
+      }
 
-        /** @var Player $playerOnArea */
-        foreach($player->getPlayersOnArea() as $playerOnArea) {
-          if($sqmFrom->Z == $player->Z) {
-            $playerOnArea->send('Libs_Player.move', [$player, $direction]);
-          }
-          else {
-            $playerOnArea->send('Libs_Player.move', [$player]);
-          }
-          $playersStillOnArea[] = $playerOnArea->Id;
+      /** @var Player $playerOnArea */
+      foreach($player->getPlayersOnArea() as $playerOnArea) {
+        if($sqmFrom->Z == $player->Z) {
+          $playerOnArea->send('Libs_Player.move', [$player, $direction]);
         }
-        foreach($playersOnAreaBeforeStep as $playerOnArea) {
-          if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
-            $playerOnArea->send('Libs_Player.remove', [$player->Id]);
-          }
+        else {
+          $playerOnArea->send('Libs_Player.move', [$player]);
         }
-        $player->send('Libs_Movement.confirmStep', ['success', $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
-        return;
+        $playersStillOnArea[] = $playerOnArea->Id;
       }
-      else {
-        $player->Locks->Movement = microtime(true) + (0.1);
-        $player->send('Libs_Movement.confirmStep', ['aborted', $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
-        return;
+      foreach($playersOnAreaBeforeStep as $playerOnArea) {
+        if(!in_array($playerOnArea->Id, $playersStillOnArea)) {
+          $playerOnArea->send('Libs_Player.remove', [$player->Id]);
+        }
       }
+      $player->send('Libs_Movement.confirmStep', ['success', $player->X, $player->Y, $player->Z, $player->Direction, $player->getArea(), $player->getPlayersOnArea(), $player->getNPCsOnArea()]);
+      return;
     }
 
     $player->send('Libs_Movement.confirmStep', ['failed', $player->X, $player->Y, $player->Z, $player->Direction]);

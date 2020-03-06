@@ -1,6 +1,6 @@
 var Libs_Board = {
 
-  AnimationFrame: 0,
+  AnimationFrame: 1,
   CursorPosition: {X: 0, Y: 0},
 
   Width: 31,
@@ -88,8 +88,15 @@ var Libs_Board = {
 
   setArea: function(area) {
     Libs_Board.Area = area;
-    Libs_Board.AreaStart.Y = parseInt(Object.keys(area[0])[0]);
-    Libs_Board.AreaStart.X = parseInt(Object.keys(area[0][Libs_Board.AreaStart.Y])[0]);
+    if(Libs_Hero.Z >= 0) {
+      Libs_Board.AreaStart.Y = parseInt(Object.keys(area[0])[0]);
+      Libs_Board.AreaStart.X = parseInt(Object.keys(area[0][Libs_Board.AreaStart.Y])[0]);
+    }
+    else {
+      var lowestFloor = -1; // TODO! -1 ATM
+      Libs_Board.AreaStart.Y = parseInt(Object.keys(area[lowestFloor])[0]);
+      Libs_Board.AreaStart.X = parseInt(Object.keys(area[lowestFloor][Libs_Board.AreaStart.Y])[0]);
+    }
   },
 
   updateSQM: function(x, y, z, stack) {

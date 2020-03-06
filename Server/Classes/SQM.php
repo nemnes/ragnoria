@@ -18,9 +18,14 @@ class SQM extends BaseClass
     $this->Z = $z;
   }
 
-  public function addItem($itemId, $quantity = null)
+  public function addItem($itemId, $quantity = null, $send = true)
   {
     $this->Items[] = $quantity ? [$itemId, $quantity] : [$itemId];
+    if($send) {
+      foreach($this->getPlayersOnArea() as $playerOnArea) {
+        $playerOnArea->send('Libs_Board.updateSQM', [$this->X, $this->Y, $this->Z, $this->Items]);
+      }
+    }
   }
 
   public function removeItem($itemId)

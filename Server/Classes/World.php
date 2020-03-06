@@ -19,43 +19,31 @@ class World extends BaseClass
 
   private function createGrid()
   {
-    foreach(glob(Settings::PATH['DATA']. '/World/*') as $worldDir) {
-      $z = (int) basename($worldDir);
-      foreach(glob($worldDir. '/*', GLOB_BRACE) as $areaDir) {
-        $areaY = (int) explode('-', str_replace('.json', '', basename($areaDir)))[0];
-        $areaX = (int) explode('-', str_replace('.json', '', basename($areaDir)))[1];
-        $scheme = json_decode(file_get_contents($areaDir), true);
-        foreach($scheme as $y => $row) {
-          $y = $y+($areaY*100);
-          foreach($row as $x => $tile) {
-            $x = $x+($areaX*100);
-            $sqm = $this->getApp()->newSQM($x,$y,$z);
-            foreach($tile as $itemId) {
-              if(is_array($itemId)) {
-                $sqm->addItem($itemId[0], $itemId[1]);
-              }
-              else {
-                if($itemId > 0) {
-                  $sqm->addItem($itemId);
-                }
-              }
-            }
-            $this->Grid[$z][$x][$y] = $sqm;
-          }
-        }
+    $world = file_get_contents(Settings::PATH['DATA']. '/World/map.json');
+    $world = json_decode($world);
 
+    foreach($world as $z => $floor) {
+      foreach($floor as $y => $row) {
+        foreach ($row as $x => $stack) {
+          $sqm = $this->getApp()->newSQM($x,$y,$z);
+          foreach($stack as $item) {
+            $sqm->addItem($item->Id, $item->Quantity, false);
+          }
+          $this->Grid[$z][$x][$y] = $sqm;
+        }
       }
     }
-    unset($scheme);
+
+    unset($world);
   }
 
   public function createNPCs()
   {
-    $this->NPCs[1] = $this->getApp()->newNPC(1);
-    $this->NPCs[2] = $this->getApp()->newNPC(2);
-    $this->NPCs[3] = $this->getApp()->newNPC(3);
-    $this->NPCs[4] = $this->getApp()->newNPC(4);
-    $this->NPCs[5] = $this->getApp()->newNPC(5);
+//    $this->NPCs[1] = $this->getApp()->newNPC(1);
+//    $this->NPCs[2] = $this->getApp()->newNPC(2);
+//    $this->NPCs[3] = $this->getApp()->newNPC(3);
+//    $this->NPCs[4] = $this->getApp()->newNPC(4);
+//    $this->NPCs[5] = $this->getApp()->newNPC(5);
   }
 
   public function addPlayer(Player $player)

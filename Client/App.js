@@ -43,8 +43,8 @@ var App = {
   },
 
   initialize: function(hero, area, players, NPCs) {
-    Libs_Board.setArea(area);
     Libs_Hero.init(hero);
+    Libs_Board.setArea(area);
     Libs_Player.updateFromList(players);
     Libs_NPC.updateFromList(NPCs);
     $('body').append('<a target="_blank" href="info.txt"><div class="info">i</div></a>');
