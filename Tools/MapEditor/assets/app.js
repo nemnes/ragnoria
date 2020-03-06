@@ -78,6 +78,7 @@ var App = {
     App.CustomSprites[3].src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAD4SURBVHja7JZNCsIwEIXfiOdw714tiGcQD+DClWJPILgWPUEFVy7EtXgGEardd9+LPBdtwf6IoW0MSB6EQBKGL29mQoQkTKoFw7IAFsA4QFv1oIjk+1WaaGGlICLFYyLNQFROwXoKAKAkJNod8L3s2vUez5tTPSdUAQDgG0Sl+lBNAUlgsMwujofpZnYAoLYa+AShvQ0f+2p7TTkgjosgjMy+hP3ZDovtuVkA5WrN9XuhI97luABJ0fkQiePicLmZcyBVr9vB87j6vQOpgjCqWaAklYaC5pMR6HtgHFYtbt0UlN4pudhPUlDKqqUI7Z/QAliAvwV4DQDz0aRH0DODTwAAAABJRU5ErkJggg==';
 
     let SpritesX1 = new Image();
+    SpritesX1.crossOrigin = "anonymous";
     SpritesX1.src = Config.SpritesX1;
     SpritesX1.onload = function() {
       let i = 1;
@@ -91,7 +92,6 @@ var App = {
           ctx.clearRect(0, 0, 32, 32);
           ctx.drawImage(SpritesX1, -x, -y);
           App.Sprites[1][i] = new Image();
-          App.Sprites[1][i].crossOrigin = "anonymous";
           App.Sprites[1][i].src = canvasSpritesX1.toDataURL();
           i++;
         }
@@ -99,6 +99,7 @@ var App = {
 
       // and then load 2x
       let SpritesX2 = new Image();
+      SpritesX2.crossOrigin = "anonymous";
       SpritesX2.src = Config.SpritesX2;
       SpritesX2.onload = function() {
         let i = 1;
@@ -112,7 +113,6 @@ var App = {
             ctx.clearRect(0, 0, 64, 64);
             ctx.drawImage(SpritesX2, -x, -y);
             App.Sprites[2][i] = new Image();
-            App.Sprites[2][i].crossOrigin = "anonymous";
             App.Sprites[2][i].src = canvasSpritesX2.toDataURL();
             i++;
           }
