@@ -16,11 +16,11 @@ class ItemPushOnDownStairs extends BaseAction
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X-1, $sqmDown->Y, $sqmDown->Z);
         break;
       }
-      if(in_array($item[0], ['3003'])) {
+      if(in_array($item[0], ['3003', '3182'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X+1, $sqmDown->Y, $sqmDown->Z);
         break;
       }
-      if(in_array($item[0], ['3180', '3182'])) {
+      if(in_array($item[0], ['3180'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X, $sqmDown->Y-1, $sqmDown->Z);
         break;
       }

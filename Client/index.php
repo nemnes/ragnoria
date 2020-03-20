@@ -11,7 +11,7 @@ session_start();
 
   <link rel="stylesheet" type="text/css" href="assets/App.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Console/Console.css<?= '?'.$v; ?>">
-  <link rel="stylesheet" type="text/css" href="Libs/Ping/Ping.css<?= '?'.$v; ?>">
+  <link rel="stylesheet" type="text/css" href="Libs/UI/UI.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Board/Board.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Chat/Chat.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Outfiter/Outfiter.css<?= '?'.$v; ?>">
@@ -27,7 +27,7 @@ session_start();
   <script src="Libs/Loader/Loader.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Console/Console.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Renderer/Renderer.js<?= '?'.$v; ?>"></script>
-  <script src="Libs/Ping/Ping.js<?= '?'.$v; ?>"></script>
+  <script src="Libs/UI/UI.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Board/Board.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Item/Item.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Hero/Hero.js<?= '?'.$v; ?>"></script>

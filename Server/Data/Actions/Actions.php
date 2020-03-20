@@ -37,6 +37,7 @@ class Actions
     ['WalkOn', '3176', 'WalkOnUpStairs'],
     ['WalkOn', '3179', 'WalkOnUpStairs'],
     ['WalkOn', '3180', 'WalkOnUpStairs'],
+    ['WalkOn', '3182', 'WalkOnUpStairs'],
     ['ItemPushOn', '3000', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3001', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3002', 'ItemPushOnUpStairs'],
@@ -44,12 +45,16 @@ class Actions
     ['ItemPushOn', '3176', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3179', 'ItemPushOnUpStairs'],
     ['ItemPushOn', '3180', 'ItemPushOnUpStairs'],
+    ['ItemPushOn', '3182', 'ItemPushOnUpStairs'],
     ['WalkOn', '3', 'WalkOnDownStairs'],
     ['WalkOn', '4', 'WalkOnDownStairs'],
     ['WalkOn', '5', 'WalkOnDownStairs'],
     ['ItemPushOn', '3', 'ItemPushOnDownStairs'],
     ['ItemPushOn', '4', 'ItemPushOnDownStairs'],
     ['ItemPushOn', '5', 'ItemPushOnDownStairs'],
+
+    // food
+    ['ItemUse', '7105', 'ItemUseFood'],
 
   ];
 

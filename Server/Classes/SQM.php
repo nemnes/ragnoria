@@ -28,10 +28,20 @@ class SQM extends BaseClass
     }
   }
 
-  public function removeItem($itemId)
+  public function removeItem($itemId, $quantity = 1)
   {
     if(!empty($this->Items) && end($this->Items)[0] == $itemId) {
-      array_pop($this->Items);
+      if(end($this->Items)[1] > $quantity) {
+        end($this->Items);
+        $key = key($this->Items);
+        $this->Items[$key][1]--;
+      }
+      else {
+        array_pop($this->Items);
+      }
+      foreach($this->getPlayersOnArea() as $playerOnArea) {
+        $playerOnArea->send('Libs_Board.updateSQM', [$this->X, $this->Y, $this->Z, $this->Items]);
+      }
       return true;
     }
     return false;

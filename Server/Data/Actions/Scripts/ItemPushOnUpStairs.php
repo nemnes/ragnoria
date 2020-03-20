@@ -13,10 +13,10 @@ class ItemPushOnUpStairs extends BaseAction
         $toSQM = $this->getApp()->getWorld()->getSQM($toSQM->X+1, $toSQM->Y, $toSQM->Z+1);
         break;
       case '3003':
+      case '3182':
         $toSQM = $this->getApp()->getWorld()->getSQM($toSQM->X-1, $toSQM->Y, $toSQM->Z+1);
         break;
       case '3180':
-      case '3182':
         $toSQM = $this->getApp()->getWorld()->getSQM($toSQM->X, $toSQM->Y+1, $toSQM->Z+1);
         break;
       default:

@@ -14,7 +14,7 @@ var App = {
       App.Connected = true;
       Libs_Mouse.init();
       Libs_Keyboard.init();
-      Libs_Ping.init();
+      Libs_UI.init();
       Libs_Movement.init();
       Libs_Item.init();
       Libs_Effect.init();

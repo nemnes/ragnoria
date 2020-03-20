@@ -1,0 +1,35 @@
+#UI {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#ping {
+  position: fixed;
+  left: 5px;
+  top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  font-family: 'Tahoma', fantasy;
+  text-shadow: #000 0 0 1px;
+}
+
+#ping::before {
+  content: '⬤';
+  margin-right: 4px;
+  text-shadow: #000 0 0 1px;
+}
+#ping[data-severity="low"]:before {
+  color: #00a800;
+}
+#ping[data-severity="medium"]:before {
+  color: #ff8800;
+}
+#ping[data-severity="high"]:before {
+  color: #d40000;;
+}

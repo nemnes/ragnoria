@@ -19,12 +19,12 @@ class WalkOnDownStairs extends BaseAction
         $direction = 'West';
         break;
       }
-      if(in_array($item[0], ['3003'])) {
+      if(in_array($item[0], ['3003', '3182'])) {
         $targetSQM = $this->getApp()->getWorld()->getSQM($player->X+1, $player->Y, $player->Z-1);
         $direction = 'East';
         break;
       }
-      if(in_array($item[0], ['3180', '3182'])) {
+      if(in_array($item[0], ['3180'])) {
         $targetSQM = $this->getApp()->getWorld()->getSQM($player->X, $player->Y-1, $player->Z-1);
         $direction = 'North';
         break;

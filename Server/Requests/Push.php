@@ -56,16 +56,8 @@ class Push extends BaseRequest
     }
 
     // validation pass, we can move item
-    if($fromSQM->removeItem($itemId)) {
+    if($fromSQM->removeItem($itemId, $quantity)) {
       $toSQM->addItem($itemId, $quantity);
-    }
-
-    /** @var Player $playerOnArea */
-    foreach($this->getWorld()->getPlayersOnArea($fromSQM->X, $fromSQM->Y) as $playerOnArea) {
-      $playerOnArea->send('Libs_Board.updateSQM', [$fromSQM->X, $fromSQM->Y, $fromSQM->Z, $fromSQM->Items]);
-    }
-    foreach($this->getWorld()->getPlayersOnArea($toSQM->X, $toSQM->Y) as $playerOnArea) {
-      $playerOnArea->send('Libs_Board.updateSQM', [$toSQM->X, $toSQM->Y, $toSQM->Z, $toSQM->Items]);
     }
 
   }
