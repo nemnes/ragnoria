@@ -14,7 +14,6 @@ session_start();
   <link rel="stylesheet" type="text/css" href="Libs/UI/UI.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Board/Board.css<?= '?'.$v; ?>">
   <link rel="stylesheet" type="text/css" href="Libs/Chat/Chat.css<?= '?'.$v; ?>">
-  <link rel="stylesheet" type="text/css" href="Libs/Outfiter/Outfiter.css<?= '?'.$v; ?>">
 
   <script src="assets/jquery/jquery-3.4.1.js"></script>
 <!--  <script src="assets/jquery/jquery-ui-1.12.1.js"></script>-->
@@ -38,7 +37,6 @@ session_start();
   <script src="Libs/Movement/Movement.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Effect/Effect.js<?= '?'.$v; ?>"></script>
   <script src="Libs/Chat/Chat.js<?= '?'.$v; ?>"></script>
-  <script src="Libs/Outfiter/Outfiter.js<?= '?'.$v; ?>"></script>
   <script>
     window.onload = function () {
       App.run();

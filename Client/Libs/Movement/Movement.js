@@ -54,7 +54,7 @@ var Libs_Movement = {
     // check sqm has floor
     let floorFound = false;
     for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
-      if(Libs_Item.Items[targetSQM[stack][0]].ItemTypeId === '1') {
+      if(Libs_Item.Items[targetSQM[stack]['Id']].ItemTypeId === '1') {
         floorFound = true;
       }
     }
@@ -64,7 +64,7 @@ var Libs_Movement = {
 
     // check item collisions
     for(let stack in targetSQM) if(targetSQM.hasOwnProperty(stack)) {
-      if(Libs_Item.Items[targetSQM[stack][0]].IsBlocking) {
+      if(Libs_Item.Items[targetSQM[stack]['Id']].IsBlocking) {
         return;
       }
     }

@@ -14,7 +14,6 @@ class World extends BaseClass
   public function initialize()
   {
     $this->createGrid();
-    $this->createNPCs();
   }
 
   private function createGrid()
@@ -27,7 +26,8 @@ class World extends BaseClass
         foreach ($row as $x => $stack) {
           $sqm = $this->getApp()->newSQM($x,$y,$z);
           foreach($stack as $item) {
-            $sqm->addItem($item->Id, $item->Quantity, false);
+            $item->ActionId = $item->ActionId ?? null;
+            $sqm->addItem($item->Id, $item->Quantity, $item->ActionId, false);
           }
           $this->Grid[$z][$x][$y] = $sqm;
         }
@@ -35,15 +35,6 @@ class World extends BaseClass
     }
 
     unset($world);
-  }
-
-  public function createNPCs()
-  {
-//    $this->NPCs[1] = $this->getApp()->newNPC(1);
-//    $this->NPCs[2] = $this->getApp()->newNPC(2);
-//    $this->NPCs[3] = $this->getApp()->newNPC(3);
-//    $this->NPCs[4] = $this->getApp()->newNPC(4);
-//    $this->NPCs[5] = $this->getApp()->newNPC(5);
   }
 
   public function addPlayer(Player $player)
@@ -111,7 +102,9 @@ class World extends BaseClass
     );
     foreach($fields as $y => $row) {
       foreach($row as $x => $tile) {
-        $result[] = $this->getSQM($x, $y, $sqmFrom->Z);
+        if($this->getSQM($x, $y, $sqmFrom->Z)) {
+          $result[] = $this->getSQM($x, $y, $sqmFrom->Z);
+        }
       }
     }
     return $result;

@@ -171,8 +171,9 @@ var App = {
     for (let Id in App.Items) if (App.Items.hasOwnProperty(Id)) {
       let Item = App.Items[Id];
       let img = App.getItemSprite(Item);
+      let paddings = (Item.PaddingX !== 0 || Item.PaddingY !== 0) ? 'true' : 'false';
       html = [];
-      html.push('<div class="item-select" data-item-layer="' +Item.ItemTypeId+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
+      html.push('<div class="item-select" data-item-layer="' +Item.ItemTypeId+ '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '" data-paddings="' + paddings + '">');
       html.push('  <img src="' + img.src + '"/>');
       html.push('</div>');
       $('.item-list', document).append(html.join(''));
@@ -248,6 +249,23 @@ var App = {
 
   setKeyboardEvents: function() {
     $(document).on("keydown", function(e) {
+      if (e.keyCode === 9) {
+        e.preventDefault();
+        if(App.HighlightedItem) {
+          App.selectItem(App.HighlightedItem.Item.Id);
+        }
+        else {
+          let x = App.CursorPosition.X;
+          let y = App.CursorPosition.Y;
+          let z = App.CurrentFloor;
+          if(!App.Area[z] || !App.Area[z][y] || !App.Area[z][y][x] || App.Area[z][y][x].length === 0) {
+            return;
+          }
+          let item = App.Area[z][y][x].slice(-1)[0];
+          App.selectItem(item.Id);
+        }
+        App.setTool('brush');
+      }
       if (e.keyCode === 107) {
         e.preventDefault();
         App.CurrentFloor = App.CurrentFloor + 1 > App.MaxFloor ? App.CurrentFloor : App.CurrentFloor+1;
@@ -349,29 +367,21 @@ var App = {
             App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
           }
           if(App.Tool === 1 && App.BrushSize === 3) {
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X-1);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X+1);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X-1);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X+1);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X-1);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X);
-            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X+1);
+            for(let i = -1;i<=1;i++) {
+              for (let j = -1; j <= 1; j++) {
+                App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+i, App.CursorPosition.X+j);
+              }
+            }
           }
           if(App.Tool === 2 && App.BrushSize === 1) {
             App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
           }
           if(App.Tool === 2 && App.BrushSize === 3) {
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X-1, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X+1, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X-1, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X+1, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X-1, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X, true);
-            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X+1, true);
+            for(let i = -1;i<=1;i++) {
+              for (let j = -1; j <= 1; j++) {
+                App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+i, App.CursorPosition.X+j, true);
+              }
+            }
           }
         }
         App.render();
@@ -391,15 +401,11 @@ var App = {
         App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
       }
       if(App.Tool === 1 && App.BrushSize === 3) {
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X-1);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X+1);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X-1);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X+1);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X-1);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X);
-        App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X+1);
+        for(let i = -1;i<=1;i++) {
+          for (let j = -1; j <= 1; j++) {
+            App.drawOnSQM(App.CurrentFloor, App.CursorPosition.Y+i, App.CursorPosition.X+j);
+          }
+        }
       }
       if(App.Tool === 0) {
         App.highlightOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
@@ -408,15 +414,11 @@ var App = {
         App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X);
       }
       if(App.Tool === 2 && App.BrushSize === 3) {
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X-1, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y-1, App.CursorPosition.X+1, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X-1, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y, App.CursorPosition.X+1, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X-1, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X, true);
-        App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+1, App.CursorPosition.X+1, true);
+        for(let i = -1;i<=1;i++) {
+          for (let j = -1; j <= 1; j++) {
+            App.clearOnSQM(App.CurrentFloor, App.CursorPosition.Y+i, App.CursorPosition.X+j, true);
+          }
+        }
       }
       App.render();
     });
@@ -497,7 +499,6 @@ var App = {
       return;
     }
     let item = App.Area[z][y][x][(App.Area[z][y][x].length-1)];
-    console.log(App.Items[item.Id].ItemTypeId);
     if(!hardClear && App.Items[item.Id].ItemTypeId === '1') {
       return;
     }
@@ -598,13 +599,25 @@ var App = {
 
             // if highlighted
             if(App.HighlightedItem && x == App.HighlightedItem.X && y == App.HighlightedItem.Y && z == App.HighlightedItem.Z && Item.Id == App.HighlightedItem.Item.Id && (parseInt(stack)+1) == App.Area[z][y][x].length) {
-              CTX.drawImage(App.getItemSprite(Item), drawX*32 - (32*(Item.Size-1)) -6, drawY*32 - (32*(Item.Size-1))-6);
+              CTX.drawImage(
+                App.getItemSprite(Item),
+                drawX*32 - (32*(Item.Size-1))+Item.PaddingX-6,
+                drawY*32 - (32*(Item.Size-1))+Item.PaddingY-6
+              );
               CTX.globalCompositeOperation = 'lighter';
-              CTX.drawImage(App.getItemSprite(Item), drawX*32 - (32*(Item.Size-1)) -6, drawY*32 - (32*(Item.Size-1))-6);
+              CTX.drawImage(
+                App.getItemSprite(Item),
+                drawX*32 - (32*(Item.Size-1))+Item.PaddingX-6,
+                drawY*32 - (32*(Item.Size-1))+Item.PaddingY-6
+              );
               CTX.globalCompositeOperation = 'source-over';
             }
             else {
-              CTX.drawImage(App.getItemSprite(Item), drawX*32 - (32*(Item.Size-1)), drawY*32 - (32*(Item.Size-1)));
+              CTX.drawImage(
+                App.getItemSprite(Item),
+                drawX*32 - (32*(Item.Size-1))+Item.PaddingX,
+                drawY*32 - (32*(Item.Size-1))+Item.PaddingY
+              );
             }
           }
         }
@@ -629,7 +642,10 @@ var App = {
 
           if(App.BrushSize === 1) {
             if(App.Tool === 1 && App.SelectedItem) {
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1)), y - (32*(App.SelectedItem.Size-1)));
+              CTX.drawImage(App.getItemSprite(App.SelectedItem),
+                x - (32*(App.SelectedItem.Size-1))+App.SelectedItem.PaddingX,
+                y - (32*(App.SelectedItem.Size-1))+App.SelectedItem.PaddingY
+              );
             }
             CTX.lineWidth = 1;
             CTX.strokeStyle = App.Tool === 1 ? "#ffffff" : '#ff0000';
@@ -640,15 +656,15 @@ var App = {
 
           if(App.BrushSize === 3) {
             if(App.Tool === 1 && App.SelectedItem) {
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))-32, y - (32*(App.SelectedItem.Size-1))-32);
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1)), y - (32*(App.SelectedItem.Size-1))-32);
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))+32, y - (32*(App.SelectedItem.Size-1))-32);
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))-32, y - (32*(App.SelectedItem.Size-1)));
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1)), y - (32*(App.SelectedItem.Size-1)));
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))+32, y - (32*(App.SelectedItem.Size-1)));
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))-32, y - (32*(App.SelectedItem.Size-1))+32);
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1)), y - (32*(App.SelectedItem.Size-1))+32);
-              CTX.drawImage(App.getItemSprite(App.SelectedItem), x - (32*(App.SelectedItem.Size-1))+32, y - (32*(App.SelectedItem.Size-1))+32);
+              for(let i = -1;i<=1;i++) {
+                for(let j = -1;j<=1;j++) {
+                  CTX.drawImage(
+                    App.getItemSprite(App.SelectedItem),
+                    x - (32*(App.SelectedItem.Size-1))+App.SelectedItem.PaddingX+(i*32),
+                    y - (32*(App.SelectedItem.Size-1))+App.SelectedItem.PaddingY+(j*32)
+                  );
+                }
+              }
             }
             CTX.lineWidth = 1;
             CTX.strokeStyle = App.Tool === 1 ? "#ffffff" : '#ff0000';

@@ -47,7 +47,7 @@ var Libs_Misc = {
   isSQMEmpty: function (x,y,z,ignoreEdges = false) {
     let SQM = Libs_Board.Area[z][y][x];
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item.Items[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack]['Id']];
       if(ignoreEdges) {
         if(Item.ItemTypeId !== '2' && Item.Id !== '3') {
           return false;
@@ -61,7 +61,7 @@ var Libs_Misc = {
     let itemsBlockingProjectilesButNotBlockingUpperView = ['3045','3047'];
     let SQM = Libs_Board.Area[z][y][x];
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item.Items[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack]['Id']];
       if(Item.IsBlockingProjectiles && !(itemsBlockingProjectilesButNotBlockingUpperView.includes(Item.Id))) {
         return true;
       }

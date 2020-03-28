@@ -12,19 +12,19 @@ class ItemPushOnDownStairs extends BaseAction
     $toSQM = $sqmDown;
 
     foreach($sqmDown->Items as $item) {
-      if(in_array($item[0], ['3179'])) {
+      if(in_array($item->Id, ['3179'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X-1, $sqmDown->Y, $sqmDown->Z);
         break;
       }
-      if(in_array($item[0], ['3003', '3182'])) {
+      if(in_array($item->Id, ['3003', '3182'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X+1, $sqmDown->Y, $sqmDown->Z);
         break;
       }
-      if(in_array($item[0], ['3180'])) {
+      if(in_array($item->Id, ['3180'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X, $sqmDown->Y-1, $sqmDown->Z);
         break;
       }
-      if(in_array($item[0], ['3000', '3001', '3002', '3176'])) {
+      if(in_array($item->Id, ['3000', '3001', '3002', '3176'])) {
         $toSQM = $this->getApp()->getWorld()->getSQM($sqmDown->X, $sqmDown->Y+1, $sqmDown->Z);
         break;
       }

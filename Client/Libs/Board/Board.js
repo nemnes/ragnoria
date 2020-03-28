@@ -71,7 +71,7 @@ var Libs_Board = {
       }
       if(event.type === 'mouseup' && event.which === 1) {
         if(Libs_Mouse.Dragging && ((Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X) !== Libs_Mouse.Dragging.X) || ((Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y) !== Libs_Mouse.Dragging.Y)) {
-          if(typeof Libs_Mouse.Dragging.Item != 'undefined' && Libs_Item.Items[Libs_Mouse.Dragging.Item[0]].IsMoveable) {
+          if(typeof Libs_Mouse.Dragging.Item != 'undefined' && Libs_Item.Items[Libs_Mouse.Dragging.Item['Id']].IsMoveable) {
             App.emit('Push', [Libs_Mouse.Dragging.X, Libs_Mouse.Dragging.Y, Libs_Mouse.Dragging.Z, (Libs_Board.CursorPosition.X+Libs_Board.AreaStart.X), (Libs_Board.CursorPosition.Y+Libs_Board.AreaStart.Y), Libs_Mouse.Dragging.Z, Libs_Mouse.Dragging.Item]);
           }
         }

@@ -108,7 +108,7 @@ var Libs_Renderer = {
 
   renderFloor: function(SQM) {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item.Items[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack]['Id']];
       if(Item.Id === '0') {
         continue;
       }
@@ -189,7 +189,7 @@ var Libs_Renderer = {
     if(parseInt(Libs_Hero.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_HERO_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_HERO_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
       Libs_Hero.Altitude = 0;
       for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-        Libs_Hero.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+        Libs_Hero.Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
       }
       Libs_Hero.Altitude = Libs_Hero.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Libs_Hero.Altitude;
       if(Libs_Renderer.LightEffects) {
@@ -257,7 +257,7 @@ var Libs_Renderer = {
       if(parseInt(Player.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
         Player.Altitude = 0;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-          Player.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+          Player.Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
         }
         Player.Altitude = Player.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Player.Altitude;
         Libs_Renderer.drawImage({
@@ -279,7 +279,7 @@ var Libs_Renderer = {
       if(parseInt(NPC.Z) === parseInt(Libs_Renderer.Z) && parseInt(NPC.Y) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(NPC.X) === parseInt(Libs_Renderer.X_SERVER)) {
         NPC.Altitude = 0;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-          NPC.Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+          NPC.Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
         }
         NPC.Altitude = NPC.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : NPC.Altitude;
         Libs_Renderer.drawImage({
@@ -298,22 +298,19 @@ var Libs_Renderer = {
   renderItems: function(SQM) {
     let Altitude = 0;
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item.Items[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack]['Id']];
       if(!(['1','2'].includes(Item.ItemTypeId))) {
         Altitude = Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Altitude;
 
-        let Quantity = 1;
+        let Quantity = SQM[stack]['Quantity'];
         if(Item.IsAlwaysTop) {
           continue;
-        }
-        if(Item.IsStackable) {
-          Quantity = SQM[stack][1];
         }
 
         if(Item.LightLevel > 0 && Item.LightRadius > 0 && Libs_Renderer.LightEffects) {
           Libs_Renderer.addLightSource({
-            Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.TopMargin),
-            Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.LeftMargin),
+            Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Item.PaddingY) + (Libs_Renderer.TopMargin),
+            Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Item.PaddingX) + (Libs_Renderer.LeftMargin),
             LightLevel: Item.LightLevel,
             LightColor: Item.LightColor,
             LightRadius: Item.LightRadius,
@@ -321,8 +318,8 @@ var Libs_Renderer = {
           });
         }
         Libs_Renderer.drawImage({
-          Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.TopMargin) - Altitude,
-          Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin) - Altitude,
+          Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Item.PaddingY) + (Libs_Renderer.TopMargin) - Altitude,
+          Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Item.PaddingX) + (Libs_Renderer.LeftMargin) - Altitude,
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
           LeftOffset: 0,
@@ -339,7 +336,7 @@ var Libs_Renderer = {
       if(Libs_Board.Effects[unique].Z === parseInt(Libs_Renderer.Z) && Libs_Board.Effects[unique].X === parseInt(Libs_Renderer.X_SERVER) && Libs_Board.Effects[unique].Y === parseInt(Libs_Renderer.Y_SERVER)) {
         let Altitude = Libs_Board.Effects[unique].Altitude;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-          Altitude += Libs_Item.Items[SQM[stack][0]].Altitude;
+          Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
         }
         Altitude = Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Altitude;
 
@@ -359,15 +356,15 @@ var Libs_Renderer = {
 
   renderItemsAlwaysTop: function(SQM) {
     for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
-      let Item = Libs_Item.Items[SQM[stack][0]];
+      let Item = Libs_Item.Items[SQM[stack]['Id']];
       if(!(Item.IsAlwaysTop)) {
         continue;
       }
       if(!([1,2].includes(Item.ItemTypeId))) {
         if(Item.LightLevel > 0 && Item.LightRadius > 0 && Libs_Renderer.LightEffects) {
           Libs_Renderer.addLightSource({
-            Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.TopMargin),
-            Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Libs_Renderer.LeftMargin),
+            Top: (Libs_Renderer.Y_CLIENT * 32) + (Item.Size * 16) + (Item.PaddingY) + (Libs_Renderer.TopMargin),
+            Left: (Libs_Renderer.X_CLIENT * 32) + (Item.Size * 16) + (Item.PaddingX) + (Libs_Renderer.LeftMargin),
             LightLevel: Item.LightLevel,
             LightColor: Item.LightColor,
             LightRadius: Item.LightRadius,
@@ -375,8 +372,8 @@ var Libs_Renderer = {
           });
         }
         Libs_Renderer.drawImage({
-          Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.TopMargin),
-          Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Libs_Renderer.LeftMargin),
+          Top: (Libs_Renderer.Y_CLIENT * 32) - ((Item.Size * 32) - 32) + (Item.PaddingY) + (Libs_Renderer.TopMargin),
+          Left: (Libs_Renderer.X_CLIENT * 32) - ((Item.Size * 32) - 32) + (Item.PaddingX) + (Libs_Renderer.LeftMargin),
           Width: (Item.Size * 32),
           Height: (Item.Size * 32),
           LeftOffset: 0,

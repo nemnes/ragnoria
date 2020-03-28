@@ -9,8 +9,8 @@ class Push extends BaseRequest
 {
   public function initialize(Player $player, $fromX, $fromY, $fromZ, $toX, $toY, $toZ, $item)
   {
-    $itemId = isset($item[0]) ? $item[0] : null;
-    $quantity = isset($item[1]) ? $item[1] : null;
+    $itemId = isset($item->Id) ? $item->Id : null;
+    $quantity = isset($item->Quantity) ? $item->Quantity : null;
 
     if(!$itemId) {
       return;
@@ -50,8 +50,8 @@ class Push extends BaseRequest
 
     // onItemPush Actions
     foreach($toSQM->Items as $item) {
-      if($action = $this->getApp()->getAction('ItemPushOn', $item[0])) {
-        $action->run($player, $item[0], $fromSQM, $toSQM);
+      if($action = $this->getApp()->getAction('ItemPushOn', $item->Id)) {
+        $action->run($player, $item->Id, $fromSQM, $toSQM);
       }
     }
 

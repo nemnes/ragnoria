@@ -31,12 +31,6 @@ var Libs_Keyboard = {
       // disable [tab]
       if (e.keyCode === 9) {
         e.preventDefault();
-        Libs_Outfiter.toggle();
-      }
-
-      if (e.keyCode === 27) {
-        e.preventDefault();
-        Libs_Outfiter.hide();
       }
 
       // prevent browser zoom

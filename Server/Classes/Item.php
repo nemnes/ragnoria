@@ -2,25 +2,17 @@
 
 namespace Server\Classes;
 
-use Libs\MiscHelper;
-
-class Item extends BaseClass
+class Item
 {
   public $Id;
-  public $Name;
-  public $Size;
-  public $IsBlocking;
-  public $IsMoveable;
-  public $IsPickupable;
-  public $IsAlwaysUnder; // if true z-index will be 0
-  public $IsAlwaysTop; // if true z-index will be +1
-  public $LightLevel;
-  public $LightColor;
+  public $Quantity;
+  public $ActionId;
 
-  public function initialize($id)
+  public function __construct($id, $quantity, $actionId = null)
   {
-    $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($id);
-    MiscHelper::copyObjectProperties($structure, $this);
+    $this->Id = $id;
+    $this->Quantity = $quantity;
+    $this->ActionId = $actionId;
   }
 
 }

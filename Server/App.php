@@ -39,12 +39,6 @@ class App
     return new Player($this, [$playerId, $conn]);
   }
 
-
-  public function newNPC($id)
-  {
-    return new NPC($this, [$id]);
-  }
-
   public function newSQM($x, $y, $z)
   {
     return new SQM($this, [$x, $y, $z]);

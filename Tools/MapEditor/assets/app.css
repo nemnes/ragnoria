@@ -113,6 +113,7 @@ body {
 }
 .item-select {
   display: inline-block;
+  position: relative;
   cursor: pointer;
   user-select: none;
   border: 2px outset #181f26;
@@ -257,4 +258,12 @@ body {
 #load-box .container input[type="button"]:hover {
   border: 1px outset #888;
   background-color: #1f2931;
+}
+[data-paddings="true"]::after {
+  content: "\f065";
+  font: normal normal normal 11px/1 FontAwesome;
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }

@@ -20,7 +20,6 @@ var App = {
       Libs_Effect.init();
       Libs_Board.init();
       Libs_Chat.init();
-      Libs_Outfiter.init();
     };
     App.IO.onmessage = function (e) {
       var args = JSON.parse(e.data)[1];

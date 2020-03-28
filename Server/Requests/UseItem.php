@@ -18,10 +18,10 @@ class UseItem extends BaseRequest
       return;
     }
 
-    $itemId = isset($item[0]) ? $item[0] : null;
-    $quantity = isset($item[1]) ? $item[1] : null;
+    $itemId = isset($item->Id) ? $item->Id : null;
+    $quantity = isset($item->Quantity) ? $item->Quantity : null;
 
-    if($action = $this->getApp()->getAction('ItemUse', $item[0])) {
+    if($action = $this->getApp()->getAction('ItemUse', $item->Id)) {
       $action->run($player, $itemId, $SQM);
     }
 

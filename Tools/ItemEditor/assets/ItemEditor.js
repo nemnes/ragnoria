@@ -43,6 +43,7 @@ var ItemEditor = {
     for (let Id in ItemEditor.Items) if (ItemEditor.Items.hasOwnProperty(Id)) {
       let Item = ItemEditor.Items[Id];
       let img = '';
+      let paddings = (Item.PaddingX !== 0 || Item.PaddingY !== 0) ? 'true' : 'false';
       if(Item.Sprites) {
         Item.Sprites = JSON.parse(Item.Sprites);
         var spriteid = Item.Sprites.Stack1.Frame1;
@@ -51,7 +52,7 @@ var ItemEditor = {
         }
       }
       html = [];
-      html.push('<div class="item-select" data-item-layer="' + Item.ItemTypeId + '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '">');
+      html.push('<div class="item-select" data-item-layer="' + Item.ItemTypeId + '" data-item-id="' + Item.Id + '" data-item-name="' + Item.Name + '" data-paddings="' + paddings + '">');
       html.push('  <img src="' +img+ '"/>');
       html.push('</div>');
       $('.item-list', document).append(html.join(''));
@@ -91,6 +92,8 @@ var ItemEditor = {
             IsPickupable: '0',
             IsStackable: '0',
             IsAlwaysTop: '0',
+            PaddingX: '0',
+            PaddingY: '0',
             Sprites: {Stack1: {Frame1: 0}}
           },
           success: function() {
@@ -124,7 +127,8 @@ var ItemEditor = {
         $('[name="IsPickupable"]', document).prop('checked', Item.IsPickupable === '1');
         $('[name="IsStackable"]', document).prop('checked', Item.IsStackable === '1');
         $('[name="IsAlwaysTop"]', document).prop('checked', Item.IsAlwaysTop === '1');
-
+        $('[name="PaddingX"]', document).val(Item.PaddingX);
+        $('[name="PaddingY"]', document).val(Item.PaddingY);
         $('.sprite-box', document).attr('data-sprite-id', '').css('background-image', 'none');
         if(Item.Sprites) {
           Item.Sprites = JSON.parse(Item.Sprites);
@@ -168,6 +172,8 @@ var ItemEditor = {
         IsPickupable: $('[name="IsPickupable"]', document).prop('checked') ? '1' : '0',
         IsStackable: $('[name="IsStackable"]', document).prop('checked') ? '1' : '0',
         IsAlwaysTop: $('[name="IsAlwaysTop"]', document).prop('checked') ? '1' : '0',
+        PaddingX: $('[name="PaddingX"]', document).val(),
+        PaddingY: $('[name="PaddingY"]', document).val(),
         Sprites: ItemEditor.getObjectSprites()
       },
       success: function() {

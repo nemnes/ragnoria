@@ -27,18 +27,6 @@ var Libs_Hero = {
     Libs_Hero.Image.onload = function() {
       Libs_Loader.reachedMilestone('Hero');
     };
-
-    Libs_Outfiter.LookType = {
-      Base: params.Base,
-      Head: params.Head,
-      Body: params.Body,
-      Back: params.Back,
-      Hands: params.Hands,
-      HeadColor: params.HeadColor,
-      PrimaryColor: params.PrimaryColor,
-      SecondaryColor: params.SecondaryColor,
-      DetailColor: params.DetailColor
-    };
   },
 
   /** @return {number}*/

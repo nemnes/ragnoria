@@ -18,9 +18,9 @@ class SQM extends BaseClass
     $this->Z = $z;
   }
 
-  public function addItem($itemId, $quantity = null, $send = true)
+  public function addItem($itemId, $quantity = null, $actionId = null, $send = true)
   {
-    $this->Items[] = $quantity ? [$itemId, $quantity] : [$itemId];
+    $this->Items[] = new Item($itemId, $quantity, $actionId);
     if($send) {
       foreach($this->getPlayersOnArea() as $playerOnArea) {
         $playerOnArea->send('Libs_Board.updateSQM', [$this->X, $this->Y, $this->Z, $this->Items]);
@@ -30,11 +30,11 @@ class SQM extends BaseClass
 
   public function removeItem($itemId, $quantity = 1)
   {
-    if(!empty($this->Items) && end($this->Items)[0] == $itemId) {
-      if(end($this->Items)[1] > $quantity) {
+    if(!empty($this->Items) && end($this->Items)->Id == $itemId) {
+      if(end($this->Items)->Quantity > $quantity) {
         end($this->Items);
         $key = key($this->Items);
-        $this->Items[$key][1]--;
+        $this->Items[$key]->Quantity--;
       }
       else {
         array_pop($this->Items);
@@ -50,8 +50,8 @@ class SQM extends BaseClass
   public function updateItem($fromItemId, $toItemId)
   {
     foreach($this->Items as &$item) {
-      if($item[0] == $fromItemId) {
-        $item[0] = $toItemId;
+      if($item->Id == $fromItemId) {
+        $item->Id = $toItemId;
         foreach($this->getPlayersOnArea() as $playerOnArea) {
           $playerOnArea->send('Libs_Board.updateSQM', [$this->X, $this->Y, $this->Z, $this->Items]);
         }
@@ -64,7 +64,7 @@ class SQM extends BaseClass
   public function getItemFromTop()
   {
     foreach(array_reverse($this->Items, true) as &$item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item->Id);
       if($structure->Name) {
         return $item;
       }
@@ -78,7 +78,7 @@ class SQM extends BaseClass
       return false;
     }
     foreach($this->Items as $item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item->Id);
       if($structure->IsBlocking) {
         return false;
       }
@@ -89,7 +89,7 @@ class SQM extends BaseClass
   public function isBlockingItems()
   {
     foreach($this->Items as $item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item->Id);
       if($structure->IsBlockingItems) {
         return true;
       }
@@ -100,7 +100,7 @@ class SQM extends BaseClass
   public function isBlockingProjectiles()
   {
     foreach($this->Items as $item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item->Id);
       if($structure->IsBlockingProjectiles) {
         return true;
       }
@@ -111,7 +111,7 @@ class SQM extends BaseClass
   public function hasFloor()
   {
     foreach($this->Items as $item) {
-      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item[0]);
+      $structure = $this->getApp()->get('ItemStructureCollection')->getItemStructure($item->Id);
       if($structure->ItemTypeId == 1) {
         return true;
       }
@@ -138,8 +138,8 @@ class SQM extends BaseClass
   public function walkOn(Player $player)
   {
     foreach($this->Items as $item) {
-      if($action = $this->getApp()->getAction('WalkOn', $item[0])) {
-        $action->run($player, $item[0], $this);
+      if($action = $this->getApp()->getAction('WalkOn', $item->Id)) {
+        $action->run($player, $item->Id, $this);
       }
     }
   }
@@ -147,8 +147,8 @@ class SQM extends BaseClass
   public function walkOut(Player $player)
   {
     foreach($this->Items as $item) {
-      if($action = $this->getApp()->getAction('WalkOut', $item[0])) {
-        $action->run($player, $item[0], $this);
+      if($action = $this->getApp()->getAction('WalkOut', $item->Id)) {
+        $action->run($player, $item->Id, $this);
       }
     }
   }

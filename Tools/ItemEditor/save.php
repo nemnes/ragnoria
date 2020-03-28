@@ -57,6 +57,8 @@ class SaveItem
       $item->LightRadius = (int) $row->LightRadius;
       $item->LightLevel = (int) $row->LightLevel;
       $item->LightColor = $row->LightColor;
+      $item->PaddingX = (int) $row->PaddingX;
+      $item->PaddingY = (int) $row->PaddingY;
       $item->Sprites = $row->Sprites;
       $this->Items[$item->Id] = $item;
     }

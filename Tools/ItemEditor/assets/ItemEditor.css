@@ -81,6 +81,7 @@ select[disabled], input[disabled] {
 }
 .item-select {
   display: inline-block;
+  position: relative;
   cursor: pointer;
   user-select: none;
   border: 2px outset #181f26;
@@ -158,4 +159,12 @@ hr {
 .sprite:hover {
   border: 1px solid #b48300;
   background-color: #586e87;
+}
+[data-paddings="true"]::after {
+  content: "\f065";
+  font: normal normal normal 11px/1 FontAwesome;
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
