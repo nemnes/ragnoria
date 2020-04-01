@@ -11,6 +11,8 @@ var Libs_Player = {
       CurrentFrame: null
     };
     player.Altitude = 0;
+    player.X_Virtual = player.X;
+    player.Y_Virtual = player.Y;
     Libs_Board.Players[player.Id] = player;
   },
 
@@ -28,22 +30,6 @@ var Libs_Player = {
       Libs_Board.Players[player.Id].Animation.CurrentFrame = 0;
       Libs_Board.Players[player.Id].Animation.Playing = true;
 
-      /** OPTION 1 - setInterval */
-      // App.clearInterval('Player_' +player.Id+ '_Movement');
-      // App.addInterval('Player_' +player.Id+ '_Movement', function() {
-      //   if(typeof Libs_Board.Players[player.Id] === 'undefined') {
-      //     App.clearInterval('Player_' +player.Id+ '_Movement');
-      //     return;
-      //   }
-      //   Libs_Board.Players[player.Id].Animation.CurrentFrame++;
-      //   if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
-      //     App.clearInterval('Player_' +player.Id+ '_Movement');
-      //     Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
-      //     Libs_Board.Players[player.Id].Animation.Playing = false;
-      //   }
-      // }, (Libs_Player.getStepTime(player.Id)/32));
-
-      /** OPTION 2 - setTimeout in loop */
       for(let i = 1; i <= 32; i++) {
         App.clearTimeout('Player_' +player.Id+ '_Movement_' + i);
       }
@@ -52,10 +38,49 @@ var Libs_Player = {
           if(typeof Libs_Board.Players[player.Id] === 'undefined') {
             return;
           }
-          Libs_Board.Players[player.Id].Animation.CurrentFrame++;
-          if(Libs_Board.Players[player.Id].Animation.CurrentFrame === 32) {
-            Libs_Board.Players[player.Id].Animation.CurrentFrame = null;
-            Libs_Board.Players[player.Id].Animation.Playing = false;
+          let Player = Libs_Board.Players[player.Id];
+          Player.Animation.CurrentFrame++;
+
+
+          // pretend player is on previous frame for first 16 frames of his walking animation to keep good layer order on board
+          Player.X_Virtual = Player.X;
+          Player.Y_Virtual = Player.Y;
+          if(Player.Animation.Playing && Player.Animation.CurrentFrame < 16) {
+            switch(Player.Direction) {
+              case 'North':
+                Player.Y_Virtual++;
+                break;
+              case 'South':
+                Player.Y_Virtual--;
+                break;
+              case 'West':
+                Player.X_Virtual++;
+                break;
+              case 'East':
+                Player.X_Virtual--;
+                break;
+              case 'NorthEast':
+                Player.Y_Virtual++;
+                Player.X_Virtual--;
+                break;
+              case 'NorthWest':
+                Player.Y_Virtual++;
+                Player.X_Virtual++;
+                break;
+              case 'SouthEast':
+                Player.Y_Virtual--;
+                Player.X_Virtual--;
+                break;
+              case 'SouthWest':
+                Player.Y_Virtual--;
+                Player.X_Virtual++;
+                break;
+            }
+          }
+
+          if(Player.Animation.CurrentFrame === 32) {
+            Player.Animation.CurrentFrame = null;
+            Player.Animation.Playing = false;
           }
         }, (Libs_Hero.getStepTime()/32)*i);
       }

@@ -34,6 +34,10 @@ var App = {
   MapHeight: null,
 
   init: function() {
+    if(typeof Config == 'undefined') {
+      $('html').html('Create and configure <i>config.js</i> file basing on <i>config.default.js</i>');
+      return;
+    }
     App.MapRangeX = {From: 0, To: 49};
     App.MapRangeY = {From: 0, To: 49};
     App.MapWidth = App.MapRangeX.To - App.MapRangeX.From + 1;
@@ -527,7 +531,7 @@ var App = {
 
     $.ajax({
       type: "POST",
-      url: 'load.php',
+      url: 'src/LoadArea.php',
       data: {
         FromX: fromX,
         FromY: fromY,
@@ -565,8 +569,11 @@ var App = {
     $('#wait').fadeIn('fast');
     $.ajax({
       type: "POST",
-      url: 'save.php',
-      data: {Area: JSON.stringify(App.Area)},
+      url: 'src/SaveArea.php',
+      data: {
+        Area: JSON.stringify(App.Area),
+        BackupMapVersions: Config.BackupMapVersions
+      },
       success: function(data) {
         alert(data);
         $('#wait').fadeOut('fast');

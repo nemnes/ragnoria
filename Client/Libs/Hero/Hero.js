@@ -5,6 +5,8 @@ var Libs_Hero = {
   X: null,
   Y: null,
   Z: null,
+  X_Virtual: null,
+  Y_Virtual: null,
   Speed: null,
   Direction: null,
   Animation: {
@@ -20,6 +22,8 @@ var Libs_Hero = {
     Libs_Hero.X = parseInt(params.X);
     Libs_Hero.Y = parseInt(params.Y);
     Libs_Hero.Z = parseInt(params.Z);
+    Libs_Hero.X_Virtual = parseInt(params.X);
+    Libs_Hero.Y_Virtual = parseInt(params.Y)
     Libs_Hero.Direction = params.Direction;
     Libs_Hero.Speed = parseInt(params.Speed);
     Libs_Hero.Image = new Image;

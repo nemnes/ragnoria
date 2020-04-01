@@ -82,7 +82,7 @@ var Libs_Movement = {
         return;
       }
     }
-    Libs_Movement.go(direction);
+    Libs_Movement.move(direction);
     App.emit('Walk', [direction]);
   },
 
@@ -98,29 +98,52 @@ var Libs_Movement = {
     App.emit('Rotate', [direction]);
   },
 
-  go: function (direction) {
+  move: function (direction) {
     Libs_Hero.Direction = direction;
     Libs_Hero.movementBlocked = true;
     Libs_Hero.Animation.CurrentFrame = 0;
     Libs_Hero.Animation.Playing = true;
 
-    /** OPTION 1 - setInterval */
-    // clearInterval(Libs_Hero.Animation.Interval);
-    // Libs_Hero.Animation.Interval = setInterval(function(){
-    //   Libs_Hero.Animation.CurrentFrame++;
-    //   if(Libs_Hero.Animation.CurrentFrame === 32) {
-    //     clearInterval(Libs_Hero.Animation.Interval);
-    //     Libs_Hero.Animation.Playing = false;
-    //   }
-    // }, Libs_Hero.getStepTime()/32);
-
-    /** OPTION 2 - setTimeout in loop */
     for(let i = 1; i <= 32; i++) {
       App.clearTimeout('Hero_Movement_' + i);
     }
     for(let i = 1; i <= 32; i++) {
       App.addTimeout('Hero_Movement_' + i, function(){
         Libs_Hero.Animation.CurrentFrame++;
+        Libs_Hero.X_Virtual = Libs_Hero.X;
+        Libs_Hero.Y_Virtual = Libs_Hero.Y;
+        if(Libs_Hero.Animation.CurrentFrame > 16) {
+          switch(Libs_Hero.Direction) {
+            case 'North':
+              Libs_Hero.Y_Virtual--;
+              break;
+            case 'NorthEast':
+              Libs_Hero.Y_Virtual--;
+              Libs_Hero.X_Virtual++;
+              break;
+            case 'NorthWest':
+              Libs_Hero.Y_Virtual--;
+              Libs_Hero.X_Virtual++;
+              break;
+            case 'West':
+              Libs_Hero.X_Virtual--;
+              break;
+            case 'East':
+              Libs_Hero.X_Virtual++;
+              break;
+            case 'South':
+              Libs_Hero.Y_Virtual++;
+              break;
+            case 'SouthEast':
+              Libs_Hero.X_Virtual++;
+              Libs_Hero.Y_Virtual++;
+              break;
+            case 'SouthWest':
+              Libs_Hero.X_Virtual--;
+              Libs_Hero.Y_Virtual++;
+              break;
+          }
+        }
         if(Libs_Hero.Animation.CurrentFrame === 32) {
           Libs_Hero.Animation.Playing = false;
         }
@@ -165,6 +188,8 @@ var Libs_Movement = {
     Libs_Hero.X = parseInt(X);
     Libs_Hero.Y = parseInt(Y);
     Libs_Hero.Z = parseInt(Z);
+    Libs_Hero.X_Virtual = Libs_Hero.X;
+    Libs_Hero.Y_Virtual = Libs_Hero.Y;
     if(status === 'success') {
       for(let sqm in Libs_Movement.AreaChangesWhileWalking) if(Libs_Movement.AreaChangesWhileWalking.hasOwnProperty(sqm)) {
         sqm = Libs_Movement.AreaChangesWhileWalking[sqm];

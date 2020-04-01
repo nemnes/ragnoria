@@ -3,8 +3,6 @@
 namespace Server;
 
 use Libs\SQLMapper;
-use Server\Classes\Item;
-use Server\Classes\NPC;
 use Server\Classes\Player;
 use Server\Classes\SQM;
 use Server\Classes\World;

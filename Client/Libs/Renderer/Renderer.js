@@ -24,6 +24,8 @@ var Libs_Renderer = {
   Y_SERVER: 0,
   X_CLIENT: 0,
   Y_CLIENT: 0,
+  X_CLIENT_VIRTUAL: 0,
+  Y_CLIENT_VIRTUAL: 0,
   Z: 0,
 
   init: function() {
@@ -137,56 +139,8 @@ var Libs_Renderer = {
   },
 
   renderHero: function(SQM) {
-    let X_HERO_VIRTUAL = Libs_Hero.X;
-    let Y_HERO_VIRTUAL = Libs_Hero.Y;
-    let X_CLIENT_VIRTUAL = Libs_Renderer.X_CLIENT;
-    let Y_CLIENT_VIRTUAL = Libs_Renderer.Y_CLIENT;
-    if(Libs_Hero.Animation.CurrentFrame > 16) {
-      switch(Libs_Hero.Direction) {
-        case 'North':
-          Y_HERO_VIRTUAL--;
-          Y_CLIENT_VIRTUAL++;
-          break;
-        case 'NorthEast':
-          Y_HERO_VIRTUAL--;
-          Y_CLIENT_VIRTUAL++;
-          X_HERO_VIRTUAL++;
-          X_CLIENT_VIRTUAL--;
-          break;
-        case 'NorthWest':
-          Y_HERO_VIRTUAL--;
-          Y_CLIENT_VIRTUAL++;
-          X_HERO_VIRTUAL--;
-          X_CLIENT_VIRTUAL++;
-          break;
-        case 'West':
-          X_HERO_VIRTUAL--;
-          X_CLIENT_VIRTUAL++;
-          break;
-        case 'East':
-          X_HERO_VIRTUAL++;
-          X_CLIENT_VIRTUAL--;
-          break;
-        case 'South':
-          Y_HERO_VIRTUAL++;
-          Y_CLIENT_VIRTUAL--;
-          break;
-        case 'SouthEast':
-          X_HERO_VIRTUAL++;
-          Y_HERO_VIRTUAL++;
-          X_CLIENT_VIRTUAL--;
-          Y_CLIENT_VIRTUAL--;
-          break;
-        case 'SouthWest':
-          X_HERO_VIRTUAL--;
-          Y_HERO_VIRTUAL++;
-          X_CLIENT_VIRTUAL++;
-          Y_CLIENT_VIRTUAL--;
-          break;
-      }
-    }
-
-    if(parseInt(Libs_Hero.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_HERO_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_HERO_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
+    Libs_Renderer.calcClientVirtual();
+    if(parseInt(Libs_Hero.Z) === parseInt(Libs_Renderer.Z) && parseInt(Libs_Hero.Y_Virtual) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(Libs_Hero.X_Virtual) === parseInt(Libs_Renderer.X_SERVER)) {
       Libs_Hero.Altitude = 0;
       for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
         Libs_Hero.Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
@@ -194,8 +148,8 @@ var Libs_Renderer = {
       Libs_Hero.Altitude = Libs_Hero.Altitude > Libs_Renderer.MaxAltitude ? Libs_Renderer.MaxAltitude : Libs_Hero.Altitude;
       if(Libs_Renderer.LightEffects) {
         Libs_Renderer.addLightSource({
-          Top: (Y_CLIENT_VIRTUAL * 32) + 13,
-          Left: (X_CLIENT_VIRTUAL * 32) + 10,
+          Top: (Libs_Renderer.Y_CLIENT_VIRTUAL * 32) + 13,
+          Left: (Libs_Renderer.X_CLIENT_VIRTUAL * 32) + 10,
           LightLevel: 5,
           LightColor: 'orange',
           LightRadius: 3,
@@ -203,8 +157,8 @@ var Libs_Renderer = {
         });
       }
       Libs_Renderer.drawImage({
-        Top: ((Y_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
-        Left: ((X_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
+        Top: ((Libs_Renderer.Y_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
+        Left: ((Libs_Renderer.X_CLIENT_VIRTUAL * 32) - Libs_Renderer.CreaturesOffset) - Libs_Hero.Altitude,
         Width: 64,
         Height: 64,
         LeftOffset: Libs_Hero.getLeftOffset(),
@@ -217,44 +171,7 @@ var Libs_Renderer = {
   renderPlayers: function(SQM) {
     for(let playerId in Libs_Board.Players) if (Libs_Board.Players.hasOwnProperty(playerId)) {
       let Player = Libs_Board.Players[playerId];
-
-      // pretend player is on previous frame for first 16 frames of his walking animation to keep good layer order on board
-      let X_PLAYER_VIRTUAL = Player.X;
-      let Y_PLAYER_VIRTUAL = Player.Y;
-      if(Player.Animation.Playing && Player.Animation.CurrentFrame < 16) {
-        switch(Player.Direction) {
-          case 'North':
-            Y_PLAYER_VIRTUAL++;
-            break;
-          case 'South':
-            Y_PLAYER_VIRTUAL--;
-            break;
-          case 'West':
-            X_PLAYER_VIRTUAL++;
-            break;
-          case 'East':
-            X_PLAYER_VIRTUAL--;
-            break;
-          case 'NorthEast':
-            Y_PLAYER_VIRTUAL++;
-            X_PLAYER_VIRTUAL--;
-            break;
-          case 'NorthWest':
-            Y_PLAYER_VIRTUAL++;
-            X_PLAYER_VIRTUAL++;
-            break;
-          case 'SouthEast':
-            Y_PLAYER_VIRTUAL--;
-            X_PLAYER_VIRTUAL--;
-            break;
-          case 'SouthWest':
-            Y_PLAYER_VIRTUAL--;
-            X_PLAYER_VIRTUAL++;
-            break;
-        }
-      }
-
-      if(parseInt(Player.Z) === parseInt(Libs_Renderer.Z) && parseInt(Y_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(X_PLAYER_VIRTUAL) === parseInt(Libs_Renderer.X_SERVER)) {
+      if(parseInt(Player.Z) === parseInt(Libs_Renderer.Z) && parseInt(Player.Y_Virtual) === parseInt(Libs_Renderer.Y_SERVER) && parseInt(Player.X_Virtual) === parseInt(Libs_Renderer.X_SERVER)) {
         Player.Altitude = 0;
         for(let stack in SQM) if (SQM.hasOwnProperty(stack)) {
           Player.Altitude += Libs_Item.Items[SQM[stack]['Id']].Altitude;
@@ -602,41 +519,78 @@ var Libs_Renderer = {
   stopFloorRendering: function() {
     if(Libs_Renderer.Z > Libs_Hero.Z) {
 
-      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual,Libs_Renderer.Z, true))) {
         return true;
       }
-      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y+1,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual+1,Libs_Renderer.Z, true))) {
         return true;
       }
-      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+1,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual+1,Libs_Hero.Y_Virtual,Libs_Renderer.Z, true))) {
         return true;
       }
-      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+1,Libs_Hero.Y+1,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual+1,Libs_Hero.Y_Virtual+1,Libs_Renderer.Z, true))) {
         return true;
       }
 
-      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X-1,Libs_Hero.Y,Libs_Hero.Z))) {
-        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X-1,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X_Virtual-1,Libs_Hero.Y_Virtual,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual-1,Libs_Hero.Y_Virtual,Libs_Renderer.Z, true))) {
           return true;
         }
       }
-      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X,Libs_Hero.Y-1,Libs_Hero.Z))) {
-        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y-1,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual-1,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual-1,Libs_Renderer.Z, true))) {
           return true;
         }
       }
-      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X+1,Libs_Hero.Y,Libs_Hero.Z))) {
-        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X+2,Libs_Hero.Y,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X_Virtual+1,Libs_Hero.Y_Virtual,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual+2,Libs_Hero.Y_Virtual,Libs_Renderer.Z, true))) {
           return true;
         }
       }
-      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X,Libs_Hero.Y+1,Libs_Hero.Z))) {
-        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X,Libs_Hero.Y+2,Libs_Renderer.Z, true))) {
+      if(!(Libs_Misc.isSQMBlockingUpperView(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual+1,Libs_Hero.Z))) {
+        if(!(Libs_Misc.isSQMEmpty(Libs_Hero.X_Virtual,Libs_Hero.Y_Virtual+2,Libs_Renderer.Z, true))) {
           return true;
         }
       }
     }
     return false;
+  },
+
+  calcClientVirtual: function() {
+    Libs_Renderer.X_CLIENT_VIRTUAL = Libs_Renderer.X_CLIENT;
+    Libs_Renderer.Y_CLIENT_VIRTUAL = Libs_Renderer.Y_CLIENT;
+    if(Libs_Hero.Animation.CurrentFrame > 16) {
+      switch(Libs_Hero.Direction) {
+        case 'North':
+          Libs_Renderer.Y_CLIENT_VIRTUAL++;
+          break;
+        case 'NorthEast':
+          Libs_Renderer.Y_CLIENT_VIRTUAL++;
+          Libs_Renderer.X_CLIENT_VIRTUAL--;
+          break;
+        case 'NorthWest':
+          Libs_Renderer.Y_CLIENT_VIRTUAL++;
+          Libs_Renderer.X_CLIENT_VIRTUAL++;
+          break;
+        case 'West':
+          Libs_Renderer.X_CLIENT_VIRTUAL++;
+          break;
+        case 'East':
+          Libs_Renderer.X_CLIENT_VIRTUAL--;
+          break;
+        case 'South':
+          Libs_Renderer.Y_CLIENT_VIRTUAL--;
+          break;
+        case 'SouthEast':
+          Libs_Renderer.X_CLIENT_VIRTUAL--;
+          Libs_Renderer.Y_CLIENT_VIRTUAL--;
+          break;
+        case 'SouthWest':
+          Libs_Renderer.X_CLIENT_VIRTUAL++;
+          Libs_Renderer.Y_CLIENT_VIRTUAL--;
+          break;
+      }
+    }
   }
 
 };
