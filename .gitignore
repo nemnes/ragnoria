@@ -14,3 +14,7 @@ Tools/items.json
 Tools/ItemEditor/config.js
 
 Tools/MapEditor/map/versions/
+
+Tools/MapEditor/src/map.json
+
+Tools/MapEditor/src/versions/
